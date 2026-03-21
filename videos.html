@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videos - WrestleMania 42 Fan Guide</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+.vid-card{background:var(--navy-light);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:all .3s ease;display:flex;flex-direction:column}
+.vid-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.3);border-color:var(--wm-gold)}
+.vid-embed{position:relative;width:100%;padding-top:56.25%;background:#0a0a12;border-radius:12px 12px 0 0;overflow:hidden}
+.vid-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px 12px 0 0}
+.vid-body{padding:18px 20px;flex:1;display:flex;flex-direction:column}
+.vid-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:6px}
+.vid-title{font-size:1rem;font-weight:800;color:var(--off-white);margin-bottom:6px}
+.vid-desc{font-size:.85rem;color:var(--mid-gray);line-height:1.5;flex:1}
+.vid-grid{display:flex;flex-wrap:wrap;gap:24px;justify-content:center}
+.vid-card{width:calc(25% - 18px);min-width:280px}
+@media(max-width:768px){.vid-card{width:calc(50% - 12px);min-width:0}}
+@media(max-width:480px){.vid-card{width:100%;min-width:0}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span style="letter-spacing:1px">WrestleMania</span> <span style="color:#D4A83C">42</span> <span style="color:#D4A83C">Guide</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="matches.html">Matches</a>
+      <a href="wrestlers.html">Wrestlers</a>
+
+      <a href="videos.html">Videos</a>
+      <a href="legal.html">Legal</a>
+    </div>
+    <button class="hamburger" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding:50px 30px 40px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
+  <div class="hero-label">WrestleMania 42</div>
+  <h1>Must-Watch <span style="color:#fff">Videos</span></h1>
+  <p class="hero-sub">Entrances, promos, and key moments -- all grouped by feud. Press play and feel the energy!</p>
+</section>
+
+<!-- FEUD BUILDUPS (data-driven) -->
+<div id="feudSections"></div>
+
+<!-- WHAT TO WATCH -->
+<section class="section section--dark">
+  <div class="inner">
+    <div class="text-center" style="margin-bottom:40px">
+      <div class="section-label">Before WrestleMania</div>
+      <h2 class="section-title">What to Watch This Week</h2>
+      <p class="section-subtitle mx-auto">Can't watch everything? Here are the most important episodes to catch before WrestleMania.</p>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="icon">&#128250;</div>
+        <h3>Monday Night Raw</h3>
+        <p>Mondays at 8 PM ET on Netflix. CM Punk, Rhea Ripley, Liv Morgan, Stephanie Vaquer, and Oba Femi's storylines play out here. The go-home show (last Raw before WrestleMania) is the most important!</p>
+      </div>
+      <div class="tip-card">
+        <div class="icon">&#128250;</div>
+        <h3>Friday Night SmackDown</h3>
+        <p>Fridays at 8 PM ET on USA Network. Cody Rhodes, Randy Orton, Roman Reigns, and Jade Cargill's stories happen here. Watch the SmackDown before WrestleMania for final drama.</p>
+      </div>
+      <div class="tip-card">
+        <div class="icon">&#127775;</div>
+        <h3>The Go-Home Shows</h3>
+        <p>The final Raw and SmackDown before WrestleMania are the most dramatic episodes of the year -- final confrontations, contract signings, and last attacks. DON'T miss these!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WrestleMania 42 &bull; April 18-19, 2026 &bull; Las Vegas</p>
+  <p>Data sourced from <a href="https://www.wwe.com/shows/wrestlemania" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets. Last updated March 2026.</p>
+</footer>
+
+<button class="scroll-top" id="scrollTop">&#8593;</button>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var container = document.getElementById('feudSections');
+  if (!container || !window.WM42_DATA) return;
+
+  var wrestlers = window.WM42_DATA.WRESTLERS;
+  var matches = window.WM42_DATA.MATCHES;
+
+  function buildVideoCard(ytId, start, label, title, desc) {
+    return '<div class="vid-card">' +
+      '<div class="vid-embed">' +
+        '<iframe src="https://www.youtube.com/embed/' + ytId + '?start=' + start + '" title="' + title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
+      '</div>' +
+      '<div class="vid-body">' +
+        '<div class="vid-label">' + label + '</div>' +
+        '<div class="vid-title">' + title + '</div>' +
+        '<div class="vid-desc">' + desc + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  matches.forEach(function(match, i) {
+    var w1 = wrestlers[match.wrestler1];
+    var w2 = wrestlers[match.wrestler2];
+    if (!w1 || !w2) return;
+
+    var sectionClass = i % 2 === 0 ? 'section section--gray' : 'section';
+
+    var html = '<section class="' + sectionClass + '">' +
+      '<div class="inner">' +
+        '<div class="text-center" style="margin-bottom:10px">';
+
+    // Banner image
+    if (match.bannerImg) {
+      html += '<img src="' + match.bannerImg + '" alt="' + w1.name + ' vs ' + w2.name + '" style="width:100%;max-width:800px;border-radius:14px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto" onerror="this.style.display=\'none\'">';
+    }
+
+    html += '<div class="section-label">' + match.championship + '</div>' +
+      '<h2 class="section-title">' + w1.name + ' vs ' + w2.name + '</h2>';
+
+    if (match.feudSubtitle) {
+      html += '<p class="section-subtitle mx-auto">' + match.feudSubtitle + '</p>';
+    }
+
+    html += '</div><div class="vid-grid">';
+
+    // Entrance videos first (wrestler1 then wrestler2)
+    if (w1.entranceVideo) {
+      var ev1 = w1.entranceVideo;
+      html += buildVideoCard(ev1.id, ev1.start, ev1.label || 'Entrance', w1.name + ' -- "' + w1.entranceTheme + '" by ' + w1.entranceArtist, ev1.desc || '');
+    }
+    if (w2.entranceVideo) {
+      var ev2 = w2.entranceVideo;
+      html += buildVideoCard(ev2.id, ev2.start, ev2.label || 'Entrance', w2.name + ' -- "' + w2.entranceTheme + '" by ' + w2.entranceArtist, ev2.desc || '');
+    }
+
+    // Feud buildup videos
+    if (match.feudVideos) {
+      match.feudVideos.forEach(function(v) {
+        html += buildVideoCard(v.id, v.start, v.label, v.title, v.desc);
+      });
+    }
+
+    html += '</div></div></section>';
+    container.innerHTML += html;
+  });
+});
+</script>
+</body>
+</html>

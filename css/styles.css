@@ -1,0 +1,1148 @@
+/* ========================================
+   WrestleMania 42 Family Fan Guide
+   Shared Stylesheet
+   ======================================== */
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Core palette - cohesive dark theme */
+  --white: #FFFFFF;
+  --off-white: #F0F0F3;
+  --light-gray: #E2E2E8;
+  --gray: #CCCCDD;
+  --mid-gray: #8A8A9A;
+  --dark-gray: #555566;
+  --near-black: #111118;
+
+  /* Brand - unified gold & red */
+  --wwe-red: #CC1A2B;
+  --wwe-red-dark: #A01525;
+  --wwe-red-light: #E83048;
+  --wm-gold: #D4A83C;
+  --wm-gold-dark: #B8922F;
+  --wm-gold-light: #F0CC5A;
+
+  /* Dark sections - consistent navy */
+  --navy: #0B0F1A;
+  --navy-light: #141B2E;
+  --navy-mid: #101628;
+
+  /* Alignment */
+  --face-blue: #4A90E2;
+  --face-blue-light: #6CB0F0;
+  --heel-red: #E04040;
+  --heel-red-light: #F06060;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.15);
+  --shadow-xl: 0 20px 50px rgba(0,0,0,0.2);
+  --shadow-gold: 0 4px 20px rgba(201,168,67,0.25);
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration: 0.3s;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; overflow-y: scroll; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--navy);
+  color: var(--off-white);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding-top: 68px;
+}
+
+a { color: var(--wwe-red); text-decoration: none; transition: color var(--duration) var(--ease); }
+a:hover { color: var(--wwe-red-dark); }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; border: none; font-family: inherit; }
+ul { list-style: none; }
+
+/* ===== LAYOUT ===== */
+.section { width: 100%; padding: 80px 0; }
+.section--dark { background: var(--near-black); color: var(--white); }
+.section--gray { background: var(--navy-light); }
+.section--red { background: var(--wwe-red); color: var(--white); }
+.inner { max-width: none; margin: 0 auto; padding: 0 20px; }
+.inner--narrow { max-width: 900px; }
+
+/* ===== TYPOGRAPHY ===== */
+.section-label {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--wm-gold);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: var(--mid-gray);
+  max-width: 850px;
+  line-height: 1.7;
+}
+.section--dark .section-subtitle { color: rgba(255,255,255,0.7); }
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* ===== NAVIGATION ===== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--navy);
+  border-bottom: 2px solid var(--wm-gold);
+  transition: background var(--duration) var(--ease);
+}
+.nav-inner {
+  max-width: none;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  min-height: 64px;
+  flex-shrink: 0;
+}
+.nav-logo {
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  display: inline-block;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, var(--wm-gold) 0%, var(--wm-gold) 40%, #fff 50%, var(--wm-gold) 60%, var(--wm-gold) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShine 6s ease-in-out infinite;
+}
+@keyframes textShine {
+  0%, 100% { background-position: 100% 0; }
+  50% { background-position: -100% 0; }
+}
+.nav-links { display: flex; gap: 6px; flex-shrink: 0; white-space: nowrap; }
+.nav-links a {
+  color: rgba(255,255,255,0.7) !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all var(--duration) var(--ease);
+  text-decoration: none;
+}
+.nav-links a:hover { color: var(--white) !important; background: rgba(255,255,255,0.08); }
+.nav-links a.active {
+  color: #FFD700 !important;
+  background: rgba(255,215,0,0.12);
+  border-bottom: 2px solid #FFD700;
+}
+.hamburger {
+  display: none;
+  background: none;
+  color: var(--wm-gold);
+  font-size: 1.6rem;
+  padding: 6px;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--navy);
+    padding: 15px 20px;
+    border-bottom: 2px solid var(--wm-gold);
+    gap: 4px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 12px 16px; }
+  .hamburger { display: block; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a1035 50%, var(--navy-light) 100%);
+  color: var(--white);
+  text-align: center;
+  padding: 80px 30px 70px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(201,168,67,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--wm-gold);
+  margin-bottom: 15px;
+}
+.hero h1 {
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+.hero h1 .gold { color: var(--wm-gold); }
+.hero-sub {
+  font-size: 1.4rem;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 40px;
+}
+
+/* Countdown */
+.countdown { display: flex; justify-content: center; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; }
+.countdown-item {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,67,0.25);
+  border-radius: 14px;
+  padding: 28px 40px;
+  min-width: 130px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+.countdown-item .num {
+  font-size: 3.8rem;
+  font-weight: 900;
+  color: var(--wm-gold);
+  display: block;
+  line-height: 1;
+}
+.countdown-item .unit {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-top: 8px;
+  display: block;
+}
+
+/* Event Details Bar */
+.event-bar {
+  background: var(--near-black);
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.event-bar-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+.event-detail { text-align: center; }
+.event-detail .label {
+  font-size: 0.85rem;
+  color: var(--mid-gray);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.event-detail .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 40px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all var(--duration) var(--ease);
+  text-decoration: none;
+}
+.btn-gold {
+  background: linear-gradient(135deg, var(--wm-gold), var(--wm-gold-dark));
+  color: #000;
+}
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  color: #000;
+}
+.btn-red {
+  background: var(--wwe-red);
+  color: var(--white);
+}
+.btn-red:hover {
+  background: var(--wwe-red-dark);
+  transform: translateY(-2px);
+  color: var(--white);
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--wm-gold);
+  color: var(--wm-gold);
+}
+.btn-outline:hover {
+  background: var(--wm-gold);
+  color: #000;
+}
+.btn-sm { padding: 8px 20px; font-size: 0.78rem; }
+.btn-play {
+  background: var(--wwe-red);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  padding: 0;
+  flex-shrink: 0;
+}
+.btn-play:hover { background: var(--wwe-red-dark); transform: scale(1.1); }
+
+/* ===== BADGES ===== */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.badge-face { background: var(--face-blue); color: #fff; }
+.badge-heel { background: var(--heel-red); color: #fff; }
+.badge-champ {
+  background: linear-gradient(135deg, var(--wm-gold), var(--wm-gold-dark));
+  color: #000;
+}
+.badge-night {
+  background: rgba(201,168,67,0.15);
+  color: var(--wm-gold);
+  border: 1px solid rgba(201,168,67,0.3);
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all var(--duration) var(--ease);
+  box-shadow: var(--shadow-sm);
+  color: var(--off-white);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--wm-gold);
+}
+.card-body { padding: 24px; }
+
+/* Quick Link Cards (Home) */
+.quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.quick-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  transition: all var(--duration) var(--ease);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--off-white);
+}
+.quick-link:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--wm-gold);
+  color: var(--off-white);
+}
+.quick-link .icon {
+  font-size: 2.5rem;
+  margin-bottom: 14px;
+}
+.quick-link h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--wm-gold);
+}
+.quick-link p { color: var(--mid-gray); font-size: 0.88rem; }
+
+/* ===== WRESTLING 101 CARDS ===== */
+.w101-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.w101-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 28px;
+  transition: all var(--duration) var(--ease);
+  box-shadow: var(--shadow-sm);
+}
+.w101-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--wm-gold);
+}
+.w101-card .icon { font-size: 2rem; margin-bottom: 12px; }
+.w101-card h3 { color: var(--wm-gold); margin-bottom: 8px; font-size: 1.05rem; }
+.w101-card p { color: var(--mid-gray); font-size: 0.9rem; line-height: 1.65; }
+
+/* ===== KNOW BEFORE YOU GO ===== */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.tip-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 28px;
+  transition: all var(--duration) var(--ease);
+}
+.tip-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255,255,255,0.1);
+  border-color: var(--wm-gold);
+}
+.tip-card .icon { font-size: 2rem; margin-bottom: 12px; }
+.tip-card h3 { color: var(--wm-gold); margin-bottom: 8px; font-size: 1.05rem; }
+.tip-card p { color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.65; }
+
+/* ===== MATCH CARDS ===== */
+.match-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration) var(--ease);
+  color: var(--off-white);
+}
+.match-card:hover { box-shadow: var(--shadow-lg); border-color: var(--wm-gold); }
+
+/* Matchup Header */
+.matchup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 30px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  flex-wrap: wrap;
+}
+.matchup-wrestler {
+  text-align: center;
+  flex: 1;
+  min-width: 160px;
+}
+.matchup-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  overflow: hidden;
+  border: 3px solid var(--wm-gold);
+  background: var(--navy-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.matchup-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.matchup-img .initials {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--wm-gold);
+}
+.matchup-name {
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+.matchup-nickname {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+}
+.matchup-stat {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 4px;
+}
+
+.vs-badge {
+  background: var(--wwe-red);
+  color: var(--white);
+  font-size: 1.3rem;
+  font-weight: 900;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(190,30,45,0.4);
+}
+
+.match-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 30px;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+}
+
+/* Match Content - Side by Side Layout */
+.match-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 0;
+}
+.match-sidebar {
+  position: sticky;
+  top: 70px;
+  align-self: start;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.match-sidebar .matchup {
+  padding: 20px 10px;
+  background: none;
+  gap: 10px;
+}
+.match-sidebar .matchup-img { width: 80px; height: 80px; }
+.match-sidebar .matchup-name { font-size: 0.95rem; }
+.match-sidebar .matchup-stat { font-size: 0.7rem; }
+.match-sidebar .match-meta { text-align: center; padding: 0 10px; }
+.match-sidebar .prediction-box { padding: 16px; }
+.match-sidebar .prediction-box h4 { font-size: 0.8rem; margin-bottom: 10px; }
+.match-sidebar .prediction-btn { font-size: 0.75rem; padding: 8px 12px; }
+@media (max-width: 900px) {
+  .match-layout { grid-template-columns: 1fr; }
+  .match-sidebar { position: static; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+}
+.match-content { padding: 30px; }
+.match-section { margin-bottom: 30px; }
+.match-section:last-child { margin-bottom: 0; }
+.match-section h3 {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--wm-gold);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.match-section h3::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  background: var(--wm-gold);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.why-box {
+  background: rgba(212,168,60,0.06);
+  border-left: 4px solid var(--wm-gold);
+  padding: 24px;
+  border-radius: 0 14px 14px 0;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--off-white);
+}
+
+.story-text {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--mid-gray);
+}
+
+.stakes-list li {
+  padding: 10px 0 10px 30px;
+  position: relative;
+  color: var(--mid-gray);
+  font-size: 0.92rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.stakes-list li::before {
+  content: '\26A1';
+  position: absolute;
+  left: 0;
+  font-size: 1rem;
+}
+.stakes-list li:last-child { border-bottom: none; }
+
+/* Match Prediction */
+.prediction-box {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+.prediction-box h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: var(--off-white);
+}
+.prediction-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.prediction-btn {
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: var(--off-white);
+  transition: all var(--duration) var(--ease);
+}
+.prediction-btn:hover {
+  border-color: var(--wwe-red);
+  background: var(--wwe-red);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(190,30,45,0.3);
+}
+.prediction-btn.selected {
+  border-color: var(--wm-gold);
+  background: var(--wm-gold);
+  color: #000;
+  box-shadow: var(--shadow-gold);
+}
+
+/* ===== TIMELINE ===== */
+.timeline { position: relative; padding-left: 30px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.1);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 24px;
+  padding-left: 24px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--wwe-red);
+  border: 3px solid var(--navy-light);
+  box-shadow: var(--shadow-sm);
+}
+.timeline-date {
+  font-size: 0.75rem;
+  color: var(--wwe-red);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.timeline-event {
+  font-size: 0.82rem;
+  color: var(--wm-gold-dark);
+  font-weight: 700;
+  margin: 2px 0;
+}
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+  line-height: 1.6;
+}
+
+/* ===== WRESTLER PROFILES ===== */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.wrestler-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration) var(--ease);
+  color: var(--off-white);
+}
+.wrestler-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--wm-gold);
+}
+
+.wrestler-top {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--duration) var(--ease);
+}
+.wrestler-top:hover { background: rgba(255,255,255,0.03); }
+
+.wrestler-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.1);
+  background: var(--navy-mid);
+}
+.wrestler-img img { width: 100%; height: 100%; object-fit: cover; }
+.wrestler-img .initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--white);
+}
+.wrestler-img.face-ring { border-color: var(--face-blue); }
+.wrestler-img.heel-ring { border-color: var(--heel-red); }
+.wrestler-img.face-ring .initials { background: var(--face-blue); }
+.wrestler-img.heel-ring .initials { background: var(--heel-red); }
+
+.wrestler-info { flex: 1; }
+.wrestler-info h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.wrestler-info .nickname {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--wm-gold-dark);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.wrestler-info .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.wrestler-expand {
+  color: var(--mid-gray);
+  font-size: 1.2rem;
+  transition: all var(--duration) var(--ease);
+  flex-shrink: 0;
+}
+.wrestler-card.open .wrestler-expand { transform: rotate(180deg); color: var(--wwe-red); }
+
+.wrestler-body {
+  display: none;
+  padding: 0 24px 24px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  animation: slideDown 0.3s var(--ease);
+}
+.wrestler-card.open .wrestler-body { display: block; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Wrestler Stats */
+.w-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+.w-stat {
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.w-stat .label {
+  font-size: 0.65rem;
+  color: var(--mid-gray);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+.w-stat .val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--off-white);
+  margin-top: 2px;
+}
+.w-stat--full { grid-column: span 2; }
+.w-stat--gold .val { color: var(--wm-gold-dark); }
+
+/* Wrestler Sections */
+.w-section { margin-top: 20px; }
+.w-section h4 {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--wm-gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.w-bio {
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+  line-height: 1.7;
+}
+.w-also {
+  font-size: 0.82rem;
+  color: var(--mid-gray);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Theme Song Player */
+.theme-player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+.theme-info { flex: 1; }
+.theme-info .song { font-weight: 700; font-size: 0.95rem; }
+.theme-info .artist { font-size: 0.82rem; color: var(--mid-gray); }
+
+/* Spotify Embed */
+.spotify-embed {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.spotify-embed iframe {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+}
+
+/* Finisher */
+.finisher-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--wwe-red);
+  color: var(--white);
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.88rem;
+}
+
+/* Chant Cards */
+.chant-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  transition: all var(--duration) var(--ease);
+}
+.chant-card:hover { border-color: var(--wm-gold); }
+.chant-text {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--off-white);
+}
+.chant-when {
+  font-size: 0.78rem;
+  color: var(--mid-gray);
+  margin-top: 2px;
+}
+.chant-tip {
+  font-size: 0.82rem;
+  color: var(--mid-gray);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* Taunts */
+.taunt-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.taunt-item:last-child { border-bottom: none; }
+.taunt-name { font-weight: 700; font-size: 0.92rem; color: var(--off-white); }
+.taunt-desc { font-size: 0.85rem; color: var(--mid-gray); margin-top: 3px; }
+
+/* Highlights */
+.highlights-list { counter-reset: hl; }
+.highlights-list li {
+  padding: 8px 0 8px 32px;
+  position: relative;
+  color: var(--mid-gray);
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  counter-increment: hl;
+}
+.highlights-list li::before {
+  content: counter(hl);
+  position: absolute;
+  left: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--wm-gold);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(212,168,60,0.12);
+}
+.highlights-list li:last-child { border-bottom: none; }
+
+/* ===== GLOSSARY ===== */
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+}
+@media(max-width:1200px){.glossary-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.glossary-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.glossary-grid{grid-template-columns:1fr}}
+.glossary-item {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 24px 28px;
+  transition: all var(--duration) var(--ease);
+  box-shadow: var(--shadow-sm);
+}
+.glossary-item:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--wm-gold);
+  transform: translateY(-2px);
+}
+.glossary-item dt {
+  font-weight: 800;
+  color: var(--wm-gold);
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+.glossary-item dd {
+  color: var(--mid-gray);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ===== GALLERY ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.gallery-item {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--navy-light);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration) var(--ease);
+  cursor: pointer;
+}
+.gallery-item:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: var(--white);
+}
+.gallery-caption h4 { font-size: 0.95rem; font-weight: 700; }
+.gallery-caption p { font-size: 0.78rem; color: rgba(255,255,255,0.7); }
+
+/* ===== VIDEO CARDS ===== */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+.video-card {
+  background: var(--navy-light);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration) var(--ease);
+  color: var(--off-white);
+}
+.video-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--wm-gold);
+}
+.video-card .embed-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+.video-card .embed-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.video-card .video-info { padding: 16px 20px; }
+.video-card .video-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.video-card .video-desc { font-size: 0.82rem; color: var(--mid-gray); }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.5);
+  padding: 40px 30px;
+  text-align: center;
+  font-size: 0.82rem;
+}
+.footer .heart { color: var(--wwe-red); }
+.footer p + p { margin-top: 8px; }
+.footer a { color: var(--wm-gold); }
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--wwe-red);
+  color: var(--white);
+  font-size: 1.3rem;
+  font-weight: 900;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration) var(--ease);
+}
+.scroll-top.show { display: flex; }
+.scroll-top:hover { transform: translateY(-3px); background: var(--wwe-red-dark); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .section { padding: 50px 0; }
+  .inner { padding: 0 18px; }
+  .hero { padding: 50px 18px 40px; }
+  .matchup { flex-direction: column; padding: 30px 18px; gap: 14px; }
+  .matchup-img { width: 90px; height: 90px; }
+  .profiles-grid { grid-template-columns: 1fr; }
+  .w-stats { grid-template-columns: 1fr; }
+  .w-stat--full { grid-column: span 1; }
+  .event-bar-grid { gap: 20px; }
+  .video-grid { grid-template-columns: 1fr; }
+  .prediction-btns { flex-direction: column; align-items: center; }
+}
+
+@media (max-width: 480px) {
+  .inner { padding: 0 12px; }
+  .nav-inner { padding: 0 12px; }
+  .hero { padding: 40px 16px 30px !important; }
+  .hero h1 { font-size: 2.5rem; }
+  .hero-sub { font-size: 1rem; }
+  .countdown { gap: 8px; }
+  .countdown-item { min-width: 70px; padding: 14px 16px; }
+  .countdown-item .num { font-size: 2.2rem; }
+  .countdown-item .unit { font-size: 0.7rem; }
+  .section-title { font-size: 1.8rem; }
+  .section-subtitle { font-size: 1rem; }
+  .section-label { font-size: 0.75rem; }
+  .event-detail .value { font-size: 0.95rem; }
+  .btn { padding: 12px 24px; font-size: 0.85rem; }
+  .matchup-name { font-size: 1.1rem; }
+  .belt-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== PRINT ===== */
+@media print {
+  .nav, .scroll-top, .hamburger, .prediction-box, .btn, .spotify-embed { display: none !important; }
+  .wrestler-body { display: block !important; }
+  .match-content { display: block !important; }
+  body { background: #fff; color: #000; }
+  .section--dark, .hero { background: #fff !important; color: #000 !important; }
+}

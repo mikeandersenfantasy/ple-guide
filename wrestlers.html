@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wrestlers - WrestleMania 42 Fan Guide</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+/* Portrait Grid */
+.roster-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+@media(max-width:1200px){.roster-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.roster-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* Portrait Card - closed state */
+.w-card{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;aspect-ratio:3/4;max-width:min(380px,100%);margin:0 auto}
+.w-card:hover{border-color:var(--wm-gold);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.w-card.face-glow:hover{box-shadow:0 12px 32px rgba(74,144,226,0.3)}
+.w-card.heel-glow:hover{box-shadow:0 12px 32px rgba(224,64,64,0.3)}
+.w-card-portrait{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.w-card:hover .w-card-portrait{transform:scale(1.05)}
+.w-card-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,0.85) 60%);pointer-events:none}
+.w-card-overlay h3{font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:2px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.w-card-overlay .nick{font-size:.9rem;font-style:italic;color:var(--wm-gold);margin-bottom:8px}
+.w-card-badges{display:flex;gap:6px;flex-wrap:wrap}
+.w-badge{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:6px}
+.w-badge.face{background:rgba(74,144,226,0.25);color:var(--face-blue-light)}
+.w-badge.heel{background:rgba(224,64,64,0.25);color:var(--heel-red-light)}
+.w-badge.champ{background:rgba(212,168,60,0.25);color:var(--wm-gold-light)}
+
+/* Expanded Card - desktop */
+.w-expanded{display:none;grid-column:1/-1;background:var(--navy-light);border:2px solid var(--wm-gold);border-radius:16px;overflow:hidden;animation:fadeSlide .3s ease;position:relative;max-width:100%;box-sizing:border-box}
+.w-expanded.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.w-expanded-inner{display:grid;grid-template-columns:1fr 2fr;min-width:0}
+.w-expanded-img{position:relative;overflow:hidden}
+.w-expanded-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:500px}
+.w-expanded .w-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.7);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid rgba(255,255,255,0.3);transition:all .2s;z-index:10}
+.w-expanded .w-close:hover{background:var(--wwe-red);border-color:var(--wwe-red)}
+.w-expanded-details{padding:32px;display:flex;flex-direction:column;justify-content:space-evenly;min-width:0}
+
+/* Mobile modal overlay */
+@media(max-width:900px){
+.w-expanded.active{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;border-radius:0;border:none;overflow-y:auto;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.w-expanded-inner{grid-template-columns:1fr}
+.w-expanded-img img{min-height:250px;max-height:300px;object-position:top}
+.w-expanded.active .w-close{position:fixed;top:12px;right:12px;z-index:1002}
+.w-expanded-details{padding:20px}
+.w-expanded-name{font-size:1.5rem}
+.w-expanded-nick{font-size:.95rem;margin-bottom:10px}
+.w-expanded-tags .w-badge{font-size:.7rem;padding:4px 10px}
+.w-finisher{padding:14px;margin-bottom:14px}
+.w-finisher-name{font-size:1.1rem}
+.w-finisher-desc{font-size:.9rem}
+.w-entrance-info{font-size:.95rem}
+.w-entrance{margin-bottom:14px}
+.w-highlights li{font-size:.9rem}
+.w-spotify iframe{height:152px}
+}
+.w-expanded-name{font-size:2.2rem;font-weight:900;color:#fff;margin-bottom:2px}
+.w-expanded-nick{font-size:1.1rem;font-style:italic;color:var(--wm-gold);margin-bottom:14px}
+.w-expanded-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.w-expanded-tags .w-badge{font-size:.8rem;padding:5px 14px}
+
+/* Finisher Box */
+.w-finisher{background:rgba(212,168,60,0.06);border:1px solid rgba(212,168,60,0.2);border-radius:12px;padding:18px;margin-bottom:20px}
+.w-finisher-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:6px}
+.w-finisher-name{font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:4px}
+.w-finisher-desc{font-size:1rem;color:var(--mid-gray);line-height:1.6}
+
+/* Entrance Music */
+.w-entrance{margin-bottom:20px;min-width:0;overflow:visible}
+.w-entrance-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:8px}
+.w-entrance-info{font-size:1.1rem;color:#fff;margin-bottom:10px}
+.w-entrance-info span{color:var(--mid-gray);font-weight:400}
+.w-spotify{width:100%;border-radius:12px;display:block;box-sizing:border-box}
+.w-spotify iframe{width:100%;border-radius:12px;display:block;border:none;box-sizing:border-box}
+
+/* Highlights */
+.w-highlights-section{margin-bottom:8px}
+.w-highlights-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:8px}
+.w-highlights{list-style:none;padding:0;margin:0}
+.w-highlights li{font-size:1rem;color:var(--mid-gray);padding:5px 0;display:flex;gap:8px;align-items:baseline}
+.w-highlights li::before{content:"\2605";color:var(--wm-gold);flex-shrink:0;font-size:.8rem}
+
+/* Volume warning */
+.vol-warning{text-align:center;margin-bottom:30px;padding:12px 20px;background:rgba(212,168,60,0.08);border:1px solid rgba(212,168,60,0.15);border-radius:10px;display:inline-flex;align-items:center;gap:10px}
+
+/* Matchup sections */
+.matchup{margin-bottom:50px;overflow:hidden;max-width:100%}
+.matchup-title{grid-column:1/-1;text-align:center;font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--wm-gold);margin-bottom:10px}
+.matchup-vs{display:grid;grid-template-columns:380px auto 380px;gap:30px;align-items:center;justify-content:center}
+@media(max-width:900px){.matchup-vs{grid-template-columns:1fr;gap:12px}.matchup-vs .vs-label{font-size:2rem}}
+.matchup-vs .vs-label{font-size:2.5rem;font-weight:900;color:var(--wwe-red);align-self:center;text-align:center;text-shadow:0 2px 12px rgba(204,26,43,0.4)}
+@media(max-width:900px){.matchup-vs .vs-label{font-size:1.8rem}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span style="letter-spacing:1px">WrestleMania</span> <span style="color:#D4A83C">42</span> <span style="color:#D4A83C">Guide</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="matches.html">Matches</a>
+      <a href="wrestlers.html">Wrestlers</a>
+
+      <a href="videos.html">Videos</a>
+      <a href="legal.html">Legal</a>
+    </div>
+    <button class="hamburger" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding:50px 30px 40px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
+  <div class="hero-label">WrestleMania 42</div>
+  <h1>Meet the <span style="color:#fff">Superstars</span></h1>
+  <p class="hero-sub">Click any wrestler to see their finisher, entrance music, and career highlights.</p>
+</section>
+
+<section class="section">
+<div class="inner">
+<div class="vol-warning">
+  <span style="font-size:1.3rem">&#128264;</span>
+  <span style="font-size:.95rem;color:var(--wm-gold)">Lower your volume before pressing play on entrance themes!</span>
+</div>
+<div id="rosterGrid"></div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WrestleMania 42 &bull; April 18-19, 2026 &bull; Las Vegas</p>
+  <p>Data sourced from <a href="https://www.wwe.com/shows/wrestlemania" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets. Last updated March 2026.</p>
+</footer>
+
+<button class="scroll-top" id="scrollTop">&#8593;</button>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var container = document.getElementById('rosterGrid');
+  if (!container || !window.WM42_DATA) return;
+
+  var wrestlers = window.WM42_DATA.WRESTLERS;
+  var matches = window.WM42_DATA.MATCHES;
+  var activeExpanded = null;
+  var activeCard = null;
+
+  function buildCard(slug, w) {
+    var isFace = w.alignment === 'Face';
+    var alignClass = isFace ? 'face' : 'heel';
+    var glowClass = isFace ? 'face-glow' : 'heel-glow';
+
+    var musicEmbed = '';
+    if (w.spotifyId) {
+      musicEmbed = '<div class="w-spotify"><iframe src="https://open.spotify.com/embed/track/' + w.spotifyId + '?utm_source=generator&theme=0" height="232" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>';
+    } else if (w.entranceVideoYT) {
+      musicEmbed = '<div class="w-spotify"><iframe src="https://www.youtube.com/embed/' + w.entranceVideoYT + '" height="232" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" style="border-radius:12px"></iframe></div>';
+    }
+
+    var highlights = w.highlights.slice(0, 4).map(function(h) { return '<li>' + h + '</li>'; }).join('');
+
+    // Portrait card
+    var card = document.createElement('div');
+    card.className = 'w-card ' + glowClass;
+    card.innerHTML =
+      '<img class="w-card-portrait" src="' + w.img + '" alt="' + w.name + '">' +
+      '<div class="w-card-overlay">' +
+        '<h3>' + w.name + '</h3>' +
+        '<div class="nick">"' + w.nickname + '"</div>' +
+        '<div class="w-card-badges">' +
+          '<span class="w-badge ' + alignClass + '">' + w.alignment + '</span>' +
+          (w.isChampion ? '<span class="w-badge champ">' + w.title + '</span>' : '') +
+        '</div>' +
+      '</div>';
+
+    // Expanded panel
+    var expanded = document.createElement('div');
+    expanded.className = 'w-expanded';
+    expanded.innerHTML =
+      '<button class="w-close">&times;</button>' +
+      '<div class="w-expanded-inner">' +
+        '<div class="w-expanded-img">' +
+          '<img src="' + w.img + '" alt="' + w.name + '">' +
+        '</div>' +
+        '<div class="w-expanded-details">' +
+          '<div>' +
+            '<div class="w-expanded-name">' + w.name + '</div>' +
+            '<div class="w-expanded-nick">"' + w.nickname + '"</div>' +
+            '<div class="w-expanded-tags">' +
+              '<span class="w-badge ' + alignClass + '">' + w.alignmentDesc + '</span>' +
+              '<span class="w-badge" style="background:rgba(255,255,255,0.08);color:var(--off-white)">' + w.brand + '</span>' +
+              (w.isChampion ? '<span class="w-badge champ">' + w.title + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="w-finisher">' +
+            '<div class="w-finisher-label">Finishing Move</div>' +
+            '<div class="w-finisher-name">' + w.finisher + '</div>' +
+            '<div class="w-finisher-desc">' + w.finisherDesc + '</div>' +
+          '</div>' +
+          '<div class="w-entrance">' +
+            '<div class="w-entrance-label">Entrance Music</div>' +
+            '<div class="w-entrance-info"><strong>' + w.entranceTheme + '</strong> <span>by ' + w.entranceArtist + '</span></div>' +
+            musicEmbed +
+          '</div>' +
+          '<div class="w-highlights-section">' +
+            '<div class="w-highlights-label">Career Highlights</div>' +
+            '<ul class="w-highlights">' + highlights + '</ul>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    var isMobile = function() { return window.innerWidth <= 900; };
+
+    function closeExpanded() {
+      if (activeExpanded) {
+        // Stop any playing audio/video by replacing iframes
+        var iframes = activeExpanded.querySelectorAll('iframe');
+        iframes.forEach(function(iframe) {
+          var parent = iframe.parentNode;
+          var clone = iframe.cloneNode(false);
+          parent.removeChild(iframe);
+          parent.appendChild(clone);
+        });
+        activeExpanded.classList.remove('active');
+        if (activeCard) activeCard.style.borderColor = '';
+        document.body.style.overflow = '';
+        activeExpanded = null;
+        activeCard = null;
+      }
+    }
+
+    // Click to expand
+    card.addEventListener('click', function() {
+      var wasActive = expanded.classList.contains('active');
+      closeExpanded();
+      if (!wasActive) {
+        expanded.classList.add('active');
+        card.style.borderColor = 'var(--wm-gold)';
+        activeExpanded = expanded;
+        activeCard = card;
+        if (isMobile()) {
+          document.body.style.overflow = 'hidden';
+          expanded.scrollTop = 0;
+        } else {
+          setTimeout(function() { expanded.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50);
+        }
+      }
+    });
+
+    // Close button
+    expanded.querySelector('.w-close').addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeExpanded();
+    });
+
+    return { card: card, expanded: expanded };
+  }
+
+  // Build page organized by matchups
+  matches.forEach(function(match) {
+    var w1 = wrestlers[match.wrestler1];
+    var w2 = wrestlers[match.wrestler2];
+    if (!w1 || !w2) return;
+
+    // Matchup section
+    var section = document.createElement('div');
+    section.className = 'matchup';
+
+    // VS grid
+    var vsGrid = document.createElement('div');
+    vsGrid.className = 'matchup-vs';
+
+    // Title spans full grid
+    var title = document.createElement('div');
+    title.className = 'matchup-title';
+    title.textContent = match.championship;
+    vsGrid.appendChild(title);
+
+    var card1 = buildCard(match.wrestler1, w1);
+    var card2 = buildCard(match.wrestler2, w2);
+
+    vsGrid.appendChild(card1.card);
+    var vsLabel = document.createElement('div');
+    vsLabel.className = 'vs-label';
+    vsLabel.textContent = 'VS';
+    vsGrid.appendChild(vsLabel);
+    vsGrid.appendChild(card2.card);
+
+    section.appendChild(vsGrid);
+    section.appendChild(card1.expanded);
+    section.appendChild(card2.expanded);
+
+    container.appendChild(section);
+  });
+});
+</script>
+</body>
+</html>
