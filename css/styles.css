@@ -1116,7 +1116,8 @@ ul { list-style: none; }
   .w-stat--full { grid-column: span 1; }
   .event-bar-grid { gap: 20px; }
   .video-grid { grid-template-columns: 1fr; }
-  .prediction-btns { flex-direction: column; align-items: center; }
+  .prediction-btns { flex-direction: column; align-items: stretch; }
+  .prediction-btn { text-align: center; padding: 14px 20px; font-size: 0.95rem; min-height: 48px; }
 }
 
 @media (max-width: 480px) {
@@ -1133,9 +1134,14 @@ ul { list-style: none; }
   .section-subtitle { font-size: 1rem; }
   .section-label { font-size: 0.75rem; }
   .event-detail .value { font-size: 0.95rem; }
-  .btn { padding: 12px 24px; font-size: 0.85rem; }
+  .btn { padding: 12px 24px; font-size: 0.85rem; min-height: 48px; }
   .matchup-name { font-size: 1.1rem; }
   .belt-grid { grid-template-columns: 1fr; }
+  /* Ensure YouTube embeds don't overflow on small screens */
+  .vid-embed, .embed-wrapper, .video-card .embed-wrapper { max-width: 100%; overflow: hidden; }
+  iframe { max-width: 100%; }
+  /* Spotify embeds */
+  .spotify-embed iframe { max-width: 100%; }
 }
 
 /* ===== PRINT ===== */

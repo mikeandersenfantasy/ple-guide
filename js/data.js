@@ -266,7 +266,14 @@ const MATCHES = [
     wrestler2: "roman-reigns",
     championship: "World Heavyweight Championship",
     isTitleMatch: true,
+    night: null,
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_PunkRoman_SUN_16x9_date.jpg",
+    whyItMatters: "This match is <strong>over a decade in the making.</strong> CM Punk and Roman Reigns have NEVER had a one-on-one match in WWE, despite their deeply intertwined history. Punk helped launch Reigns' career as part of The Shield back in 2012, and when Punk left WWE in 2014, Reigns became the face of the company. Their real-life tension -- Punk's explosive podcast comments, Reigns' meteoric rise -- blurs the line between fiction and reality. This personal rivalry has been building for years, with deeply personal attacks making this the most heated feud heading into WrestleMania 42.",
+    storySoFar: "Roman Reigns won the 2026 Royal Rumble and chose CM Punk as his WrestleMania opponent -- not because he wants the title, but because he <em>hates</em> Punk. Their promos have been fire: Punk claims he built Reigns' career through The Shield, while Reigns says Punk is the reason fans turned on him. Things got deeply personal when Punk made comments about Reigns' late father Sika, bringing the Anoa'i family into the fight. The Usos demanded an apology; Punk gave them a fight instead.",
+    predictions: [
+      { label: "CM Punk retains", wrestler: "CM Punk" },
+      { label: "Roman Reigns wins", wrestler: "Roman Reigns" }
+    ],
     feudSubtitle: "The buildup to the biggest match at WrestleMania 42. Watch how this feud exploded.",
     feudVideos: [
       { id: "SVxtaqT2k_Q", start: 180, end: 245, label: "It Starts Here", title: "Roman Reigns Wins the 2026 Royal Rumble", desc: "Roman wins the Rumble and earns a WrestleMania title shot. He's coming for CM Punk's championship." },
@@ -281,7 +288,14 @@ const MATCHES = [
     wrestler2: "randy-orton",
     championship: "Undisputed WWE Championship",
     isTitleMatch: true,
+    night: null,
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_CodyRandy_SAT_16x9_Date.jpg",
+    whyItMatters: "A collision of <strong>broken brotherhood.</strong> Cody Rhodes and Randy Orton were in the Legacy faction together (2008-2010) and are real-life best friends. That's what makes Orton's shocking March 13 betrayal so devastating. Orton is 45, knows his career is winding down, and desperately wants one more world title. Cody \"Finished the Story\" at WrestleMania 40 -- now his former best friend wants to end the next chapter.",
+    storySoFar: "Randy Orton won the 2026 Elimination Chamber to earn his title shot against his best friend Cody Rhodes. Everything seemed amicable -- two brothers competing for the ultimate prize. Then at the contract signing on March 13, Orton shook Cody's hand... and <em>snapped.</em> He attacked Cody with steel steps, chair shots, and left him bloodied in the ring. The man who helped Cody celebrate at WrestleMania 40 has become his most dangerous enemy. Cody now faces the fight of his life against someone who knows him better than anyone.",
+    predictions: [
+      { label: "Cody Rhodes retains", wrestler: "Cody Rhodes" },
+      { label: "Randy Orton wins", wrestler: "Randy Orton" }
+    ],
     feudSubtitle: "Brothers turned rivals. Watch the betrayal unfold.",
     feudVideos: [
       { id: "pYPoHMcf3tE", start: 15, end: 71, label: "Earning the Shot", title: "Randy Orton Wins the Elimination Chamber", desc: "Randy survives the Chamber and earns the right to challenge his former tag partner Cody at WrestleMania." },
@@ -296,7 +310,14 @@ const MATCHES = [
     wrestler2: "jade-cargill",
     championship: "WWE Women's Championship",
     isTitleMatch: true,
+    night: null,
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_JadeRhea_SUN_16x9_date.jpg",
+    whyItMatters: "The <strong>first-ever singles match</strong> between two of the most physically dominant women in WWE history. Jade Cargill has been nearly unbeatable with a 7-month championship streak. Rhea Ripley is the most popular woman in WWE and a former two-time champion. Their social media warfare has blurred the lines between real and scripted, with both women claiming to be \"That Bitch.\" This is a collision of power vs. power with the Women's Championship on the line.",
+    storySoFar: "Rhea Ripley earned her title shot by dominating the 2026 Women's Elimination Chamber in Chicago, finishing the match with a devastating Riptide. She immediately set her sights on Jade Cargill's WWE Women's Championship. Their face-to-face confrontation on SmackDown was electric -- both women refused to back down, with Jade insisting she's the most dominant champion in WWE and Rhea firing back that she's <em>\"coming to take what's hers.\"</em> Social media has only added fuel to the fire, with both claiming to be \"That Bitch.\"",
+    predictions: [
+      { label: "Rhea Ripley wins", wrestler: "Rhea Ripley" },
+      { label: "Jade Cargill retains", wrestler: "Jade Cargill" }
+    ],
     feudSubtitle: "Mami is coming for Jade's title. Watch the tension build.",
     feudVideos: [
       { id: "4WF2qkv2JPE", start: 153, end: 213, label: "Earning the Shot", title: "Rhea Ripley Wins the Women's Elimination Chamber", desc: "Mami dominates the Chamber and sets her sights on Jade Cargill's championship at WrestleMania." },
@@ -310,7 +331,14 @@ const MATCHES = [
     wrestler2: "stephanie-vaquer",
     championship: "Women's World Championship",
     isTitleMatch: true,
+    night: null,
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_StephLiv_SAT_16x9_Date_0.jpg",
+    whyItMatters: "A clash of <strong>two completely different paths.</strong> Stephanie Vaquer spent over a decade grinding through Mexico and Japan before becoming the first South American woman to hold a WWE world title. Liv Morgan was discovered at 20 while working as a waitress at Hooters and rose through WWE's system. Vaquer says Morgan \"hasn't earned her position.\" With The Judgment Day faction in Liv's corner, nothing about this fight will be fair.",
+    storySoFar: "Liv Morgan won the 2026 Women's Royal Rumble from the #14 spot and chose Stephanie Vaquer's Women's World Championship as her WrestleMania target. Liv initially played nice, pretending to respect Vaquer's journey -- then showed her true colors. On Raw, Morgan feigned admiration before blindsiding Vaquer with a Codebreaker and Oblivion, leaving the champion laid out. Vaquer has made it clear: Liv hasn't <em>earned</em> anything. She's taken shortcuts her entire career. At WrestleMania, Vaquer plans to prove that a decade of grinding beats a lifetime of manipulation.",
+    predictions: [
+      { label: "Liv Morgan wins", wrestler: "Liv Morgan" },
+      { label: "Stephanie Vaquer retains", wrestler: "Stephanie Vaquer" }
+    ],
     feudSubtitle: "The Revenge Tour continues. Liv has Stephanie in her sights.",
     feudVideos: [
       { id: "A6E8KWZkW9s", start: 230, end: 270, label: "It Starts Here", title: "Liv Morgan Wins the Women's Royal Rumble", desc: "Liv wins the Rumble and earns her WrestleMania title shot. The Revenge Tour is heading to the biggest stage." },
@@ -324,7 +352,14 @@ const MATCHES = [
     wrestler2: "oba-femi",
     championship: "Non-Title Match",
     isTitleMatch: false,
+    night: null,
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260316_WM42_BrockOba_Tron_16x9_date.jpg",
+    whyItMatters: "The classic <strong>\"passing of the torch\"</strong> match. Brock Lesnar is 48 and possibly on a retirement tour -- he ended The Undertaker's WrestleMania streak, conquered UFC, and dominated WWE for 20+ years. Oba Femi is 27, undefeated on the main roster, and represents the FUTURE of WWE -- a 310-pound Nigerian powerhouse and former collegiate shot putter. A win at WrestleMania over The Beast makes Femi an instant main eventer and the new face of dominance in WWE.",
+    storySoFar: "The seeds were planted at the Royal Rumble when Oba Femi dominated the match, tossing out competitor after competitor -- until Brock Lesnar eliminated him. It was the first time anyone had physically matched Femi and come out on top. Weeks later, Lesnar issued an open challenge for WrestleMania. Oba Femi answered. He marched to the ring, hit Brock with the Fall From Grace, placed his foot on Lesnar's chest, and <em>pointed at the WrestleMania sign.</em> The message was clear: the future has arrived, and The Beast is standing in the way.",
+    predictions: [
+      { label: "Brock Lesnar wins", wrestler: "Brock Lesnar" },
+      { label: "Oba Femi wins", wrestler: "Oba Femi" }
+    ],
     feudSubtitle: "The Conqueror answers The Beast's open challenge. Watch the moment the world changed.",
     feudVideos: [
       { id: "B04v0CY9kw0", start: 130, end: 162, label: "The Challenge", title: "Oba Femi Confronts Brock Lesnar", desc: "Oba answers Brock's open WrestleMania challenge. Two massive forces stand face to face. You can feel the tension." },

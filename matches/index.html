@@ -6,12 +6,21 @@
 <title>Match Card - WrestleMania 42 Fan Guide</title>
 <link rel="stylesheet" href="../css/styles.css">
 <style>
-.match-row{display:grid;grid-template-columns:1fr 1fr;background:var(--navy-light);border:1px solid rgba(255,255,255,0.06);border-radius:16px;margin-bottom:30px;overflow:hidden}
+/* Night grouping */
+.night-group{margin-bottom:48px}
+.night-header{display:flex;align-items:center;gap:16px;margin-bottom:28px;padding-bottom:14px;border-bottom:2px solid rgba(212,168,60,0.25)}
+.night-header h2{font-size:1.6rem;font-weight:900;text-transform:uppercase;letter-spacing:3px;color:var(--wm-gold)}
+.night-header .night-date{font-size:0.95rem;color:var(--mid-gray);font-weight:600}
+.night-header .night-badge{display:inline-block;padding:6px 16px;border-radius:50px;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;background:rgba(212,168,60,0.12);color:var(--wm-gold);border:1px solid rgba(212,168,60,0.3)}
+.night-header .night-badge.tbd{background:rgba(255,255,255,0.06);color:var(--mid-gray);border-color:rgba(255,255,255,0.15)}
+
+/* Match rows */
+.match-row{display:grid;grid-template-columns:1fr 1fr;background:var(--navy-light);border:1px solid rgba(255,255,255,0.06);border-radius:16px;margin-bottom:30px;overflow:hidden;transition:all var(--duration) var(--ease)}
 .match-row:hover{border-color:var(--wm-gold);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .match-row.reverse .match-img-side{order:2}
 .match-row.reverse .match-text-side{order:1}
 .match-img-side{display:flex;flex-direction:column}
-.match-img-side img{width:100%;display:block;object-fit:cover;flex:1}
+.match-img-side img{width:100%;display:block;object-fit:cover;flex:1;min-height:200px}
 .match-predict{padding:16px 20px;background:rgba(0,0,0,0.3);text-align:center}
 .match-predict h4{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:10px}
 .match-text-side{padding:20px 24px;display:flex;flex-direction:column;justify-content:space-evenly}
@@ -20,16 +29,22 @@
 .match-text-side .match-section h3{font-size:1.15rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .match-text-side .match-section h3::before{content:'';width:5px;height:20px;background:var(--wm-gold);border-radius:2px;flex-shrink:0}
 .match-title-badge{display:inline-block;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:8px 18px;border-radius:6px;background:rgba(212,168,60,0.12);color:var(--wm-gold);margin-bottom:10px}
+.match-night-tag{display:inline-block;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:5px 12px;border-radius:50px;margin-left:10px;vertical-align:middle}
+.match-night-tag.night-1{background:rgba(74,144,226,0.15);color:var(--face-blue);border:1px solid rgba(74,144,226,0.3)}
+.match-night-tag.night-2{background:rgba(224,64,64,0.15);color:var(--heel-red);border:1px solid rgba(224,64,64,0.3)}
+.match-night-tag.tbd{background:rgba(255,255,255,0.06);color:var(--mid-gray);border:1px solid rgba(255,255,255,0.12)}
 .match-text-side .why-box{font-size:1.35rem;padding:14px;line-height:1.7}
 .match-text-side .story-text{font-size:1.35rem;line-height:1.7;color:var(--mid-gray)}
-.stakes-list{list-style:none;padding:0;margin:0}
-.stakes-list li{font-size:.95rem;color:var(--mid-gray);line-height:1.7;padding:4px 0;display:flex;align-items:baseline;gap:8px}
-.stakes-list li::before{content:'⚡';flex-shrink:0}
+
+/* Match count badge in hero */
+.match-count{display:inline-block;padding:8px 20px;border-radius:50px;background:rgba(212,168,60,0.15);color:var(--wm-gold);font-weight:800;font-size:0.9rem;letter-spacing:1px;border:1px solid rgba(212,168,60,0.3);margin-top:12px}
+
 @media(max-width:900px){
   .match-row,.match-row.reverse{grid-template-columns:1fr}
   .match-row.reverse .match-img-side{order:1}
   .match-row.reverse .match-text-side{order:2}
   .match-text-side{padding:24px}
+  .match-img-side img{min-height:180px;max-height:280px}
 }
 @media(max-width:480px){
   .match-text-side{padding:16px 14px}
@@ -38,6 +53,11 @@
   .match-text-side .match-section h3{font-size:.85rem}
   .match-title-badge{font-size:.8rem;padding:6px 12px}
   .match-text-side .match-section{margin-bottom:20px}
+  .night-header{flex-direction:column;align-items:flex-start;gap:8px}
+  .night-header h2{font-size:1.2rem}
+  .match-night-tag{margin-left:0;margin-top:6px;display:block;width:fit-content}
+  .match-predict .prediction-btns{flex-direction:column;align-items:stretch}
+  .match-predict .prediction-btn{width:100%;text-align:center}
 }
 </style>
 </head>
@@ -51,7 +71,6 @@
       <a href="../">Home</a>
       <a href="../matches/">Matches</a>
       <a href="../wrestlers/">Wrestlers</a>
-
       <a href="../videos/">Videos</a>
       <a href="../legal/">Legal</a>
     </div>
@@ -63,137 +82,12 @@
 <section class="hero" style="padding:50px 30px 40px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
   <div class="hero-label">WrestleMania 42</div>
   <h1>The Match <span style="color:#fff">Card</span></h1>
-  <p class="hero-sub">5 confirmed matches. Scroll through to see the full storyline breakdown. Pick your winners!</p>
+  <p class="hero-sub" id="hero-sub">Loading matches...</p>
 </section>
 
 <section class="section">
-<div class="inner">
-
-<!-- MATCH 1: CM Punk vs Roman Reigns (image LEFT) -->
-<div class="match-row" id="match-1">
-  <div class="match-img-side">
-    <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_PunkRoman_SUN_16x9_date.jpg" alt="CM Punk vs Roman Reigns">
-    <div class="match-predict">
-      <h4>Who Wins?</h4>
-      <div class="prediction-btns">
-        <button class="prediction-btn" data-match="match1" data-wrestler="CM Punk">CM Punk retains</button>
-        <button class="prediction-btn" data-match="match1" data-wrestler="Roman Reigns">Roman Reigns wins</button>
-      </div>
-    </div>
-  </div>
-  <div class="match-text-side">
-    <span class="match-title-badge">World Heavyweight Championship</span>
-    <div class="match-section">
-      <h3>Why This Match Matters</h3>
-      <div class="why-box">This match is <strong>over a decade in the making.</strong> CM Punk and Roman Reigns have NEVER had a one-on-one match in WWE, despite their deeply intertwined history. Punk helped launch Reigns' career as part of The Shield back in 2012, and when Punk left WWE in 2014, Reigns became the face of the company. Their real-life tension -- Punk's explosive podcast comments, Reigns' meteoric rise -- blurs the line between fiction and reality. This personal rivalry has been building for years, with deeply personal attacks making this the most heated feud heading into WrestleMania 42.</div>
-    </div>
-    <div class="match-section">
-      <h3>The Story So Far</h3>
-      <div class="story-text">Roman Reigns won the 2026 Royal Rumble and chose CM Punk as his WrestleMania opponent -- not because he wants the title, but because he <em>hates</em> Punk. Their promos have been fire: Punk claims he built Reigns' career through The Shield, while Reigns says Punk is the reason fans turned on him. Things got deeply personal when Punk made comments about Reigns' late father Sika, bringing the Anoa'i family into the fight. The Usos demanded an apology; Punk gave them a fight instead.</div>
-    </div>
-  </div>
-</div>
-
-<!-- MATCH 2: Cody Rhodes vs Randy Orton (image RIGHT) -->
-<div class="match-row reverse" id="match-2">
-  <div class="match-img-side">
-    <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_CodyRandy_SAT_16x9_Date.jpg" alt="Cody Rhodes vs Randy Orton">
-    <div class="match-predict">
-      <h4>Who Wins?</h4>
-      <div class="prediction-btns">
-        <button class="prediction-btn" data-match="match2" data-wrestler="Cody Rhodes">Cody Rhodes retains</button>
-        <button class="prediction-btn" data-match="match2" data-wrestler="Randy Orton">Randy Orton wins</button>
-      </div>
-    </div>
-  </div>
-  <div class="match-text-side">
-    <span class="match-title-badge">Undisputed WWE Championship</span>
-    <div class="match-section">
-      <h3>Why This Match Matters</h3>
-      <div class="why-box">A collision of <strong>broken brotherhood.</strong> Cody Rhodes and Randy Orton were in the Legacy faction together (2008-2010) and are real-life best friends. That's what makes Orton's shocking March 13 betrayal so devastating. Orton is 45, knows his career is winding down, and desperately wants one more world title. Cody "Finished the Story" at WrestleMania 40 -- now his former best friend wants to end the next chapter.</div>
-    </div>
-    <div class="match-section">
-      <h3>The Story So Far</h3>
-      <div class="story-text">Randy Orton won the 2026 Elimination Chamber to earn his title shot against his best friend Cody Rhodes. Everything seemed amicable -- two brothers competing for the ultimate prize. Then at the contract signing on March 13, Orton shook Cody's hand... and <em>snapped.</em> He attacked Cody with steel steps, chair shots, and left him bloodied in the ring. The man who helped Cody celebrate at WrestleMania 40 has become his most dangerous enemy. Cody now faces the fight of his life against someone who knows him better than anyone.</div>
-    </div>
-  </div>
-</div>
-
-<!-- MATCH 3: Rhea Ripley vs Jade Cargill (image LEFT) -->
-<div class="match-row" id="match-3">
-  <div class="match-img-side">
-    <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_JadeRhea_SUN_16x9_date.jpg" alt="Jade Cargill vs Rhea Ripley">
-    <div class="match-predict">
-      <h4>Who Wins?</h4>
-      <div class="prediction-btns">
-        <button class="prediction-btn" data-match="match3" data-wrestler="Rhea Ripley">Rhea Ripley wins</button>
-        <button class="prediction-btn" data-match="match3" data-wrestler="Jade Cargill">Jade Cargill retains</button>
-      </div>
-    </div>
-  </div>
-  <div class="match-text-side">
-    <span class="match-title-badge">WWE Women's Championship</span>
-    <div class="match-section">
-      <h3>Why This Match Matters</h3>
-      <div class="why-box">The <strong>first-ever singles match</strong> between two of the most physically dominant women in WWE history. Jade Cargill has been nearly unbeatable with a 7-month championship streak. Rhea Ripley is the most popular woman in WWE and a former two-time champion. Their social media warfare has blurred the lines between real and scripted, with both women claiming to be "That Bitch." This is a collision of power vs. power with the Women's Championship on the line.</div>
-    </div>
-    <div class="match-section">
-      <h3>The Story So Far</h3>
-      <div class="story-text">Rhea Ripley earned her title shot by dominating the 2026 Women's Elimination Chamber in Chicago, finishing the match with a devastating Riptide. She immediately set her sights on Jade Cargill's WWE Women's Championship. Their face-to-face confrontation on SmackDown was electric -- both women refused to back down, with Jade insisting she's the most dominant champion in WWE and Rhea firing back that she's <em>"coming to take what's hers."</em> Social media has only added fuel to the fire, with both claiming to be "That Bitch."</div>
-    </div>
-  </div>
-</div>
-
-<!-- MATCH 4: Liv Morgan vs Stephanie Vaquer (image RIGHT) -->
-<div class="match-row reverse" id="match-4">
-  <div class="match-img-side">
-    <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_StephLiv_SAT_16x9_Date_0.jpg" alt="Stephanie Vaquer vs Liv Morgan">
-    <div class="match-predict">
-      <h4>Who Wins?</h4>
-      <div class="prediction-btns">
-        <button class="prediction-btn" data-match="match4" data-wrestler="Liv Morgan">Liv Morgan wins</button>
-        <button class="prediction-btn" data-match="match4" data-wrestler="Stephanie Vaquer">Stephanie Vaquer retains</button>
-      </div>
-    </div>
-  </div>
-  <div class="match-text-side">
-    <span class="match-title-badge">Women's World Championship</span>
-    <div class="match-section">
-      <h3>Why This Match Matters</h3>
-      <div class="why-box">A clash of <strong>two completely different paths.</strong> Stephanie Vaquer spent over a decade grinding through Mexico and Japan before becoming the first South American woman to hold a WWE world title. Liv Morgan was discovered at 20 while working as a waitress at Hooters and rose through WWE's system. Vaquer says Morgan "hasn't earned her position." With The Judgment Day faction in Liv's corner, nothing about this fight will be fair.</div>
-    </div>
-    <div class="match-section">
-      <h3>The Story So Far</h3>
-      <div class="story-text">Liv Morgan won the 2026 Women's Royal Rumble from the #14 spot and chose Stephanie Vaquer's Women's World Championship as her WrestleMania target. Liv initially played nice, pretending to respect Vaquer's journey -- then showed her true colors. On Raw, Morgan feigned admiration before blindsiding Vaquer with a Codebreaker and Oblivion, leaving the champion laid out. Vaquer has made it clear: Liv hasn't <em>earned</em> anything. She's taken shortcuts her entire career. At WrestleMania, Vaquer plans to prove that a decade of grinding beats a lifetime of manipulation.</div>
-    </div>
-  </div>
-</div>
-
-<!-- MATCH 5: Brock Lesnar vs Oba Femi (image LEFT) -->
-<div class="match-row" id="match-5">
-  <div class="match-img-side">
-    <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260316_WM42_BrockOba_Tron_16x9_date.jpg" alt="Brock Lesnar vs Oba Femi">
-    <div class="match-predict">
-      <h4>Who Wins?</h4>
-      <div class="prediction-btns">
-        <button class="prediction-btn" data-match="match5" data-wrestler="Brock Lesnar">Brock Lesnar wins</button>
-        <button class="prediction-btn" data-match="match5" data-wrestler="Oba Femi">Oba Femi wins</button>
-      </div>
-    </div>
-  </div>
-  <div class="match-text-side">
-    <span class="match-title-badge">Non-Title Match</span>
-    <div class="match-section">
-      <h3>Why This Match Matters</h3>
-      <div class="why-box">The classic <strong>"passing of the torch"</strong> match. Brock Lesnar is 48 and possibly on a retirement tour -- he ended The Undertaker's WrestleMania streak, conquered UFC, and dominated WWE for 20+ years. Oba Femi is 27, undefeated on the main roster, and represents the FUTURE of WWE -- a 310-pound Nigerian powerhouse and former collegiate shot putter. A win at WrestleMania over The Beast makes Femi an instant main eventer and the new face of dominance in WWE.</div>
-    </div>
-    <div class="match-section">
-      <h3>The Story So Far</h3>
-      <div class="story-text">The seeds were planted at the Royal Rumble when Oba Femi dominated the match, tossing out competitor after competitor -- until Brock Lesnar eliminated him. It was the first time anyone had physically matched Femi and come out on top. Weeks later, Lesnar issued an open challenge for WrestleMania. Oba Femi answered. He marched to the ring, hit Brock with the Fall From Grace, placed his foot on Lesnar's chest, and <em>pointed at the WrestleMania sign.</em> The message was clear: the future has arrived, and The Beast is standing in the way.</div>
-    </div>
-  </div>
-</div>
-
+<div class="inner" id="matches-container">
+  <!-- Matches rendered by JS -->
 </div>
 </section>
 
@@ -206,5 +100,153 @@
 <button class="scroll-top" id="scrollTop">&#8593;</button>
 <script src="../js/data.js"></script>
 <script src="../js/main.js"></script>
+<script>
+(function() {
+  const container = document.getElementById('matches-container');
+  const heroSub = document.getElementById('hero-sub');
+  const matches = MATCHES;
+
+  // Update hero subtitle with match count
+  heroSub.textContent = matches.length + ' confirmed match' + (matches.length !== 1 ? 'es' : '') + '. Scroll through to see the full storyline breakdown. Pick your winners!';
+
+  // Check if any matches have nights assigned
+  const hasNights = matches.some(m => m.night !== null);
+
+  if (hasNights) {
+    // Group matches by night
+    const night1 = matches.filter(m => m.night === 1);
+    const night2 = matches.filter(m => m.night === 2);
+    const tbd = matches.filter(m => m.night === null);
+
+    if (night1.length > 0) {
+      container.innerHTML += buildNightSection(1, 'Saturday, April 18', night1);
+    }
+    if (night2.length > 0) {
+      container.innerHTML += buildNightSection(2, 'Sunday, April 19', night2);
+    }
+    if (tbd.length > 0) {
+      container.innerHTML += buildNightSection(null, 'To Be Announced', tbd);
+    }
+  } else {
+    // No nights assigned yet — render all matches flat
+    matches.forEach(function(match, i) {
+      container.innerHTML += buildMatchRow(match, i);
+    });
+  }
+
+  // Load saved predictions
+  loadPredictions();
+
+  // Bind prediction buttons
+  container.addEventListener('click', function(e) {
+    if (e.target.classList.contains('prediction-btn')) {
+      var matchId = e.target.getAttribute('data-match');
+      var wrestler = e.target.getAttribute('data-wrestler');
+      savePrediction(matchId, wrestler);
+
+      // Update UI
+      var btns = container.querySelectorAll('.prediction-btn[data-match="' + matchId + '"]');
+      btns.forEach(function(btn) { btn.classList.remove('selected'); });
+      e.target.classList.add('selected');
+    }
+  });
+
+  function buildNightSection(night, dateStr, nightMatches) {
+    var nightLabel, badgeClass;
+    if (night === 1) {
+      nightLabel = 'Night 1';
+      badgeClass = 'night-badge';
+    } else if (night === 2) {
+      nightLabel = 'Night 2';
+      badgeClass = 'night-badge';
+    } else {
+      nightLabel = 'Night TBD';
+      badgeClass = 'night-badge tbd';
+    }
+
+    var html = '<div class="night-group">';
+    html += '<div class="night-header">';
+    html += '<h2>' + nightLabel + '</h2>';
+    html += '<span class="night-date">' + dateStr + '</span>';
+    html += '</div>';
+
+    nightMatches.forEach(function(match, i) {
+      // Use global index for alternating layout
+      var globalIdx = matches.indexOf(match);
+      html += buildMatchRow(match, globalIdx);
+    });
+
+    html += '</div>';
+    return html;
+  }
+
+  function buildMatchRow(match, index) {
+    var w1 = WRESTLERS[match.wrestler1];
+    var w2 = WRESTLERS[match.wrestler2];
+    var isReverse = index % 2 !== 0;
+    var matchKey = match.id.replace('-', '');
+
+    // Night tag
+    var nightTag = '';
+    if (match.night === 1) {
+      nightTag = '<span class="match-night-tag night-1">Night 1</span>';
+    } else if (match.night === 2) {
+      nightTag = '<span class="match-night-tag night-2">Night 2</span>';
+    } else {
+      nightTag = '<span class="match-night-tag tbd">Night TBD</span>';
+    }
+
+    var html = '<div class="match-row' + (isReverse ? ' reverse' : '') + '" id="' + match.id + '">';
+
+    // Image side
+    html += '<div class="match-img-side">';
+    html += '<img src="' + match.bannerImg + '" alt="' + w1.name + ' vs ' + w2.name + '" loading="lazy">';
+    html += '<div class="match-predict">';
+    html += '<h4>Who Wins?</h4>';
+    html += '<div class="prediction-btns">';
+    match.predictions.forEach(function(pred) {
+      html += '<button class="prediction-btn" data-match="' + matchKey + '" data-wrestler="' + pred.wrestler + '">' + pred.label + '</button>';
+    });
+    html += '</div></div></div>';
+
+    // Text side
+    html += '<div class="match-text-side">';
+    html += '<span class="match-title-badge">' + match.championship + '</span>' + nightTag;
+
+    html += '<div class="match-section">';
+    html += '<h3>Why This Match Matters</h3>';
+    html += '<div class="why-box">' + match.whyItMatters + '</div>';
+    html += '</div>';
+
+    html += '<div class="match-section">';
+    html += '<h3>The Story So Far</h3>';
+    html += '<div class="story-text">' + match.storySoFar + '</div>';
+    html += '</div>';
+
+    html += '</div>'; // match-text-side
+    html += '</div>'; // match-row
+
+    return html;
+  }
+
+  function savePrediction(matchId, wrestler) {
+    var predictions = JSON.parse(localStorage.getItem('wm42-predictions') || '{}');
+    predictions[matchId] = wrestler;
+    localStorage.setItem('wm42-predictions', JSON.stringify(predictions));
+  }
+
+  function loadPredictions() {
+    var predictions = JSON.parse(localStorage.getItem('wm42-predictions') || '{}');
+    Object.keys(predictions).forEach(function(matchId) {
+      var btns = container.querySelectorAll('.prediction-btn[data-match="' + matchId + '"]');
+      btns.forEach(function(btn) {
+        if (btn.getAttribute('data-wrestler') === predictions[matchId]) {
+          btn.classList.add('selected');
+        }
+      });
+    });
+  }
+})();
+</script>
 </body>
 </html>

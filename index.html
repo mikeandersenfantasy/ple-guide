@@ -72,28 +72,36 @@
       <h2 class="section-title">WrestleMania 42 Matches</h2>
       <p class="section-subtitle mx-auto">Click any match to see the full storyline breakdown!</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;justify-items:center" class="match-preview-grid">
-      <style>.match-grid-bottom{grid-column:1/-1;display:flex;gap:16px;justify-content:center;width:100%}.match-grid-bottom>a{flex:0 1 calc(33.33% - 11px)}@media(max-width:768px){.match-preview-grid{grid-template-columns:1fr!important}.match-grid-bottom{flex-direction:column}.match-grid-bottom>a{flex:1}}</style>
-      <a href="matches/#match-1" style="border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none" onmouseover="this.style.borderColor='#C9A843';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none';this.style.boxShadow='none'">
-        <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_PunkRoman_SUN_16x9_date.jpg" alt="CM Punk vs Roman Reigns" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
-      </a>
-      <a href="matches/#match-2" style="border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none" onmouseover="this.style.borderColor='#C9A843';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none';this.style.boxShadow='none'">
-        <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_CodyRandy_SAT_16x9_Date.jpg" alt="Cody Rhodes vs Randy Orton" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
-      </a>
-      <a href="matches/#match-3" style="border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none" onmouseover="this.style.borderColor='#C9A843';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none';this.style.boxShadow='none'">
-        <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_JadeRhea_SUN_16x9_date.jpg" alt="Jade Cargill vs Rhea Ripley" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
-      </a>
-      <div class="match-grid-bottom">
-        <a href="matches/#match-4" style="border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none" onmouseover="this.style.borderColor='#C9A843';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none';this.style.boxShadow='none'">
-          <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_StephLiv_SAT_16x9_Date_0.jpg" alt="Stephanie Vaquer vs Liv Morgan" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
-        </a>
-        <a href="matches/#match-5" style="border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none" onmouseover="this.style.borderColor='#C9A843';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.transform='none';this.style.boxShadow='none'">
-          <img src="https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260316_WM42_BrockOba_Tron_16x9_date.jpg" alt="Brock Lesnar vs Oba Femi" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
-        </a>
-      </div>
-    </div>
+    <style>
+      .match-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+      .match-preview-link{border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none}
+      .match-preview-link:hover{border-color:#C9A843;transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,0.3)}
+      .match-preview-link img{width:100%;display:block}
+      @media(max-width:768px){.match-preview-grid{grid-template-columns:1fr}}
+    </style>
+    <div class="match-preview-grid" id="home-match-grid"></div>
   </div>
 </section>
+<script>
+(function() {
+  var grid = document.getElementById('home-match-grid');
+  if (!grid || typeof MATCHES === 'undefined') return;
+  MATCHES.forEach(function(match) {
+    var w1 = WRESTLERS[match.wrestler1];
+    var w2 = WRESTLERS[match.wrestler2];
+    var a = document.createElement('a');
+    a.href = 'matches/#' + match.id;
+    a.className = 'match-preview-link';
+    var img = document.createElement('img');
+    img.src = match.bannerImg;
+    img.alt = w1.name + ' vs ' + w2.name;
+    img.loading = 'lazy';
+    img.onerror = function() { a.style.display = 'none'; };
+    a.appendChild(img);
+    grid.appendChild(a);
+  });
+})();
+</script>
 
 <!-- GLOSSARY -->
 <section class="section section--gray" id="glossary">
