@@ -306,6 +306,106 @@ const WRESTLERS = {
       "NCAA Division I Heavyweight Wrestling Champion",
       "Youngest WWE Champion in history at the time (age 25)"
     ]
+  },
+  "sami-zayn": {
+    name: "Sami Zayn",
+    nickname: "Honorary Uce",
+    aliases: "The Underdog from the Underground",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Beloved underdog fan favorite",
+    isChampion: true,
+    title: "United States Champion",
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/sami_zayn_profile%202.png",
+    about: "Sami Zayn is one of the most beloved wrestlers in WWE. A Canadian of Syrian heritage, he wrestled in 29 countries before joining WWE. He became an honorary member of The Bloodline (Roman Reigns' family faction) before a dramatic split that led to one of WWE's best storylines. He defeated Gunther at WrestleMania XL to end a 666-day Intercontinental Championship reign. Now a two-time United States Champion, he won the title in an open challenge to earn his spot on the WrestleMania 42 card.",
+    finisher: "Helluva Kick",
+    finisherDesc: "Charges full speed at an opponent trapped in the corner and delivers a devastating running kick to the face. Simple but absolutely brutal.",
+    entranceTheme: "Worlds Apart",
+    entranceArtist: "CFO$",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Current United States Champion (2x)",
+      "Intercontinental Champion -- ended Gunther's 666-day reign at WrestleMania XL",
+      "Undisputed WWE Tag Team Champion (with Kevin Owens)",
+      "Former NXT Champion",
+      "Wrestled in 29 countries before joining WWE"
+    ]
+  },
+  "trick-williams": {
+    name: "Trick Williams",
+    nickname: "Whoop That Trick",
+    aliases: "",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Charismatic rising star",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/10/Trick_Williams_Profile.png",
+    about: "Trick Williams is one of the most electrifying young stars in WWE. At 6'5\" and 250 pounds, he started as a hype man in NXT before breaking out as a two-time NXT Champion. He's the only sixth person to ever win the NXT Championship twice. He made history as the first active WWE Superstar to win the TNA World Title. Now on SmackDown, he's one of the hottest free agents to come out of NXT and is making his WrestleMania debut.",
+    finisher: "Trick Shot",
+    finisherDesc: "A devastating jumping knee strike that catches opponents right on the chin. Lights out.",
+    entranceTheme: "Whoop That Trick",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "2x NXT Champion",
+      "NXT North American Champion",
+      "First active WWE Superstar to win the TNA World Title",
+      "Iron Survivor Challenge winner",
+      "WrestleMania debut at WM42"
+    ]
+  },
+  "jacob-fatu": {
+    name: "Jacob Fatu",
+    nickname: "The Samoan Werewolf",
+    aliases: "",
+    brand: "SmackDown",
+    alignment: "Heel",
+    alignmentDesc: "The Bloodline's most dangerous enforcer",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/02/Jakob_Fatu_PROFILE.png",
+    about: "Jacob Fatu is the most dangerous member of SmackDown and part of the legendary Anoa'i wrestling dynasty -- cousin to Roman Reigns, The Usos, and Solo Sikoa. The son of The Tonga Kid, Fatu debuted on SmackDown in June 2024 as Solo Sikoa's enforcer and immediately made an impact by destroying three opponents in his first match. At 6'2\" and 285 pounds, he combines freakish agility with raw power. He's been called a \"Samoan Werewolf\" for his wild, uncontrollable fighting style.",
+    finisher: "Moonsault",
+    finisherDesc: "A top-rope backflip splash. At 285 pounds, Fatu doing a moonsault is terrifying. He also uses a devastating hip attack and a Samoan Spike.",
+    entranceTheme: "Untouchable",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Former United States Champion",
+      "WWE Tag Team Champion",
+      "Member of the Anoa'i wrestling dynasty",
+      "Cousin to Roman Reigns and The Usos",
+      "Defeated 3 opponents in his WWE debut match"
+    ]
+  },
+  "drew-mcintyre": {
+    name: "Drew McIntyre",
+    nickname: "The Scottish Warrior",
+    aliases: "The Scottish Psychopath",
+    brand: "SmackDown",
+    alignment: "Heel",
+    alignmentDesc: "Bitter and consumed by rage",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2021/09/Drew_Mcintyre_Profile--aca391095fe74e721e098cadc93571d3.png",
+    about: "Drew McIntyre is a 6'5\", 265-pound powerhouse from Scotland who started wrestling at 15. He was released from WWE in 2014, rebuilt himself on the independent circuit, and returned in 2017 as a completely different beast. He won his first WWE Championship at WrestleMania 36 by destroying Brock Lesnar. His rivalry with CM Punk consumed him in 2024, costing him the World Heavyweight Championship multiple times. Now bitter and dangerous, he's locked in a war with Jacob Fatu that has spiraled completely out of control.",
+    finisher: "Claymore Kick",
+    finisherDesc: "A running kick with the force of a sword strike. McIntyre charges full speed and boots his opponent in the face. Also uses the Glasgow Kiss (headbutt).",
+    entranceTheme: "Broken Dreams / Gallantry",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "2x WWE Champion",
+      "World Heavyweight Champion",
+      "2020 Royal Rumble winner",
+      "2024 Money in the Bank winner",
+      "Defeated Brock Lesnar at WrestleMania 36"
+    ]
   }
 };
 
@@ -435,6 +535,40 @@ const MATCHES = [
       { id: "-ciHeeXLZe8", start: 7, end: 69, label: "The Attack", title: "Becky Lynch Attacks AJ Lee", desc: "After AJ successfully defends her title, Becky Lynch launches a vicious post-match attack. This is FAR from over." },
       { id: "hm3XFZEt1cw", start: 47, end: 80, label: "It's Official", title: "WrestleMania Match Is Set", desc: "The WrestleMania match is made official. AJ Lee vs Becky Lynch for the Women's Intercontinental Championship. No more games." }
     ]
+  },
+  {
+    id: "match-7",
+    wrestler1: "sami-zayn",
+    wrestler2: "trick-williams",
+    championship: "United States Championship",
+    isTitleMatch: true,
+    night: null,
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_SamiTrick__Tron_16x9_date.jpg",
+    whyItMatters: "A <strong>veteran vs. rising star</strong> showdown. Sami Zayn wasn't even on the WrestleMania card -- so he went out and WON the United States Championship in an open challenge just to earn his spot. That's how much WrestleMania means to him. Trick Williams is making his <strong>WrestleMania debut</strong> -- a 6'5\" charismatic powerhouse who's been the hottest thing out of NXT. Zayn is the beloved underdog who has delivered iconic WrestleMania moments year after year. Can Trick \"Whoop That WrestleMania\" or will Zayn deliver more WrestleMania magic?",
+    storySoFar: "Trick Williams was confirmed for the WrestleMania card while Sami Zayn was left off entirely. Rather than accept being left out, Zayn answered then-U.S. Champion Carmelo Hayes' open challenge and shocked the world by winning the United States Championship. Now a two-time U.S. Champion, Zayn finally has his spot on the card -- but Trick Williams is standing in his way. This is Zayn's first-ever WrestleMania championship defense, and Trick's first-ever WrestleMania match. Both men have <em>everything</em> to prove.",
+    predictions: [
+      { label: "Sami Zayn retains", wrestler: "Sami Zayn" },
+      { label: "Trick Williams wins", wrestler: "Trick Williams" }
+    ],
+    feudSubtitle: "Can Trick Whoop That WrestleMania or will Zayn deliver more magic?",
+    feudVideos: []
+  },
+  {
+    id: "match-8",
+    wrestler1: "drew-mcintyre",
+    wrestler2: "jacob-fatu",
+    championship: "Unsanctioned Match",
+    isTitleMatch: false,
+    night: null,
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_DrewJacob_MM_16x9_Date.jpg",
+    whyItMatters: "This is an <strong>Unsanctioned Match</strong> -- which means <strong>there are NO rules.</strong> No disqualifications, no countouts, no protection from officials. Chairs, tables, ladders, anything goes. WWE doesn't officially sanction this match because it's too dangerous. Jacob Fatu is a member of the Anoa'i dynasty (Roman Reigns' family) and is the most violent, uncontrollable force on SmackDown. Drew McIntyre is a bitter, rage-fueled Scottish warrior who has been pushed to his breaking point. These two have been trying to DESTROY each other for weeks -- and now there are zero rules to stop them.",
+    storySoFar: "The hatred runs deep. Jacob Fatu helped cost Drew McIntyre the Undisputed WWE Championship against Cody Rhodes, and McIntyre has never forgiven him. Drew faked leaving SmackDown entirely, only to return and ambush Fatu during a match. Their war escalated on the March 20 SmackDown when they brawled from the <em>opening moments of the show until the very end</em> -- culminating in them throwing each other off a high steel balcony. SmackDown GM Nick Aldis had no choice but to make this an Unsanctioned Match at WrestleMania. No rules. No protection. Just two men trying to end each other.",
+    predictions: [
+      { label: "Drew McIntyre wins", wrestler: "Drew McIntyre" },
+      { label: "Jacob Fatu wins", wrestler: "Jacob Fatu" }
+    ],
+    feudSubtitle: "No rules. No protection. Just chaos. Watch how this war spiraled out of control.",
+    feudVideos: []
   }
 ];
 
