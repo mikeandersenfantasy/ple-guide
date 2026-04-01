@@ -127,6 +127,38 @@ document.addEventListener('DOMContentLoaded', function() {
     return [];
   }
 
+  function buildTeamEntranceCard(teamWrestlers, teamName) {
+    // Use the first wrestler's entrance video for the team
+    var w1 = teamWrestlers[0];
+    var names = teamWrestlers.map(function(w) { return w.name; }).join(' & ');
+    if (w1.entranceVideo) {
+      var ev = w1.entranceVideo;
+      return '<div class="vid-card fade-in">' +
+        '<div class="vid-embed">' +
+          '<iframe src="https://www.youtube.com/embed/' + ev.id + '?start=' + ev.start + '" title="' + names + ' Entrance" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
+        '</div>' +
+        '<div class="vid-body">' +
+          '<div class="vid-name">' + names + '</div>' +
+          '<div class="vid-theme">"' + w1.entranceTheme + '" by ' + w1.entranceArtist + '</div>' +
+          (ev.desc ? '<div class="vid-desc">' + ev.desc + '</div>' : '') +
+        '</div>' +
+      '</div>';
+    } else {
+      return '<div class="vid-card vid-card--placeholder fade-in">' +
+        '<div class="vid-embed">' +
+          '<div class="vid-placeholder-inner">' +
+            '<div class="icon">&#127908;</div>' +
+            '<div class="text">Coming Soon</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vid-body">' +
+          '<div class="vid-name">' + names + '</div>' +
+          '<div class="vid-theme">"' + w1.entranceTheme + '" by ' + w1.entranceArtist + '</div>' +
+        '</div>' +
+      '</div>';
+    }
+  }
+
   function buildEntranceCard(w) {
     if (w.entranceVideo) {
       var ev = w.entranceVideo;
@@ -178,15 +210,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (match.teams) {
+      html += '<div class="vid-grid">';
       match.teams.forEach(function(team) {
-        html += '<div class="team-label">' + team.name + (team.isChampion ? ' (Champions)' : '') + '</div>';
-        html += '<div class="' + gridClass + '">';
-        team.wrestlers.forEach(function(key) {
-          var w = wrestlers[key];
-          if (w) html += buildEntranceCard(w);
-        });
-        html += '</div>';
+        var teamWrestlers = team.wrestlers.map(function(k) { return wrestlers[k]; }).filter(Boolean);
+        if (teamWrestlers.length > 0) {
+          html += buildTeamEntranceCard(teamWrestlers, team.name);
+        }
       });
+      html += '</div>';
     } else {
       html += '<div class="' + gridClass + '">';
       wrestlerKeys.forEach(function(key) {
