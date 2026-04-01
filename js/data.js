@@ -423,7 +423,7 @@ const WRESTLERS = {
     entranceTheme: "Zero Miedo",
     entranceArtist: "def rebel",
     spotifyId: "79J8FTZRoO8JGTWavAR7OZ",
-    entranceVideo: null,
+    entranceVideo: { id: "RRnfqHHbKSA", start: 15, end: 100, label: "Entrance", desc: "Watch for the \"ZERO MIEDO\" taunt -- Penta holds up his hand with zero fear. The crowd goes crazy for this luchador." },
     highlights: [
       "Current Intercontinental Champion",
       "Former AEW World Tag Team Champion",
@@ -447,7 +447,7 @@ const WRESTLERS = {
     entranceTheme: "Evans Above",
     entranceArtist: "def rebel",
     spotifyId: "1JwyTc98Nqvb964lj2p695",
-    entranceVideo: null,
+    entranceVideo: { id: "3RZXTES1wYA", start: 0, end: 86, label: "Entrance", desc: "One of the youngest stars in WWE. Watch the energy and athleticism -- this kid can FLY." },
     highlights: [
       "One of the youngest competitors at WrestleMania 42",
       "Won Main Event qualifier to earn Ladder Match spot",
@@ -471,7 +471,7 @@ const WRESTLERS = {
     entranceTheme: "Dragon Lee",
     entranceArtist: "def rebel",
     spotifyId: "3ZTOLHSSZE5O7EyAF1jzvQ",
-    entranceVideo: null,
+    entranceVideo: { id: "SKw8VEVTi_w", start: 2, end: 84, label: "Entrance", desc: "Dragon Lee's lucha libre entrance. Fast, explosive, and ready to fly off ladders at WrestleMania." },
     highlights: [
       "Former CMLL World Lightweight Champion",
       "Competed across Mexico, Japan, and the US",
@@ -495,7 +495,7 @@ const WRESTLERS = {
     entranceTheme: "Rebel Heart",
     entranceArtist: "def rebel",
     spotifyId: "7sK9Xxr63paUTglk8hbGVT",
-    entranceVideo: null,
+    entranceVideo: { id: "4I3s6gvyf-0", start: 2, end: 65, label: "Entrance", desc: "The Judgment Day's entrance. Listen for the dramatic theme -- JD McDonagh enters with the faction that just kicked Finn Bálor out." },
     highlights: [
       "Former WWE Tag Team Champion",
       "Former NXT Cruiserweight Champion",
@@ -519,7 +519,7 @@ const WRESTLERS = {
     entranceTheme: "Rusev Day",
     entranceArtist: "def rebel",
     spotifyId: "6VdtSJHFxEf9gdBws6ydrq",
-    entranceVideo: null,
+    entranceVideo: { id: "5u-HnV9PzrE", start: 0, end: 80, label: "Entrance", desc: "The Bulgarian Brute is BACK. Listen for the crowd chanting \"RUSEV DAY!\" -- one of the most fun chants in WWE history." },
     highlights: [
       "Former United States Champion",
       "Entered WWE with a dominant undefeated streak",
@@ -543,7 +543,7 @@ const WRESTLERS = {
     entranceTheme: "Catch Your Breath",
     entranceArtist: "CFO$",
     spotifyId: "45G4QkIjK4Oob3K3arZxFG",
-    entranceVideo: null,
+    entranceVideo: { id: "8XSRDa8rKb0", start: 52, end: 164, label: "Entrance", desc: "The Demon King's entrance. When Finn paints up as The Demon with the full body paint and crawling entrance, he's NEVER lost at WrestleMania." },
     highlights: [
       "First-ever Universal Champion",
       "2x Intercontinental Champion",
@@ -567,7 +567,7 @@ const WRESTLERS = {
     entranceTheme: "Latino Heat",
     entranceArtist: "def rebel",
     spotifyId: "6NsOClAKAF6f2eM8wvKq60",
-    entranceVideo: null,
+    entranceVideo: { id: "VNgmhY2xRKQ", start: 87, end: 162, label: "Entrance", desc: "Dirty Dom's entrance. Listen for the MASSIVE boos -- Dominik Mysterio is one of the most hated wrestlers in WWE. The crowd DESPISES him." },
     highlights: [
       "Former NXT North American Champion",
       "Key member of The Judgment Day",
@@ -591,7 +591,7 @@ const WRESTLERS = {
     entranceTheme: "Force of Greatness",
     entranceArtist: "def rebel",
     spotifyId: "3pT820a0OyX4JZg6ZIxYCL",
-    entranceVideo: null,
+    entranceVideo: { id: "4Rp6HN75P7M", start: 0, label: "Entrance", desc: "The champions' entrance. Nia Jax and Lash Legend are the most physically dominant tag team in the women's division." },
     highlights: [
       "Current WWE Women's Tag Team Champion",
       "Former Raw Women's Champion",
@@ -615,7 +615,7 @@ const WRESTLERS = {
     entranceTheme: "All About Me",
     entranceArtist: "def rebel",
     spotifyId: "5ZzpJE66IGK7l5s7N5S20N",
-    entranceVideo: null,
+    entranceVideo: { id: "4Rp6HN75P7M", start: 0, label: "Entrance", desc: "Lash Legend enters with her tag partner Nia Jax. At 6'1\", she towers over everyone in the women's division." },
     highlights: [
       "Current WWE Women's Tag Team Champion",
       "Former college basketball player",
@@ -639,7 +639,7 @@ const WRESTLERS = {
     entranceTheme: "Recognition",
     entranceArtist: "def rebel",
     spotifyId: "7yt4p8GEAUMWqrAGR3f4zy",
-    entranceVideo: null,
+    entranceVideo: { id: "IJmRutpLafc", start: 0, end: 77, label: "Entrance", desc: "Charlotte Flair and Alexa Bliss enter together. Charlotte's entrance is pure royalty -- The Queen has arrived." },
     highlights: [
       "14x Women's Champion -- the most in history",
       "Daughter of WWE legend Ric Flair",
@@ -663,7 +663,7 @@ const WRESTLERS = {
     entranceTheme: "Spiteful",
     entranceArtist: "def rebel",
     spotifyId: "2RDNHPIYnDCStQSWgW35YQ",
-    entranceVideo: null,
+    entranceVideo: { id: "IJmRutpLafc", start: 0, end: 77, label: "Entrance", desc: "Alexa Bliss enters alongside Charlotte Flair. The Goddess is back and ready for WrestleMania." },
     highlights: [
       "3x Raw Women's Champion",
       "2x SmackDown Women's Champion",
@@ -687,7 +687,7 @@ const WRESTLERS = {
     entranceTheme: "Turn It Up",
     entranceArtist: "def rebel",
     spotifyId: "4hfozVD15In8G5lhpKrtLD",
-    entranceVideo: null,
+    entranceVideo: { id: "k80Oi7CIcQY", start: 6, end: 76, label: "Entrance", desc: "Bayley and Lyra Valkyria enter as a team. Bayley is one of the Four Horsewomen -- a WrestleMania veteran." },
     highlights: [
       "First-ever Women's Grand Slam Champion",
       "Longest-reigning SmackDown Women's Champion",
@@ -711,7 +711,7 @@ const WRESTLERS = {
     entranceTheme: "Warrior Code",
     entranceArtist: "def rebel",
     spotifyId: "4Nld0oepDujgKRg3wd0D0Z",
-    entranceVideo: null,
+    entranceVideo: { id: "k80Oi7CIcQY", start: 6, end: 76, label: "Entrance", desc: "Lyra Valkyria enters alongside Bayley. The Irish rising star making her WrestleMania debut." },
     highlights: [
       "Former NXT Women's Champion",
       "2024 Queen of the Ring tournament finalist",
@@ -735,7 +735,7 @@ const WRESTLERS = {
     entranceTheme: "You Can Look (But You Can't Touch)",
     entranceArtist: "Jim Johnston",
     spotifyId: "7ETjUGznkux2JNOCzI6hf2",
-    entranceVideo: null,
+    entranceVideo: { id: "uNtp_LTLVmY", start: 24, end: 76, label: "Entrance", desc: "The Bella Twins are BACK! Listen for \"You Can Look But You Can't Touch\" -- one of the most iconic entrance themes in women's wrestling history." },
     highlights: [
       "WWE Hall of Famer (Class of 2020)",
       "2x Divas Champion (record 301-day reign)",
@@ -759,7 +759,7 @@ const WRESTLERS = {
     entranceTheme: "You Can Look (But You Can't Touch)",
     entranceArtist: "Jim Johnston",
     spotifyId: "7ETjUGznkux2JNOCzI6hf2",
-    entranceVideo: null,
+    entranceVideo: { id: "uNtp_LTLVmY", start: 24, end: 76, label: "Entrance", desc: "Brie Bella enters with her twin sister Nikki. Hall of Famers returning for one more WrestleMania run." },
     highlights: [
       "WWE Hall of Famer (Class of 2020)",
       "Former Divas Champion",
