@@ -65,20 +65,13 @@
 </div>
 
 <!-- MATCH PREVIEW BANNERS -->
-<section class="section" style="padding-top:0">
+<section class="section" style="padding-top:20px">
   <div class="inner">
     <div class="text-center" style="margin-bottom:30px">
       <div class="section-label">The Card</div>
       <h2 class="section-title">WrestleMania 42 Matches</h2>
       <p class="section-subtitle mx-auto">Click any match to see the full storyline breakdown!</p>
     </div>
-    <style>
-      .match-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-      .match-preview-link{border-radius:14px;overflow:hidden;display:block;border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none}
-      .match-preview-link:hover{border-color:#C9A843;transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,0.3)}
-      .match-preview-link img{width:100%;display:block}
-      @media(max-width:768px){.match-preview-grid{grid-template-columns:1fr}}
-    </style>
     <div class="match-preview-grid" id="home-match-grid"></div>
   </div>
 </section>
@@ -105,6 +98,10 @@
     img.loading = 'lazy';
     img.onerror = function() { a.style.display = 'none'; };
     a.appendChild(img);
+    var label = document.createElement('div');
+    label.className = 'match-preview-label';
+    label.textContent = match.championship.replace(/ -- .*/, '');
+    a.appendChild(label);
     grid.appendChild(a);
   });
 })();
@@ -153,12 +150,16 @@
       <h2 class="section-title">Explore the Guide</h2>
     </div>
     <div class="quick-links">
+      <a href="matches/" class="quick-link">
+        <div class="icon">&#127942;</div>
+        <h3>Match Card</h3>
+        <p>Full storyline breakdowns, predictions, and match types explained</p>
+      </a>
       <a href="wrestlers/" class="quick-link">
         <div class="icon">&#128170;</div>
         <h3>Wrestler Profiles</h3>
-        <p>Meet all 16 competitors: entrance music, finishers, and more</p>
+        <p>Meet the competitors: entrance music, finishers, and more</p>
       </a>
-
       <a href="videos/" class="quick-link">
         <div class="icon">&#127909;</div>
         <h3>Videos</h3>

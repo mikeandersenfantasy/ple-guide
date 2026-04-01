@@ -96,6 +96,22 @@ document.addEventListener('DOMContentLoaded', function() {
   var wrestlers = window.WM42_DATA.WRESTLERS;
   var matches = window.WM42_DATA.MATCHES;
 
+  function buildPlaceholderCard(w) {
+    return '<div class="vid-card vid-card--placeholder">' +
+      '<div class="vid-embed">' +
+        '<div class="vid-placeholder-inner">' +
+          '<div class="icon">&#127908;</div>' +
+          '<div class="text">Video coming soon</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="vid-body">' +
+        '<div class="vid-label">Entrance</div>' +
+        '<div class="vid-title">' + w.name + ' -- "' + w.entranceTheme + '"</div>' +
+        '<div class="vid-desc">Entrance video will be added soon. Listen to the theme on the Wrestlers page!</div>' +
+      '</div>' +
+    '</div>';
+  }
+
   function buildVideoCard(ytId, start, label, title, desc) {
     return '<div class="vid-card">' +
       '<div class="vid-embed">' +
@@ -158,15 +174,36 @@ document.addEventListener('DOMContentLoaded', function() {
     html += '</div>';
 
     // Entrance videos section
-    var hasEntrances = wrestlerKeys.some(function(k) { return wrestlers[k] && wrestlers[k].entranceVideo; });
-    if (hasEntrances) {
-      html += '<div class="vid-section-header"><span class="vid-section-icon">&#127908;</span> Entrances</div>';
-      html += '<div class="vid-grid">';
+    var multiClass = wrestlerKeys.length >= 5 ? ' vid-grid--multi' : '';
+    html += '<div class="vid-section-header"><span class="vid-section-icon">&#127908;</span> Entrances</div>';
+
+    if (match.teams) {
+      // Group entrance videos by team
+      match.teams.forEach(function(team) {
+        html += '<div class="team-divider">' + team.name + (team.isChampion ? ' (Champions)' : '') + '</div>';
+        html += '<div class="vid-grid' + multiClass + '">';
+        team.wrestlers.forEach(function(key) {
+          var w = wrestlers[key];
+          if (!w) return;
+          if (w.entranceVideo) {
+            var ev = w.entranceVideo;
+            html += buildVideoCard(ev.id, ev.start, ev.label || 'Entrance', w.name + ' -- "' + w.entranceTheme + '" by ' + w.entranceArtist, ev.desc || '');
+          } else {
+            html += buildPlaceholderCard(w);
+          }
+        });
+        html += '</div>';
+      });
+    } else {
+      html += '<div class="vid-grid' + multiClass + '">';
       wrestlerKeys.forEach(function(key) {
         var w = wrestlers[key];
-        if (w && w.entranceVideo) {
+        if (!w) return;
+        if (w.entranceVideo) {
           var ev = w.entranceVideo;
           html += buildVideoCard(ev.id, ev.start, ev.label || 'Entrance', w.name + ' -- "' + w.entranceTheme + '" by ' + w.entranceArtist, ev.desc || '');
+        } else {
+          html += buildPlaceholderCard(w);
         }
       });
       html += '</div>';
@@ -180,6 +217,13 @@ document.addEventListener('DOMContentLoaded', function() {
         html += buildVideoCard(v.id, v.start, v.label, v.title, v.desc);
       });
       html += '</div>';
+    } else {
+      html += '<div class="vid-section-header"><span class="vid-section-icon">&#9889;</span> Feud Buildup</div>';
+      html += '<div class="coming-soon-box">' +
+        '<div class="coming-soon-icon">&#128247;</div>' +
+        '<div class="coming-soon-text">Feud buildup videos coming soon!</div>' +
+        '<div class="coming-soon-sub">Check back as WrestleMania approaches for key moments from this rivalry.</div>' +
+      '</div>';
     }
 
     html += '</div></section>';
