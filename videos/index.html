@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Videos - WrestleMania 42 Fan Guide</title>
+<title>Entrances - WrestleMania 42 Fan Guide</title>
 <link rel="stylesheet" href="../css/styles.css">
 <style>
 .vid-card{background:var(--navy-light);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:all .3s ease;display:flex;flex-direction:column}
@@ -14,13 +14,15 @@
 .vid-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:6px}
 .vid-title{font-size:1rem;font-weight:800;color:var(--off-white);margin-bottom:6px}
 .vid-desc{font-size:.85rem;color:var(--mid-gray);line-height:1.5;flex:1}
-.vid-grid{display:flex;flex-wrap:wrap;gap:24px;justify-content:center}
-.vid-card{width:calc(25% - 18px);min-width:280px}
-@media(max-width:768px){.vid-card{width:calc(50% - 12px);min-width:0}}
-@media(max-width:480px){.vid-card{width:100%;min-width:0}}
-.vid-section-header{display:flex;align-items:center;gap:10px;font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin:28px 0 16px;padding-bottom:10px;border-bottom:1px solid rgba(212,168,60,0.2)}
-.vid-section-icon{font-size:1.2rem}
-@media(max-width:480px){.vid-section-header{font-size:.85rem;margin:20px 0 12px}}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+@media(max-width:680px){.vid-grid{grid-template-columns:1fr}}
+.match-divider{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid rgba(212,168,60,0.2)}
+.match-divider h2{font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold)}
+.match-divider .match-type{font-size:.8rem;color:var(--mid-gray);font-weight:600}
+.match-group{margin-bottom:50px}
+.match-group:last-child{margin-bottom:0}
+.team-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);padding:10px 0 8px;border-bottom:1px solid rgba(212,168,60,0.12);margin-bottom:12px}
+@media(max-width:480px){.match-divider h2{font-size:1rem}.match-divider{flex-direction:column;align-items:flex-start;gap:4px}}
 </style>
 </head>
 <body>
@@ -33,8 +35,7 @@
       <a href="../">Home</a>
       <a href="../matches/">Matches</a>
       <a href="../wrestlers/">Wrestlers</a>
-
-      <a href="../videos/">Videos</a>
+      <a href="../videos/">Entrances</a>
       <a href="../legal/">Legal</a>
     </div>
     <button class="hamburger" aria-label="Menu">&#9776;</button>
@@ -44,39 +45,12 @@
 <!-- HERO -->
 <section class="hero" style="padding:50px 30px 40px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
   <div class="hero-label">WrestleMania 42</div>
-  <h1>Must-Watch <span style="color:#fff">Videos</span></h1>
-  <p class="hero-sub">Entrances, promos, and key moments -- all grouped by feud. Press play and feel the energy!</p>
+  <h1>Entrance <span style="color:#fff">Videos</span></h1>
+  <p class="hero-sub">Learn the entrance themes before the show! When these songs hit, you'll know exactly who's coming out.</p>
 </section>
 
-<!-- FEUD BUILDUPS (data-driven) -->
-<div id="feudSections"></div>
-
-<!-- WHAT TO WATCH -->
-<section class="section section--dark">
-  <div class="inner">
-    <div class="text-center" style="margin-bottom:40px">
-      <div class="section-label">Before WrestleMania</div>
-      <h2 class="section-title">What to Watch This Week</h2>
-      <p class="section-subtitle mx-auto">Can't watch everything? Here are the most important episodes to catch before WrestleMania.</p>
-    </div>
-    <div class="tips-grid">
-      <div class="tip-card">
-        <div class="icon">&#128250;</div>
-        <h3>Monday Night Raw</h3>
-        <p>Mondays at 8 PM ET on Netflix. CM Punk, Rhea Ripley, Liv Morgan, Stephanie Vaquer, and Oba Femi's storylines play out here. The go-home show (last Raw before WrestleMania) is the most important!</p>
-      </div>
-      <div class="tip-card">
-        <div class="icon">&#128250;</div>
-        <h3>Friday Night SmackDown</h3>
-        <p>Fridays at 8 PM ET on USA Network. Cody Rhodes, Randy Orton, Roman Reigns, and Jade Cargill's stories happen here. Watch the SmackDown before WrestleMania for final drama.</p>
-      </div>
-      <div class="tip-card">
-        <div class="icon">&#127775;</div>
-        <h3>The Go-Home Shows</h3>
-        <p>The final Raw and SmackDown before WrestleMania are the most dramatic episodes of the year -- final confrontations, contract signings, and last attacks. DON'T miss these!</p>
-      </div>
-    </div>
-  </div>
+<section class="section">
+<div class="inner" id="entranceContainer"></div>
 </section>
 
 <!-- FOOTER -->
@@ -90,42 +64,12 @@
 <script src="../js/main.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var container = document.getElementById('feudSections');
+  var container = document.getElementById('entranceContainer');
   if (!container || !window.WM42_DATA) return;
 
   var wrestlers = window.WM42_DATA.WRESTLERS;
   var matches = window.WM42_DATA.MATCHES;
 
-  function buildPlaceholderCard(w) {
-    return '<div class="vid-card vid-card--placeholder">' +
-      '<div class="vid-embed">' +
-        '<div class="vid-placeholder-inner">' +
-          '<div class="icon">&#127908;</div>' +
-          '<div class="text">Video coming soon</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="vid-body">' +
-        '<div class="vid-label">Entrance</div>' +
-        '<div class="vid-title">' + w.name + ' -- "' + w.entranceTheme + '"</div>' +
-        '<div class="vid-desc">Entrance video will be added soon. Listen to the theme on the Wrestlers page!</div>' +
-      '</div>' +
-    '</div>';
-  }
-
-  function buildVideoCard(ytId, start, label, title, desc) {
-    return '<div class="vid-card">' +
-      '<div class="vid-embed">' +
-        '<iframe src="https://www.youtube.com/embed/' + ytId + '?start=' + start + '" title="' + title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
-      '</div>' +
-      '<div class="vid-body">' +
-        '<div class="vid-label">' + label + '</div>' +
-        '<div class="vid-title">' + title + '</div>' +
-        '<div class="vid-desc">' + desc + '</div>' +
-      '</div>' +
-    '</div>';
-  }
-
-  // Get all wrestler keys for a match
   function getMatchWrestlerKeys(match) {
     if (match.wrestler1 && match.wrestler2) return [match.wrestler1, match.wrestler2];
     if (match.participants) return match.participants;
@@ -148,86 +92,72 @@ document.addEventListener('DOMContentLoaded', function() {
     return match.championship;
   }
 
-  matches.forEach(function(match, i) {
+  function buildEntranceCard(w) {
+    if (w.entranceVideo) {
+      var ev = w.entranceVideo;
+      return '<div class="vid-card">' +
+        '<div class="vid-embed">' +
+          '<iframe src="https://www.youtube.com/embed/' + ev.id + '?start=' + ev.start + '" title="' + w.name + ' Entrance" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
+        '</div>' +
+        '<div class="vid-body">' +
+          '<div class="vid-label">Entrance</div>' +
+          '<div class="vid-title">' + w.name + '</div>' +
+          '<div class="vid-desc">"' + w.entranceTheme + '" by ' + w.entranceArtist + (ev.desc ? ' -- ' + ev.desc : '') + '</div>' +
+        '</div>' +
+      '</div>';
+    } else {
+      return '<div class="vid-card vid-card--placeholder">' +
+        '<div class="vid-embed">' +
+          '<div class="vid-placeholder-inner">' +
+            '<div class="icon">&#127908;</div>' +
+            '<div class="text">Video coming soon</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vid-body">' +
+          '<div class="vid-label">Entrance</div>' +
+          '<div class="vid-title">' + w.name + '</div>' +
+          '<div class="vid-desc">"' + w.entranceTheme + '" by ' + w.entranceArtist + ' -- Entrance video will be added soon!</div>' +
+        '</div>' +
+      '</div>';
+    }
+  }
+
+  matches.forEach(function(match) {
     var wrestlerKeys = getMatchWrestlerKeys(match);
     if (wrestlerKeys.length === 0) return;
 
-    var sectionClass = i % 2 === 0 ? 'section section--gray' : 'section';
-    var matchTitle = getMatchTitle(match);
+    var group = document.createElement('div');
+    group.className = 'match-group';
 
-    var html = '<section class="' + sectionClass + '">' +
-      '<div class="inner">' +
-        '<div class="text-center" style="margin-bottom:10px">';
+    // Match header
+    var header = '<div class="match-divider">' +
+      '<h2>' + getMatchTitle(match) + '</h2>' +
+      '<span class="match-type">' + match.championship.replace(/ -- .*/, '') + '</span>' +
+    '</div>';
 
-    // Banner image
-    if (match.bannerImg) {
-      html += '<img src="' + match.bannerImg + '" alt="' + matchTitle + '" style="width:100%;max-width:800px;border-radius:14px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto" onerror="this.style.display=\'none\'">';
-    }
-
-    html += '<div class="section-label">' + match.championship + '</div>' +
-      '<h2 class="section-title">' + matchTitle + '</h2>';
-
-    if (match.feudSubtitle) {
-      html += '<p class="section-subtitle mx-auto">' + match.feudSubtitle + '</p>';
-    }
-
-    html += '</div>';
-
-    // Entrance videos section
-    var multiClass = wrestlerKeys.length >= 5 ? ' vid-grid--multi' : '';
-    html += '<div class="vid-section-header"><span class="vid-section-icon">&#127908;</span> Entrances</div>';
+    var html = header;
 
     if (match.teams) {
-      // Group entrance videos by team
       match.teams.forEach(function(team) {
-        html += '<div class="team-divider">' + team.name + (team.isChampion ? ' (Champions)' : '') + '</div>';
-        html += '<div class="vid-grid' + multiClass + '">';
+        html += '<div class="team-label">' + team.name + (team.isChampion ? ' (Champions)' : '') + '</div>';
+        html += '<div class="vid-grid">';
         team.wrestlers.forEach(function(key) {
           var w = wrestlers[key];
-          if (!w) return;
-          if (w.entranceVideo) {
-            var ev = w.entranceVideo;
-            html += buildVideoCard(ev.id, ev.start, ev.label || 'Entrance', w.name + ' -- "' + w.entranceTheme + '" by ' + w.entranceArtist, ev.desc || '');
-          } else {
-            html += buildPlaceholderCard(w);
-          }
+          if (w) html += buildEntranceCard(w);
         });
         html += '</div>';
       });
     } else {
-      html += '<div class="vid-grid' + multiClass + '">';
+      html += '<div class="vid-grid">';
       wrestlerKeys.forEach(function(key) {
         var w = wrestlers[key];
-        if (!w) return;
-        if (w.entranceVideo) {
-          var ev = w.entranceVideo;
-          html += buildVideoCard(ev.id, ev.start, ev.label || 'Entrance', w.name + ' -- "' + w.entranceTheme + '" by ' + w.entranceArtist, ev.desc || '');
-        } else {
-          html += buildPlaceholderCard(w);
-        }
+        if (w) html += buildEntranceCard(w);
       });
       html += '</div>';
     }
 
-    // Feud buildup videos section
-    if (match.feudVideos && match.feudVideos.length > 0) {
-      html += '<div class="vid-section-header"><span class="vid-section-icon">&#9889;</span> Feud Buildup</div>';
-      html += '<div class="vid-grid">';
-      match.feudVideos.forEach(function(v) {
-        html += buildVideoCard(v.id, v.start, v.label, v.title, v.desc);
-      });
-      html += '</div>';
-    } else {
-      html += '<div class="vid-section-header"><span class="vid-section-icon">&#9889;</span> Feud Buildup</div>';
-      html += '<div class="coming-soon-box">' +
-        '<div class="coming-soon-icon">&#128247;</div>' +
-        '<div class="coming-soon-text">Feud buildup videos coming soon!</div>' +
-        '<div class="coming-soon-sub">Check back as WrestleMania approaches for key moments from this rivalry.</div>' +
-      '</div>';
-    }
-
-    html += '</div></section>';
-    container.innerHTML += html;
+    group.innerHTML = html;
+    container.appendChild(group);
   });
 });
 </script>
