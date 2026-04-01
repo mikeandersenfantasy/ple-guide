@@ -41,9 +41,10 @@
 /* ===== GRID LAYOUTS ===== */
 .vid-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto}
 @media(max-width:680px){.vid-grid{grid-template-columns:1fr;max-width:500px}}
-.vid-grid--multi{grid-template-columns:repeat(3,1fr);max-width:1100px}
-@media(max-width:960px){.vid-grid--multi{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:680px){.vid-grid--multi{grid-template-columns:1fr;max-width:500px}}
+.vid-grid--multi{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;max-width:1100px}
+.vid-grid--multi .vid-card,.vid-grid--multi .vid-card--placeholder{width:calc(33.33% - 16px);min-width:0}
+@media(max-width:960px){.vid-grid--multi .vid-card,.vid-grid--multi .vid-card--placeholder{width:calc(50% - 12px)}}
+@media(max-width:680px){.vid-grid--multi .vid-card,.vid-grid--multi .vid-card--placeholder{width:100%;max-width:500px}}
 
 /* ===== SCROLL ANIMATIONS ===== */
 .fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
