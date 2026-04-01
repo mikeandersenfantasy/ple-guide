@@ -406,6 +406,366 @@ const WRESTLERS = {
       "2024 Money in the Bank winner",
       "Defeated Brock Lesnar at WrestleMania 36"
     ]
+  },
+  "penta": {
+    name: "Penta",
+    nickname: "",
+    aliases: "Penta El Zero Miedo, Pentagon Jr.",
+    brand: "Raw",
+    alignment: "Face",
+    alignmentDesc: "Fan favorite luchador",
+    isChampion: true,
+    title: "Intercontinental Champion",
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/Penta_03232026MM_22590_PROFILE.png",
+    about: "Penta is one of the most exciting luchadors in the world. Known for his fearless high-flying style and his signature \"Zero Miedo\" (Zero Fear) taunt, he spent years dominating in Mexico, Impact Wrestling, and AEW before joining WWE in 2025. He quickly captured the Intercontinental Championship and now defends it in a Ladder Match at WrestleMania 42.",
+    finisher: "Penta Driver",
+    finisherDesc: "A package piledriver that spikes opponents head-first into the mat. Devastating and dangerous.",
+    entranceTheme: "Zero Miedo",
+    entranceArtist: "def rebel",
+    spotifyId: "79J8FTZRoO8JGTWavAR7OZ",
+    entranceVideo: null,
+    highlights: [
+      "Current Intercontinental Champion",
+      "Former AEW World Tag Team Champion",
+      "Known worldwide for \"Zero Miedo\" (Zero Fear)",
+      "Lucha libre legend across Mexico and the US"
+    ]
+  },
+  "jevon-evans": {
+    name: "Je'Von Evans",
+    nickname: "",
+    aliases: "",
+    brand: "Raw",
+    alignment: "Face",
+    alignmentDesc: "High-flying young star",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/02/JeVon-Evans_12022025KS_009_Profile.png",
+    about: "Je'Von Evans is one of the youngest and most athletic stars in WWE. A high-flying daredevil who earned his spot in the WrestleMania Ladder Match by winning a Main Event qualifying bout. He's fearless in the air and looking to make the biggest statement of his young career on the grandest stage.",
+    finisher: "Evans Above",
+    finisherDesc: "A spectacular top-rope cutter. Leaps off the top rope and catches opponents in mid-air.",
+    entranceTheme: "Evans Above",
+    entranceArtist: "def rebel",
+    spotifyId: "1JwyTc98Nqvb964lj2p695",
+    entranceVideo: null,
+    highlights: [
+      "One of the youngest competitors at WrestleMania 42",
+      "Won Main Event qualifier to earn Ladder Match spot",
+      "Known for incredible aerial acrobatics",
+      "WrestleMania debut at WM42"
+    ]
+  },
+  "dragon-lee": {
+    name: "Dragon Lee",
+    nickname: "",
+    aliases: "",
+    brand: "Raw",
+    alignment: "Face",
+    alignmentDesc: "Luchador fan favorite",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2023/04/DragonLee_PROFILE--1f4a6234a174e11bd6c26fda0292e73f.png",
+    about: "Dragon Lee is a world-class luchador from Mexico who has wrestled across CMLL, NJPW, and ROH before joining WWE. Known for his explosive speed and high-risk offense, he defeated Grayson Waller in his Main Event qualifier to earn a spot in the Intercontinental Championship Ladder Match at WrestleMania.",
+    finisher: "Operacion Dragon",
+    finisherDesc: "A running knee strike followed by a sitout powerbomb. Also uses a devastating top-rope double stomp.",
+    entranceTheme: "Dragon Lee",
+    entranceArtist: "def rebel",
+    spotifyId: "3ZTOLHSSZE5O7EyAF1jzvQ",
+    entranceVideo: null,
+    highlights: [
+      "Former CMLL World Lightweight Champion",
+      "Competed across Mexico, Japan, and the US",
+      "Won Main Event qualifier vs Grayson Waller",
+      "WrestleMania Ladder Match debut"
+    ]
+  },
+  "jd-mcdonagh": {
+    name: "JD McDonagh",
+    nickname: "",
+    aliases: "Jordan Devlin",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Cunning villain",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/10/JD_Profile.png",
+    about: "JD McDonagh is a crafty, hard-hitting Irish wrestler and a former member of The Judgment Day. Known for his technical skill and willingness to take insane risks, he defeated Akira Tozawa in his Main Event qualifier. He's dangerous in a Ladder Match because he has zero regard for his own body.",
+    finisher: "Devil Inside",
+    finisherDesc: "A headbutt from the top rope. McDonagh launches himself headfirst into opponents. Reckless and devastating.",
+    entranceTheme: "Rebel Heart",
+    entranceArtist: "def rebel",
+    spotifyId: "7sK9Xxr63paUTglk8hbGVT",
+    entranceVideo: null,
+    highlights: [
+      "Former WWE Tag Team Champion",
+      "Former NXT Cruiserweight Champion",
+      "Former member of The Judgment Day",
+      "Won Main Event qualifier vs Akira Tozawa"
+    ]
+  },
+  "rusev": {
+    name: "Rusev",
+    nickname: "The Bulgarian Brute",
+    aliases: "Miro, Alexander Rusev",
+    brand: "Raw",
+    alignment: "Face",
+    alignmentDesc: "Powerful fan favorite",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2025/04/Rusev_04212025rf_098_Profile--86d07e43e6fa49c789ee40bb7ec05827.png",
+    about: "Rusev is a 300-pound Bulgarian powerhouse who first dominated WWE with an undefeated streak and a WrestleMania match against John Cena. After stints in AEW as Miro, he returned to WWE and earned his spot in the Intercontinental Championship Ladder Match by conquering Otis in a Main Event qualifier.",
+    finisher: "The Accolade",
+    finisherDesc: "A crushing camel clutch submission. Sits on opponent's back and wrenches their neck. Nearly impossible to escape.",
+    entranceTheme: "Rusev Day",
+    entranceArtist: "def rebel",
+    spotifyId: "6VdtSJHFxEf9gdBws6ydrq",
+    entranceVideo: null,
+    highlights: [
+      "Former United States Champion",
+      "Entered WWE with a dominant undefeated streak",
+      "Faced John Cena at WrestleMania 31",
+      "Won Main Event qualifier vs Otis"
+    ]
+  },
+  "finn-balor": {
+    name: "Finn Bálor",
+    nickname: "The Demon King",
+    aliases: "The Prince, Fergal Devitt",
+    brand: "Raw",
+    alignment: "Face",
+    alignmentDesc: "Kicked out of The Judgment Day",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/02/Finn_Balor_PROFILE.png",
+    about: "Finn Bálor is an Irish wrestling legend who was the first-ever Universal Champion and a worldwide star in Japan as \"Prince Devitt\" before joining WWE. He co-founded The Judgment Day faction but was violently expelled in March 2026 after nearly 4 years. Now he's out for revenge against the faction, starting with Dominik Mysterio at WrestleMania.",
+    finisher: "Coup de Grâce",
+    finisherDesc: "A devastating double foot stomp from the top rope, landing on the opponent's chest. When he paints up as \"The Demon,\" he's nearly unbeatable.",
+    entranceTheme: "Catch Your Breath",
+    entranceArtist: "CFO$",
+    spotifyId: "45G4QkIjK4Oob3K3arZxFG",
+    entranceVideo: null,
+    highlights: [
+      "First-ever Universal Champion",
+      "2x Intercontinental Champion",
+      "Co-founded The Judgment Day",
+      "Former IWGP Junior Heavyweight Champion in Japan"
+    ]
+  },
+  "dominik-mysterio": {
+    name: "Dominik Mysterio",
+    nickname: "Dirty Dom",
+    aliases: "",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "The Judgment Day's golden child",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2025/02/Dominik_Mysterio_6616_profile--f4617d4abb18e42c2f577037e67cfe9e.png",
+    about: "Dominik Mysterio is the son of WWE legend Rey Mysterio. He turned his back on his father to join The Judgment Day and has become one of the most hated villains in WWE. He's in a relationship with Liv Morgan on-screen. After Finn Bálor was kicked out of the faction, Dominik finds himself face-to-face with his former ally at WrestleMania.",
+    finisher: "Frog Splash",
+    finisherDesc: "A top-rope splash where he leaps and lands chest-first on his opponent. Stolen from Eddie Guerrero's legacy -- which makes fans hate him even more.",
+    entranceTheme: "Latino Heat",
+    entranceArtist: "def rebel",
+    spotifyId: "6NsOClAKAF6f2eM8wvKq60",
+    entranceVideo: null,
+    highlights: [
+      "Former NXT North American Champion",
+      "Key member of The Judgment Day",
+      "Son of WWE Hall of Famer Rey Mysterio",
+      "One of the most booed wrestlers in WWE"
+    ]
+  },
+  "nia-jax": {
+    name: "Nia Jax",
+    nickname: "",
+    aliases: "The Irresistible Force",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Dominant villain",
+    isChampion: true,
+    title: "WWE Women's Tag Team Champion",
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/09/Nia_Jax_Profile.png",
+    about: "Nia Jax is one of the most physically dominant women in WWE history. A member of the Anoa'i wrestling dynasty (related to Roman Reigns and The Rock), she uses her size and power to overpower opponents. She and Lash Legend captured the Women's Tag Team Championship in February 2026 and now defend them in a Fatal 4-Way at WrestleMania.",
+    finisher: "Annihilator",
+    finisherDesc: "A massive leg drop from the second rope. At her size, it's absolutely crushing.",
+    entranceTheme: "Force of Greatness",
+    entranceArtist: "def rebel",
+    spotifyId: "3pT820a0OyX4JZg6ZIxYCL",
+    entranceVideo: null,
+    highlights: [
+      "Current WWE Women's Tag Team Champion",
+      "Former Raw Women's Champion",
+      "Member of the Anoa'i wrestling dynasty",
+      "Related to Roman Reigns and The Rock"
+    ]
+  },
+  "lash-legend": {
+    name: "Lash Legend",
+    nickname: "",
+    aliases: "",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Dominant villain",
+    isChampion: true,
+    title: "WWE Women's Tag Team Champion",
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/Lash_Legend_PROFILE.png",
+    about: "Lash Legend is a former college basketball player who transitioned to professional wrestling. At 6'1\", she towers over most of the women's division. She teamed up with Nia Jax to capture the Women's Tag Team Championship and forms one of the most physically imposing tag teams in WWE history.",
+    finisher: "Legend Slam",
+    finisherDesc: "A thunderous slam that plants opponents into the mat. Pure power.",
+    entranceTheme: "All About Me",
+    entranceArtist: "def rebel",
+    spotifyId: "5ZzpJE66IGK7l5s7N5S20N",
+    entranceVideo: null,
+    highlights: [
+      "Current WWE Women's Tag Team Champion",
+      "Former college basketball player",
+      "One of the tallest women in WWE at 6'1\"",
+      "Former NXT Women's Tag Team Champion"
+    ]
+  },
+  "charlotte-flair": {
+    name: "Charlotte Flair",
+    nickname: "The Queen",
+    aliases: "The Genetically Superior Athlete",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Returning legend",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/11/Charlotte_Profile.png",
+    about: "Charlotte Flair is widely considered the greatest women's wrestler of all time. The daughter of legendary Ric Flair, she's a 14-time Women's Champion and has main-evented WrestleMania multiple times. She teams with Alexa Bliss to challenge for the Women's Tag Team Championships after Nia Jax and Lash Legend's interference cost them their previous title reign.",
+    finisher: "Figure Eight",
+    finisherDesc: "An upgraded version of her father Ric Flair's iconic Figure Four Leglock. Bridges up to add extra pressure. Nearly impossible to escape.",
+    entranceTheme: "Recognition",
+    entranceArtist: "def rebel",
+    spotifyId: "7yt4p8GEAUMWqrAGR3f4zy",
+    entranceVideo: null,
+    highlights: [
+      "14x Women's Champion -- the most in history",
+      "Daughter of WWE legend Ric Flair",
+      "Main-evented WrestleMania multiple times",
+      "Grand Slam Champion"
+    ]
+  },
+  "alexa-bliss": {
+    name: "Alexa Bliss",
+    nickname: "The Goddess",
+    aliases: "Little Miss Bliss, Five Feet of Fury",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Beloved returning star",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/11/Alexa_Bliss_Profile.png",
+    about: "Alexa Bliss is a multi-time champion who has done it all in WWE. A former fitness competitor turned wrestler, she's held championships across Raw, SmackDown, and the tag team division. She returned to WWE after taking time off for the birth of her daughter and teamed up with Charlotte Flair to go after the Women's Tag Team Championships at WrestleMania.",
+    finisher: "Twisted Bliss",
+    finisherDesc: "A top-rope swinging splash with a twist. Flips off the turnbuckle and crashes into her opponent.",
+    entranceTheme: "Spiteful",
+    entranceArtist: "def rebel",
+    spotifyId: "2RDNHPIYnDCStQSWgW35YQ",
+    entranceVideo: null,
+    highlights: [
+      "3x Raw Women's Champion",
+      "2x SmackDown Women's Champion",
+      "Women's Tag Team Champion",
+      "2018 Money in the Bank winner"
+    ]
+  },
+  "bayley": {
+    name: "Bayley",
+    nickname: "The Role Model",
+    aliases: "",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Beloved veteran",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/11/Bayley_PROFILE.png",
+    about: "Bayley is one of the most accomplished women in WWE history and a member of the legendary Four Horsewomen alongside Charlotte Flair, Becky Lynch, and Sasha Banks. She was the first-ever Women's Grand Slam Champion and had a record-breaking SmackDown Women's Championship reign. She teams with Lyra Valkyria as they aim for the Women's Tag Team Championships at WrestleMania.",
+    finisher: "Rose Plant",
+    finisherDesc: "A modified sitout facebuster. Grabs the opponent's head and plants them face-first into the mat.",
+    entranceTheme: "Turn It Up",
+    entranceArtist: "def rebel",
+    spotifyId: "4hfozVD15In8G5lhpKrtLD",
+    entranceVideo: null,
+    highlights: [
+      "First-ever Women's Grand Slam Champion",
+      "Longest-reigning SmackDown Women's Champion",
+      "Member of the Four Horsewomen",
+      "2023 Women's Royal Rumble winner"
+    ]
+  },
+  "lyra-valkyria": {
+    name: "Lyra Valkyria",
+    nickname: "",
+    aliases: "",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Rising star",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2025/11/Lyra_valkyr_PROFILE.png",
+    about: "Lyra Valkyria is an Irish wrestler who has quickly risen through the ranks in WWE. A former NXT Women's Champion, she made it her personal mission to get Bayley back to WrestleMania and the two formed a tag team. Together they challenge for the Women's Tag Team Championships at WrestleMania 42.",
+    finisher: "Nightwing",
+    finisherDesc: "A spinning heel kick that connects flush with the opponent's head. Fast and precise.",
+    entranceTheme: "Warrior Code",
+    entranceArtist: "def rebel",
+    spotifyId: "4Nld0oepDujgKRg3wd0D0Z",
+    entranceVideo: null,
+    highlights: [
+      "Former NXT Women's Champion",
+      "2024 Queen of the Ring tournament finalist",
+      "Rapidly rising star from Ireland",
+      "WrestleMania debut at WM42"
+    ]
+  },
+  "nikki-bella": {
+    name: "Nikki Bella",
+    nickname: "",
+    aliases: "",
+    brand: "Legends",
+    alignment: "Face",
+    alignmentDesc: "Returning Hall of Famer",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/Bella_03202026ca_335_Profile.png",
+    about: "Nikki Bella is one half of The Bella Twins and a WWE Hall of Famer. A 2x Divas Champion with a record-breaking 301-day reign, she returns alongside her twin sister Brie to challenge for the Women's Tag Team Championships at WrestleMania 42 -- their first championship opportunity as a team.",
+    finisher: "Rack Attack",
+    finisherDesc: "Lifts opponents across her shoulders in a torture rack position and drops them into a neckbreaker.",
+    entranceTheme: "You Can Look (But You Can't Touch)",
+    entranceArtist: "Jim Johnston",
+    spotifyId: "7ETjUGznkux2JNOCzI6hf2",
+    entranceVideo: null,
+    highlights: [
+      "WWE Hall of Famer (Class of 2020)",
+      "2x Divas Champion (record 301-day reign)",
+      "One half of The Bella Twins",
+      "Reality TV star and entrepreneur"
+    ]
+  },
+  "brie-bella": {
+    name: "Brie Bella",
+    nickname: "",
+    aliases: "",
+    brand: "Legends",
+    alignment: "Face",
+    alignmentDesc: "Returning Hall of Famer",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/Bella_03202026ca_030_Profile.png",
+    about: "Brie Bella is one half of The Bella Twins and a WWE Hall of Famer. Known for her \"Brie Mode\" battle cry and Yes Kicks (inspired by her husband Daniel Bryan), she returns alongside her twin sister Nikki for one more run at WrestleMania -- chasing their first-ever Tag Team Championship.",
+    finisher: "Brie Mode Knee",
+    finisherDesc: "A running knee strike, inspired by her husband Daniel Bryan's signature move.",
+    entranceTheme: "You Can Look (But You Can't Touch)",
+    entranceArtist: "Jim Johnston",
+    spotifyId: "7ETjUGznkux2JNOCzI6hf2",
+    entranceVideo: null,
+    highlights: [
+      "WWE Hall of Famer (Class of 2020)",
+      "Former Divas Champion",
+      "One half of The Bella Twins",
+      "Married to WWE legend Daniel Bryan"
+    ]
   }
 };
 
@@ -577,6 +937,65 @@ const MATCHES = [
       { id: "_hxdcLCcVlQ", start: 171, end: 257, label: "Payback", title: "Jacob Throws Drew Into the Steps", desc: "Jacob Fatu gets his revenge, throwing Drew into the steel steps with violent force. Neither man will stop." },
       { id: "uFE-EzbYo_w", start: 0, end: 142, label: "Face to Face", title: "Drew and Jacob Exchange Words", desc: "An intense face-to-face confrontation. You can feel the hatred between these two. This can only end at WrestleMania." }
     ]
+  },
+  {
+    id: "match-9",
+    participants: ["penta", "jevon-evans", "dragon-lee", "jd-mcdonagh", "rusev"],
+    championship: "Intercontinental Championship -- Ladder Match",
+    isTitleMatch: true,
+    night: null,
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_ICLadder_Tron_16x9_date.jpg",
+    whyItMatters: "This is a <strong>Ladder Match</strong> -- meaning the title belt hangs high above the ring and the only way to win is to climb a ladder and grab it. No pinfalls, no submissions -- just chaos. Five wrestlers will battle using ladders as weapons AND as tools to reach the championship. <strong>Penta</strong> is the defending champion, a fearless luchador. Four challengers won qualifying matches to earn their spots: Je'Von Evans, Dragon Lee, JD McDonagh, and the returning Rusev. Ladder Matches are always some of the most spectacular matches at WrestleMania -- expect jaw-dropping high spots and pure mayhem.",
+    storySoFar: "The Intercontinental Championship is one of WWE's most prestigious titles, and Penta has been a fighting champion since winning it. When WWE announced a Ladder Match for WrestleMania, four Main Event qualifying bouts determined the challengers: JD McDonagh defeated Akira Tozawa, Dragon Lee beat Grayson Waller, Je'Von Evans outlasted Rayo Americano, and Rusev conquered Otis. Now all five men will put their bodies on the line in <em>what is sure to be an epic Ladder Match at The Showcase of the Immortals.</em>",
+    predictions: [
+      { label: "Penta retains", wrestler: "Penta" },
+      { label: "Je'Von Evans", wrestler: "Je'Von Evans" },
+      { label: "Dragon Lee", wrestler: "Dragon Lee" },
+      { label: "JD McDonagh", wrestler: "JD McDonagh" },
+      { label: "Rusev", wrestler: "Rusev" }
+    ],
+    feudSubtitle: "Five men. One ladder. One championship. Pure chaos.",
+    feudVideos: []
+  },
+  {
+    id: "match-10",
+    wrestler1: "finn-balor",
+    wrestler2: "dominik-mysterio",
+    championship: "Singles Match",
+    isTitleMatch: false,
+    night: null,
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_FinnDom__Tron_16x9_date.jpg",
+    whyItMatters: "A <strong>betrayal within The Judgment Day.</strong> Finn Bálor co-founded The Judgment Day faction nearly 4 years ago and helped build it into one of the most dominant groups in WWE. On March 9, the faction turned on him -- beating him down and kicking him out. Bálor didn't take it quietly. He interfered in Dominik Mysterio's Intercontinental Championship match against Penta, costing Dominik the title. Now these former allies meet at WrestleMania for revenge.",
+    storySoFar: "Finn Bálor spent nearly 4 years as the leader of The Judgment Day. But after challenging CM Punk for the World Heavyweight Championship, tensions grew within the group. On the March 9 episode of Raw, The Judgment Day <em>assaulted Bálor and threw him out of the faction.</em> Weeks later, Bálor got his first taste of revenge by interfering in Dominik Mysterio's Intercontinental Championship match. On the March 30 Raw, Bálor officially challenged Mysterio for WrestleMania. The Demon King is out for blood.",
+    predictions: [
+      { label: "Finn Bálor wins", wrestler: "Finn Bálor" },
+      { label: "Dominik Mysterio wins", wrestler: "Dominik Mysterio" }
+    ],
+    feudSubtitle: "Former allies turned bitter enemies. Watch the Judgment Day implode.",
+    feudVideos: []
+  },
+  {
+    id: "match-11",
+    teams: [
+      { name: "Nia Jax & Lash Legend", wrestlers: ["nia-jax", "lash-legend"], isChampion: true },
+      { name: "Charlotte Flair & Alexa Bliss", wrestlers: ["charlotte-flair", "alexa-bliss"] },
+      { name: "Bayley & Lyra Valkyria", wrestlers: ["bayley", "lyra-valkyria"] },
+      { name: "The Bella Twins", wrestlers: ["nikki-bella", "brie-bella"] }
+    ],
+    championship: "WWE Women's Tag Team Championship -- Fatal 4-Way",
+    isTitleMatch: true,
+    night: null,
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_WomensTag4Way_MM_16x9_Date.jpg",
+    whyItMatters: "A <strong>Fatal 4-Way Tag Team Match</strong> -- four teams compete at once, and the first team to score a pinfall or submission wins the championships. That means there's no disqualification and the action will be non-stop chaos with 8 women in the match. The champions <strong>Nia Jax & Lash Legend</strong> are the most physically dominant team. <strong>Charlotte Flair & Alexa Bliss</strong> want payback after Jax and Legend cost them their previous title reign. <strong>Bayley & Lyra Valkyria</strong> are a veteran-rookie combo hungry for gold. And <strong>The Bella Twins</strong> return from the Hall of Fame for one more championship run.",
+    storySoFar: "Nia Jax and Lash Legend captured the Women's Tag Team Championships from Rhea Ripley and IYO SKY in late February, establishing themselves as the most physically imposing tag team in the division. Charlotte Flair and Alexa Bliss have a score to settle -- Jax and Legend's interference cost them their <em>previous</em> tag title reign against The Kabuki Warriors. Bayley was on the outside looking in until Lyra Valkyria made it her personal mission to get Bayley back to WrestleMania. And the Hall of Fame Bella Twins have returned seeking their first-ever Tag Team Championship. Four teams, one title, and WrestleMania chaos.",
+    predictions: [
+      { label: "Nia Jax & Lash Legend retain", wrestler: "Nia Jax & Lash Legend" },
+      { label: "Charlotte Flair & Alexa Bliss", wrestler: "Charlotte Flair & Alexa Bliss" },
+      { label: "Bayley & Lyra Valkyria", wrestler: "Bayley & Lyra Valkyria" },
+      { label: "The Bella Twins", wrestler: "The Bella Twins" }
+    ],
+    feudSubtitle: "Four teams. Eight women. One championship. Who walks out as champions?",
+    feudVideos: []
   }
 ];
 

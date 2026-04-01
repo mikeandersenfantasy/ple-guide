@@ -88,14 +88,20 @@
   var grid = document.getElementById('home-match-grid');
   if (!grid || typeof MATCHES === 'undefined') return;
   MATCHES.forEach(function(match) {
-    var w1 = WRESTLERS[match.wrestler1];
-    var w2 = WRESTLERS[match.wrestler2];
+    var altText = match.championship;
+    if (match.wrestler1 && match.wrestler2) {
+      altText = WRESTLERS[match.wrestler1].name + ' vs ' + WRESTLERS[match.wrestler2].name;
+    } else if (match.participants) {
+      altText = match.participants.map(function(k) { return WRESTLERS[k].name; }).join(', ');
+    } else if (match.teams) {
+      altText = match.teams.map(function(t) { return t.name; }).join(' vs ');
+    }
     var a = document.createElement('a');
     a.href = 'matches/#' + match.id;
     a.className = 'match-preview-link';
     var img = document.createElement('img');
     img.src = match.bannerImg;
-    img.alt = w1.name + ' vs ' + w2.name;
+    img.alt = altText;
     img.loading = 'lazy';
     img.onerror = function() { a.style.display = 'none'; };
     a.appendChild(img);
@@ -133,6 +139,8 @@
       <div class="glossary-item"><dt>Near Fall</dt><dd>When the ref counts 1-2 and everyone GASPS thinking the match is over, but the wrestler kicks out at the last second.</dd></div>
       <div class="glossary-item"><dt>Hot Tag</dt><dd>In a tag team match, when the exhausted wrestler finally tags in their fresh partner. The crowd erupts.</dd></div>
       <div class="glossary-item"><dt>Unsanctioned Match</dt><dd>A match with NO rules at all. No disqualifications, no countouts -- chairs, tables, anything goes. WWE says they don't "officially" sanction it because it's too dangerous.</dd></div>
+      <div class="glossary-item"><dt>Ladder Match</dt><dd>The title belt hangs above the ring. The only way to win is to climb a ladder and grab it. No pins, no submissions -- just chaos, high spots, and insane risks.</dd></div>
+      <div class="glossary-item"><dt>Fatal 4-Way</dt><dd>Four competitors (or teams) compete at the same time. The first one to score a pin or submission wins. No disqualifications, non-stop action.</dd></div>
     </div>
   </div>
 </section>

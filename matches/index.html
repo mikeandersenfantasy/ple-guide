@@ -59,6 +59,8 @@
   .match-predict .prediction-btns{flex-direction:column;align-items:stretch}
   .match-predict .prediction-btn{width:100%;text-align:center}
 }
+.prediction-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.prediction-btn{flex:0 1 auto}
 </style>
 </head>
 <body>
@@ -180,9 +182,18 @@
     return html;
   }
 
+  function getMatchAltText(match) {
+    if (match.wrestler1 && match.wrestler2) {
+      return WRESTLERS[match.wrestler1].name + ' vs ' + WRESTLERS[match.wrestler2].name;
+    } else if (match.participants) {
+      return match.participants.map(function(k) { return WRESTLERS[k].name; }).join(', ');
+    } else if (match.teams) {
+      return match.teams.map(function(t) { return t.name; }).join(' vs ');
+    }
+    return match.championship;
+  }
+
   function buildMatchRow(match, index) {
-    var w1 = WRESTLERS[match.wrestler1];
-    var w2 = WRESTLERS[match.wrestler2];
     var isReverse = index % 2 !== 0;
     var matchKey = match.id.replace('-', '');
 
@@ -200,7 +211,7 @@
 
     // Image side
     html += '<div class="match-img-side">';
-    html += '<img src="' + match.bannerImg + '" alt="' + w1.name + ' vs ' + w2.name + '" loading="lazy">';
+    html += '<img src="' + match.bannerImg + '" alt="' + getMatchAltText(match) + '" loading="lazy">';
     html += '<div class="match-predict">';
     html += '<h4>Who Wins?</h4>';
     html += '<div class="prediction-btns">';

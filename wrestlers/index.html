@@ -260,39 +260,72 @@ document.addEventListener('DOMContentLoaded', function() {
     return { card: card, expanded: expanded };
   }
 
+  // Get all wrestler keys for a match
+  function getMatchWrestlerKeys(match) {
+    if (match.wrestler1 && match.wrestler2) return [match.wrestler1, match.wrestler2];
+    if (match.participants) return match.participants;
+    if (match.teams) {
+      var keys = [];
+      match.teams.forEach(function(t) { keys = keys.concat(t.wrestlers); });
+      return keys;
+    }
+    return [];
+  }
+
   // Build page organized by matchups
   matches.forEach(function(match) {
-    var w1 = wrestlers[match.wrestler1];
-    var w2 = wrestlers[match.wrestler2];
-    if (!w1 || !w2) return;
+    var wrestlerKeys = getMatchWrestlerKeys(match);
+    if (wrestlerKeys.length === 0) return;
 
-    // Matchup section
     var section = document.createElement('div');
     section.className = 'matchup';
 
-    // VS grid
-    var vsGrid = document.createElement('div');
-    vsGrid.className = 'matchup-vs';
-
-    // Title spans full grid
+    // Title
     var title = document.createElement('div');
     title.className = 'matchup-title';
+    title.style.textAlign = 'center';
+    title.style.marginBottom = '20px';
     title.textContent = match.championship;
-    vsGrid.appendChild(title);
 
-    var card1 = buildCard(match.wrestler1, w1);
-    var card2 = buildCard(match.wrestler2, w2);
+    if (wrestlerKeys.length === 2) {
+      // Standard 1v1 VS layout
+      var vsGrid = document.createElement('div');
+      vsGrid.className = 'matchup-vs';
+      vsGrid.appendChild(title);
 
-    vsGrid.appendChild(card1.card);
-    var vsLabel = document.createElement('div');
-    vsLabel.className = 'vs-label';
-    vsLabel.textContent = 'VS';
-    vsGrid.appendChild(vsLabel);
-    vsGrid.appendChild(card2.card);
+      var card1 = buildCard(wrestlerKeys[0], wrestlers[wrestlerKeys[0]]);
+      var card2 = buildCard(wrestlerKeys[1], wrestlers[wrestlerKeys[1]]);
 
-    section.appendChild(vsGrid);
-    section.appendChild(card1.expanded);
-    section.appendChild(card2.expanded);
+      vsGrid.appendChild(card1.card);
+      var vsLabel = document.createElement('div');
+      vsLabel.className = 'vs-label';
+      vsLabel.textContent = 'VS';
+      vsGrid.appendChild(vsLabel);
+      vsGrid.appendChild(card2.card);
+
+      section.appendChild(vsGrid);
+      section.appendChild(card1.expanded);
+      section.appendChild(card2.expanded);
+    } else {
+      // Multi-person match -- roster grid layout
+      section.appendChild(title);
+      var multiGrid = document.createElement('div');
+      multiGrid.className = 'roster-grid';
+      var expandedPanels = [];
+
+      wrestlerKeys.forEach(function(key) {
+        var w = wrestlers[key];
+        if (!w) return;
+        var card = buildCard(key, w);
+        multiGrid.appendChild(card.card);
+        expandedPanels.push(card.expanded);
+      });
+
+      section.appendChild(multiGrid);
+      expandedPanels.forEach(function(panel) {
+        section.appendChild(panel);
+      });
+    }
 
     container.appendChild(section);
   });

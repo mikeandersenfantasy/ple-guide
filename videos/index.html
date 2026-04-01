@@ -109,12 +109,35 @@ document.addEventListener('DOMContentLoaded', function() {
     '</div>';
   }
 
+  // Get all wrestler keys for a match
+  function getMatchWrestlerKeys(match) {
+    if (match.wrestler1 && match.wrestler2) return [match.wrestler1, match.wrestler2];
+    if (match.participants) return match.participants;
+    if (match.teams) {
+      var keys = [];
+      match.teams.forEach(function(t) { keys = keys.concat(t.wrestlers); });
+      return keys;
+    }
+    return [];
+  }
+
+  function getMatchTitle(match) {
+    if (match.wrestler1 && match.wrestler2) {
+      return wrestlers[match.wrestler1].name + ' vs ' + wrestlers[match.wrestler2].name;
+    } else if (match.participants) {
+      return match.participants.map(function(k) { return wrestlers[k].name; }).join(' vs ');
+    } else if (match.teams) {
+      return match.teams.map(function(t) { return t.name; }).join(' vs ');
+    }
+    return match.championship;
+  }
+
   matches.forEach(function(match, i) {
-    var w1 = wrestlers[match.wrestler1];
-    var w2 = wrestlers[match.wrestler2];
-    if (!w1 || !w2) return;
+    var wrestlerKeys = getMatchWrestlerKeys(match);
+    if (wrestlerKeys.length === 0) return;
 
     var sectionClass = i % 2 === 0 ? 'section section--gray' : 'section';
+    var matchTitle = getMatchTitle(match);
 
     var html = '<section class="' + sectionClass + '">' +
       '<div class="inner">' +
@@ -122,11 +145,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Banner image
     if (match.bannerImg) {
-      html += '<img src="' + match.bannerImg + '" alt="' + w1.name + ' vs ' + w2.name + '" style="width:100%;max-width:800px;border-radius:14px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto" onerror="this.style.display=\'none\'">';
+      html += '<img src="' + match.bannerImg + '" alt="' + matchTitle + '" style="width:100%;max-width:800px;border-radius:14px;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto" onerror="this.style.display=\'none\'">';
     }
 
     html += '<div class="section-label">' + match.championship + '</div>' +
-      '<h2 class="section-title">' + w1.name + ' vs ' + w2.name + '</h2>';
+      '<h2 class="section-title">' + matchTitle + '</h2>';
 
     if (match.feudSubtitle) {
       html += '<p class="section-subtitle mx-auto">' + match.feudSubtitle + '</p>';
@@ -135,18 +158,17 @@ document.addEventListener('DOMContentLoaded', function() {
     html += '</div>';
 
     // Entrance videos section
-    var hasEntrances = w1.entranceVideo || w2.entranceVideo;
+    var hasEntrances = wrestlerKeys.some(function(k) { return wrestlers[k] && wrestlers[k].entranceVideo; });
     if (hasEntrances) {
       html += '<div class="vid-section-header"><span class="vid-section-icon">&#127908;</span> Entrances</div>';
       html += '<div class="vid-grid">';
-      if (w1.entranceVideo) {
-        var ev1 = w1.entranceVideo;
-        html += buildVideoCard(ev1.id, ev1.start, ev1.label || 'Entrance', w1.name + ' -- "' + w1.entranceTheme + '" by ' + w1.entranceArtist, ev1.desc || '');
-      }
-      if (w2.entranceVideo) {
-        var ev2 = w2.entranceVideo;
-        html += buildVideoCard(ev2.id, ev2.start, ev2.label || 'Entrance', w2.name + ' -- "' + w2.entranceTheme + '" by ' + w2.entranceArtist, ev2.desc || '');
-      }
+      wrestlerKeys.forEach(function(key) {
+        var w = wrestlers[key];
+        if (w && w.entranceVideo) {
+          var ev = w.entranceVideo;
+          html += buildVideoCard(ev.id, ev.start, ev.label || 'Entrance', w.name + ' -- "' + w.entranceTheme + '" by ' + w.entranceArtist, ev.desc || '');
+        }
+      });
       html += '</div>';
     }
 
