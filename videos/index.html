@@ -6,23 +6,47 @@
 <title>Entrances - WrestleMania 42 Fan Guide</title>
 <link rel="stylesheet" href="../css/styles.css">
 <style>
-.vid-card{background:var(--navy-light);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:all .3s ease;display:flex;flex-direction:column}
-.vid-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.3);border-color:var(--wm-gold)}
-.vid-embed{position:relative;width:100%;padding-top:56.25%;background:#0a0a12;border-radius:12px 12px 0 0;overflow:hidden}
-.vid-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px 12px 0 0}
-.vid-body{padding:18px 20px;flex:1;display:flex;flex-direction:column}
-.vid-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:6px}
-.vid-title{font-size:1rem;font-weight:800;color:var(--off-white);margin-bottom:6px}
-.vid-desc{font-size:.85rem;color:var(--mid-gray);line-height:1.5;flex:1}
-.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-@media(max-width:680px){.vid-grid{grid-template-columns:1fr}}
-.match-divider{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid rgba(212,168,60,0.2)}
-.match-divider h2{font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold)}
-.match-divider .match-type{font-size:.8rem;color:var(--mid-gray);font-weight:600}
-.match-group{margin-bottom:50px}
-.match-group:last-child{margin-bottom:0}
-.team-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);padding:10px 0 8px;border-bottom:1px solid rgba(212,168,60,0.12);margin-bottom:12px}
-@media(max-width:480px){.match-divider h2{font-size:1rem}.match-divider{flex-direction:column;align-items:flex-start;gap:4px}}
+/* Entrance cards */
+.vid-card{background:var(--navy-light);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;transition:all .3s ease;display:flex;flex-direction:column;border-top:3px solid transparent}
+.vid-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.3);border-color:var(--wm-gold);border-top-color:var(--wm-gold)}
+.vid-embed{position:relative;width:100%;padding-top:56.25%;background:#0a0a12;overflow:hidden}
+.vid-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.vid-body{padding:16px 20px;flex:1;display:flex;flex-direction:column;text-align:center}
+.vid-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);margin-bottom:4px}
+.vid-title{font-size:1.05rem;font-weight:900;color:var(--off-white);margin-bottom:4px}
+.vid-theme{font-size:.85rem;color:var(--mid-gray);font-style:italic;margin-bottom:6px}
+.vid-desc{font-size:.82rem;color:var(--mid-gray);line-height:1.5;flex:1}
+
+/* Grid layout */
+.vid-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:900px;margin:0 auto}
+@media(max-width:680px){.vid-grid{grid-template-columns:1fr;max-width:500px}}
+
+/* For 1v1 matches - side by side looks great */
+/* For multi-person - use 3 columns */
+.vid-grid--multi{grid-template-columns:repeat(3,1fr);max-width:1100px}
+@media(max-width:900px){.vid-grid--multi{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.vid-grid--multi{grid-template-columns:1fr;max-width:500px}}
+
+/* Match group sections */
+.match-group{padding:50px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.match-group:last-child{border-bottom:none}
+.match-group:nth-child(even){background:var(--navy-light);margin:0 -20px;padding-left:20px;padding-right:20px;border-radius:0}
+
+/* Match header - centered */
+.match-header{text-align:center;margin-bottom:30px}
+.match-header .championship{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--wm-gold);margin-bottom:8px}
+.match-header h2{font-size:1.6rem;font-weight:900;color:var(--white);line-height:1.3;max-width:700px;margin:0 auto}
+@media(max-width:480px){.match-header h2{font-size:1.15rem}.match-header .championship{font-size:.65rem}}
+
+/* Team labels */
+.team-label{text-align:center;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--wm-gold);padding:16px 0 10px;margin:20px auto 12px;max-width:900px;border-bottom:1px solid rgba(212,168,60,0.15)}
+.team-label:first-of-type{margin-top:0}
+
+/* Placeholder card */
+.vid-card--placeholder .vid-embed{display:flex;align-items:center;justify-content:center}
+.vid-placeholder-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:var(--mid-gray)}
+.vid-placeholder-inner .icon{font-size:2.5rem;margin-bottom:8px;opacity:.5}
+.vid-placeholder-inner .text{font-size:.85rem;font-weight:600}
 </style>
 </head>
 <body>
@@ -49,7 +73,7 @@
   <p class="hero-sub">Learn the entrance themes before the show! When these songs hit, you'll know exactly who's coming out.</p>
 </section>
 
-<section class="section">
+<section class="section" style="padding-top:20px">
 <div class="inner" id="entranceContainer"></div>
 </section>
 
@@ -84,12 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function getMatchTitle(match) {
     if (match.wrestler1 && match.wrestler2) {
       return wrestlers[match.wrestler1].name + ' vs ' + wrestlers[match.wrestler2].name;
-    } else if (match.participants) {
-      return match.participants.map(function(k) { return wrestlers[k].name; }).join(' vs ');
-    } else if (match.teams) {
-      return match.teams.map(function(t) { return t.name; }).join(' vs ');
     }
-    return match.championship;
+    return match.championship.replace(/ -- .*/, '');
   }
 
   function buildEntranceCard(w) {
@@ -102,7 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
         '<div class="vid-body">' +
           '<div class="vid-label">Entrance</div>' +
           '<div class="vid-title">' + w.name + '</div>' +
-          '<div class="vid-desc">"' + w.entranceTheme + '" by ' + w.entranceArtist + (ev.desc ? ' -- ' + ev.desc : '') + '</div>' +
+          '<div class="vid-theme">"' + w.entranceTheme + '" by ' + w.entranceArtist + '</div>' +
+          (ev.desc ? '<div class="vid-desc">' + ev.desc + '</div>' : '') +
         '</div>' +
       '</div>';
     } else {
@@ -116,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         '<div class="vid-body">' +
           '<div class="vid-label">Entrance</div>' +
           '<div class="vid-title">' + w.name + '</div>' +
-          '<div class="vid-desc">"' + w.entranceTheme + '" by ' + w.entranceArtist + ' -- Entrance video will be added soon!</div>' +
+          '<div class="vid-theme">"' + w.entranceTheme + '" by ' + w.entranceArtist + '</div>' +
         '</div>' +
       '</div>';
     }
@@ -129,18 +150,19 @@ document.addEventListener('DOMContentLoaded', function() {
     var group = document.createElement('div');
     group.className = 'match-group';
 
-    // Match header
-    var header = '<div class="match-divider">' +
-      '<h2>' + getMatchTitle(match) + '</h2>' +
-      '<span class="match-type">' + match.championship.replace(/ -- .*/, '') + '</span>' +
-    '</div>';
+    var isMulti = wrestlerKeys.length > 2;
+    var gridClass = isMulti ? 'vid-grid vid-grid--multi' : 'vid-grid';
 
-    var html = header;
+    // Centered match header
+    var html = '<div class="match-header">' +
+      '<div class="championship">' + match.championship.replace(/ -- .*/, '') + '</div>' +
+      '<h2>' + getMatchTitle(match) + '</h2>' +
+    '</div>';
 
     if (match.teams) {
       match.teams.forEach(function(team) {
         html += '<div class="team-label">' + team.name + (team.isChampion ? ' (Champions)' : '') + '</div>';
-        html += '<div class="vid-grid">';
+        html += '<div class="' + gridClass + '">';
         team.wrestlers.forEach(function(key) {
           var w = wrestlers[key];
           if (w) html += buildEntranceCard(w);
@@ -148,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
         html += '</div>';
       });
     } else {
-      html += '<div class="vid-grid">';
+      html += '<div class="' + gridClass + '">';
       wrestlerKeys.forEach(function(key) {
         var w = wrestlers[key];
         if (w) html += buildEntranceCard(w);
