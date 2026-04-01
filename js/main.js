@@ -13,8 +13,8 @@ function initCountdown() {
   };
   if (!els.days) return;
 
-  // WrestleMania 42 Night 1: April 18, 2026 at 7:00 PM ET (4:00 PM PT / Vegas local)
-  const target = new Date('2026-04-18T19:00:00-04:00').getTime();
+  // WrestleMania 42 Night 1: April 18, 2026 at 6:00 PM ET (3:00 PM PT / Vegas local)
+  const target = new Date('2026-04-18T18:00:00-04:00').getTime();
 
   function update() {
     const diff = target - Date.now();
