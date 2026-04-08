@@ -154,6 +154,28 @@ function initSmoothScroll() {
   });
 }
 
+// ===== ROTATING HERO TAGLINE =====
+function initTagline() {
+  var el = document.getElementById('hero-tagline');
+  if (!el) return;
+  var phrases = [
+    'The Showcase of the Immortals',
+    '10 Years in the Making',
+    'Las Vegas. April 18–19.'
+  ];
+  var idx = 0;
+  el.textContent = phrases[0];
+  el.style.opacity = '1';
+  setInterval(function() {
+    el.style.opacity = '0';
+    setTimeout(function() {
+      idx = (idx + 1) % phrases.length;
+      el.textContent = phrases[idx];
+      el.style.opacity = '1';
+    }, 500);
+  }, 4000);
+}
+
 // ===== INIT ALL =====
 document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
@@ -163,4 +185,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initPredictions();
   initScrollTop();
   initSmoothScroll();
+  initTagline();
 });

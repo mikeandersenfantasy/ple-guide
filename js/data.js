@@ -984,17 +984,70 @@ const WRESTLERS = {
       "Over 30 years in professional wrestling",
       "Father of Dominik Mysterio"
     ]
+  },
+  "giulia": {
+    name: "Giulia",
+    nickname: "",
+    aliases: "",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Dominant champion from Japan",
+    isChampion: true,
+    title: "Women's United States Champion",
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/01/guilia_PROFILE.png",
+    about: "Giulia is here to redefine the Women's Division. Following in the footsteps of Japanese wrestling icons like Asuka and IYO SKY, she transitioned from NXT to SmackDown and immediately captured the Women's United States Championship. Known for her brutal strikes, undeniable charisma, and electric presence, she's one of the most talented women in WWE.",
+    finisher: "Northern Lights Bomb",
+    finisherDesc: "A devastating suplex bomb. Lifts opponents and drives them into the mat with full force. Also uses a brutal running knee strike.",
+    entranceTheme: "Giulia Theme",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Current Women's United States Champion",
+      "Former NXT Women's Champion",
+      "2024 Women's Iron Survivor Challenge winner",
+      "Star of Japanese wrestling scene before WWE"
+    ]
+  },
+  "iyo-sky": {
+    name: "IYO SKY",
+    nickname: "The Genius of the Sky",
+    aliases: "IO Shirai",
+    brand: "Raw",
+    alignment: "Face",
+    alignmentDesc: "High-flying fan favorite",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2024/07/IyoSky_01282024RF_2393_Profile--57f7b2018f8d8b3f8e8407cfa6fc3f7c.png",
+    about: "IYO SKY is one of the most innovative high-flyers in WWE history. The Genius of the Sky has held championships across every level of WWE -- from NXT to the Women's World Championship. A former Ms. Money in the Bank, she's hungry to add the Women's United States Championship to her collection at WrestleMania.",
+    finisher: "Over The Moonsault",
+    finisherDesc: "A breathtaking moonsault from the top rope. IYO SKY defies gravity every time she climbs the turnbuckle.",
+    entranceTheme: "Tokyo Shock",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Former Women's World Champion",
+      "2x WWE Women's Champion",
+      "Ms. Money in the Bank",
+      "Former NXT Women's Champion",
+      "Gravity-defying aerial specialist"
+    ]
   }
 };
 
 const MATCHES = [
   {
-    id: "match-1",
+    id: "punk-reigns",
     wrestler1: "cm-punk",
     wrestler2: "roman-reigns",
     championship: "World Heavyweight Championship",
+    matchType: "title",
+    hype: 5,
     isTitleMatch: true,
     night: 2,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "The main event of WrestleMania 42. Roman Reigns — the most dominant champion in WWE history with a nearly 4-year title reign — won the 2026 Royal Rumble and called his shot. CM Punk has rebuilt himself as the face of the new era. A decade of history. One moment. This is the match.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_PunkRoman_SUN_16x9_date.jpg",
     whyItMatters: "This match is <strong>over a decade in the making.</strong> CM Punk and Roman Reigns have NEVER had a one-on-one match in WWE, despite their deeply intertwined history. Punk helped launch Reigns' career as part of The Shield back in 2012, and when Punk left WWE in 2014, Reigns became the face of the company. Their real-life tension -- Punk's explosive podcast comments, Reigns' meteoric rise -- blurs the line between fiction and reality. This personal rivalry has been building for years, with deeply personal attacks making this the most heated feud heading into WrestleMania 42.",
     storySoFar: "Roman Reigns won the 2026 Royal Rumble and chose CM Punk as his WrestleMania opponent -- not because he wants the title, but because he <em>hates</em> Punk. Their promos have been fire: Punk claims he built Reigns' career through The Shield, while Reigns says Punk is the reason fans turned on him. Things got deeply personal when Punk made comments about Reigns' late father Sika, bringing the Anoa'i family into the fight. The Usos demanded an apology; Punk gave them a fight instead.",
@@ -1011,12 +1064,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-2",
+    id: "cody-orton",
     wrestler1: "cody-rhodes",
     wrestler2: "randy-orton",
     championship: "Undisputed WWE Championship",
+    matchType: "title",
+    hype: 5,
     isTitleMatch: true,
     night: 1,
+    spotifyTrackId: "1mea3bSkSGXuIRvnydlB5b",
+    story: "Cody Rhodes finally finished his story at WrestleMania 40, winning the title he chased for years. Now his childhood friend-turned-rival Randy Orton — backed by the returning Pat McAfee — wants to rip it away. Two legends, unfinished business, one belt.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/20260403_WM42_CodyRandyPat_MM_16x9_saturday.jpg",
     whyItMatters: "A collision of <strong>broken brotherhood.</strong> Cody Rhodes and Randy Orton were in the Legacy faction together (2008-2010) and are real-life best friends. That's what makes Orton's shocking March 13 betrayal so devastating. Orton is 45, knows his career is winding down, and desperately wants one more world title. Cody \"Finished the Story\" at WrestleMania 40 -- now his former best friend wants to end the next chapter.",
     storySoFar: "Randy Orton won the 2026 Elimination Chamber to earn his title shot against his best friend Cody Rhodes. Everything seemed amicable -- two brothers competing for the ultimate prize. Then at the contract signing on March 13, Orton shook Cody's hand... and <em>snapped.</em> He attacked Cody with steel steps, chair shots, and left him bloodied in the ring. The man who helped Cody celebrate at WrestleMania 40 has become his most dangerous enemy. Cody now faces the fight of his life against someone who knows him better than anyone.",
@@ -1033,12 +1090,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-3",
+    id: "cargill-ripley",
     wrestler1: "rhea-ripley",
     wrestler2: "jade-cargill",
     championship: "WWE Women's Championship",
+    matchType: "title",
+    hype: 5,
     isTitleMatch: true,
     night: 2,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "The most physically imposing match on the card. Jade Cargill defends her title against the returning Mami, Rhea Ripley. Two powerhouses, zero fear between them. This is the women's main event of Night 2 in everything but name.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_JadeRhea_SUN_16x9_date.jpg",
     whyItMatters: "The <strong>first-ever singles match</strong> between two of the most physically dominant women in WWE history. Jade Cargill has been nearly unbeatable with a 7-month championship streak. Rhea Ripley is the most popular woman in WWE and a former two-time champion. Their social media warfare has blurred the lines between real and scripted, with both women claiming to be \"That Bitch.\" This is a collision of power vs. power with the Women's Championship on the line.",
     storySoFar: "Rhea Ripley earned her title shot by dominating the 2026 Women's Elimination Chamber in Chicago, finishing the match with a devastating Riptide. She immediately set her sights on Jade Cargill's WWE Women's Championship. Their face-to-face confrontation on SmackDown was electric -- both women refused to back down, with Jade insisting she's the most dominant champion in WWE and Rhea firing back that she's <em>\"coming to take what's hers.\"</em> Social media has only added fuel to the fire, with both claiming to be \"That Bitch.\"",
@@ -1054,12 +1115,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-4",
+    id: "vaquer-morgan",
     wrestler1: "liv-morgan",
     wrestler2: "stephanie-vaquer",
     championship: "Women's World Championship",
+    matchType: "title",
+    hype: 4,
     isTitleMatch: true,
     night: 1,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "Liv Morgan won the 2026 Women's Royal Rumble and immediately called her shot at Vaquer's title. Morgan wants to become a three-time champion. Vaquer is proving she belongs at the top. Something has to give at WrestleMania.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_StephLiv_SAT_16x9_Date_0.jpg",
     whyItMatters: "A clash of <strong>two completely different paths.</strong> Stephanie Vaquer spent over a decade grinding through Mexico and Japan before becoming the first South American woman to hold a WWE world title. Liv Morgan was discovered at 20 while working as a waitress at Hooters and rose through WWE's system. Vaquer says Morgan \"hasn't earned her position.\" With The Judgment Day faction in Liv's corner, nothing about this fight will be fair.",
     storySoFar: "Liv Morgan won the 2026 Women's Royal Rumble from the #14 spot and chose Stephanie Vaquer's Women's World Championship as her WrestleMania target. Liv initially played nice, pretending to respect Vaquer's journey -- then showed her true colors. On Raw, Morgan feigned admiration before blindsiding Vaquer with a Codebreaker and Oblivion, leaving the champion laid out. Vaquer has made it clear: Liv hasn't <em>earned</em> anything. She's taken shortcuts her entire career. At WrestleMania, Vaquer plans to prove that a decade of grinding beats a lifetime of manipulation.",
@@ -1075,12 +1140,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-5",
+    id: "lesnar-femi",
     wrestler1: "brock-lesnar",
     wrestler2: "oba-femi",
-    championship: "Non-Title Match",
+    championship: "Monster vs Monster",
+    matchType: "special",
+    hype: 4,
     isTitleMatch: false,
     night: 2,
+    spotifyTrackId: "1CS7Sd1u5tWkstBhpssyjP",
+    story: "Brock Lesnar issued an open challenge. Oba Femi — the most dominant NXT champion in years — accepted on the March 16 SmackDown. The Next Big Thing versus the future of WWE. A genuine clash of eras and raw power.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260316_WM42_BrockOba_Tron_16x9_date.jpg",
     whyItMatters: "The classic <strong>\"passing of the torch\"</strong> match. Brock Lesnar is 48 and possibly on a retirement tour -- he ended The Undertaker's WrestleMania streak, conquered UFC, and dominated WWE for 20+ years. Oba Femi is 27, undefeated on the main roster, and represents the FUTURE of WWE -- a 310-pound Nigerian powerhouse and former collegiate shot putter. A win at WrestleMania over The Beast makes Femi an instant main eventer and the new face of dominance in WWE.",
     storySoFar: "The seeds were planted at the Royal Rumble when Oba Femi dominated the match, tossing out competitor after competitor -- until Brock Lesnar eliminated him. It was the first time anyone had physically matched Femi and come out on top. Weeks later, Lesnar issued an open challenge for WrestleMania. Oba Femi answered. He marched to the ring, hit Brock with the Fall From Grace, placed his foot on Lesnar's chest, and <em>pointed at the WrestleMania sign.</em> The message was clear: the future has arrived, and The Beast is standing in the way.",
@@ -1095,12 +1164,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-6",
+    id: "ajlee-becky",
     wrestler1: "aj-lee",
     wrestler2: "becky-lynch",
     championship: "Women's Intercontinental Championship",
+    matchType: "title",
+    hype: 5,
     isTitleMatch: true,
     night: 1,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "AJ Lee came out of retirement 11 years after walking away and immediately won gold. Becky Lynch attacked her, then Lee offered a WrestleMania rematch — saying Becky was \"falling into my trap.\" Two generations of women's wrestling on the grandest stage.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_StephLiv_MM_16x9_Date.jpg",
     whyItMatters: "AJ Lee has had Becky Lynch's number <strong>every single time</strong> they've faced off. Mixed tag at Wrestlepalooza? AJ submitted Becky. WarGames at Survivor Series? AJ won again. The Women's Intercontinental Championship at Elimination Chamber? AJ made Becky tap. This is Becky Lynch's <strong>last chance at redemption</strong> -- on the grandest stage of them all. Can \"The Man\" finally solve the puzzle of a woman who returned after 11 years and has been absolutely unstoppable?",
     storySoFar: "The rivalry ignited at Wrestlepalooza when AJ Lee and CM Punk faced Becky Lynch and Seth Rollins in a Mixed Tag Team match -- AJ submitted Becky to win. Their war continued at Survivor Series 2025 in WarGames, where AJ got the better of Becky again. Then at Elimination Chamber 2026, AJ Lee captured the Women's Intercontinental Championship by forcing Becky to submit <em>yet again.</em> After AJ successfully defended the title against Bayley on the March 16 episode of Raw, Becky Lynch launched a vicious post-match attack. Rather than back down, AJ challenged Becky to one more match -- this time for the title at WrestleMania. The stakes have never been higher.",
@@ -1115,12 +1188,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-7",
+    id: "zayn-williams",
     wrestler1: "sami-zayn",
     wrestler2: "trick-williams",
-    championship: "United States Championship",
+    championship: "WWE United States Championship",
+    matchType: "title",
+    hype: 4,
     isTitleMatch: true,
     night: 2,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "Trick Williams is ready to break through to the main roster. Sami Zayn retained over Williams on SmackDown — but the score isn't settled. Expect a US Title match that steals the show.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_SamiTrick__Tron_16x9_date.jpg",
     whyItMatters: "A <strong>veteran vs. rising star</strong> showdown. Sami Zayn wasn't even on the WrestleMania card -- so he went out and WON the United States Championship in an open challenge just to earn his spot. That's how much WrestleMania means to him. Trick Williams is making his <strong>WrestleMania debut</strong> -- a 6'5\" charismatic powerhouse who's been the hottest thing out of NXT. Zayn is the beloved underdog who has delivered iconic WrestleMania moments year after year. Can Trick \"Whoop That WrestleMania\" or will Zayn deliver more WrestleMania magic?",
     storySoFar: "Trick Williams was confirmed for the WrestleMania card while Sami Zayn was left off entirely. Rather than accept being left out, Zayn answered then-U.S. Champion Carmelo Hayes' open challenge and shocked the world by winning the United States Championship. Now a two-time U.S. Champion, Zayn finally has his spot on the card -- but Trick Williams is standing in his way. This is Zayn's first-ever WrestleMania championship defense, and Trick's first-ever WrestleMania match. Both men have <em>everything</em> to prove.",
@@ -1136,12 +1213,16 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-8",
+    id: "fatu-mcintyre",
     wrestler1: "drew-mcintyre",
     wrestler2: "jacob-fatu",
     championship: "Unsanctioned Match",
+    matchType: "grudge",
+    hype: 4,
     isTitleMatch: false,
     night: 1,
+    spotifyTrackId: "1CS7Sd1u5tWkstBhpssyjP",
+    story: "No rules. No disqualifications. No mercy. This feud dates to October when Fatu was found incapacitated backstage — with McIntyre in the area. An unsanctioned match means chairs, stairs, and whatever it takes. The most violent match on the card.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_DrewJacob_MM_16x9_Date.jpg",
     whyItMatters: "This is an <strong>Unsanctioned Match</strong> -- which means <strong>there are NO rules.</strong> No disqualifications, no countouts, no protection from officials. Chairs, tables, ladders, anything goes. WWE doesn't officially sanction this match because it's too dangerous. Jacob Fatu is a member of the Anoa'i dynasty (Roman Reigns' family) and is the most violent, uncontrollable force on SmackDown. Drew McIntyre is a bitter, rage-fueled Scottish warrior who has been pushed to his breaking point. These two have been trying to DESTROY each other for weeks -- and now there are zero rules to stop them.",
     storySoFar: "The hatred runs deep. Jacob Fatu helped cost Drew McIntyre the Undisputed WWE Championship against Cody Rhodes, and McIntyre has never forgiven him. Drew faked leaving SmackDown entirely, only to return and ambush Fatu during a match. Their war escalated on the March 20 SmackDown when they brawled from the <em>opening moments of the show until the very end</em> -- culminating in them throwing each other off a high steel balcony. SmackDown GM Nick Aldis had no choice but to make this an Unsanctioned Match at WrestleMania. No rules. No protection. Just two men trying to end each other.",
@@ -1157,11 +1238,15 @@ const MATCHES = [
     ]
   },
   {
-    id: "match-9",
+    id: "ic-ladder",
     participants: ["penta", "jevon-evans", "dragon-lee", "jd-mcdonagh", "rusev", "rey-mysterio"],
-    championship: "Intercontinental Championship -- Ladder Match",
+    championship: "Intercontinental Championship Ladder Match",
+    matchType: "ladder",
+    hype: 5,
     isTitleMatch: true,
     night: 2,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "Six men. One ladder. The belt hangs above the ring. Penta is the champion but has no friends in this match. Rey Mysterio returned from injury to claim his spot. Je'Von Evans is a highlight reel waiting to happen. This match WILL be the one everyone talks about the next day.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_6ManLadder_Tron_16x9_sunday.jpg",
     whyItMatters: "This is a <strong>Ladder Match</strong> -- meaning the title belt hangs high above the ring and the only way to win is to climb a ladder and grab it. No pinfalls, no submissions -- just chaos. Five wrestlers will battle using ladders as weapons AND as tools to reach the championship. <strong>Penta</strong> is the defending champion, a fearless luchador. Four challengers won qualifying matches to earn their spots: Je'Von Evans, Dragon Lee, JD McDonagh, and the returning Rusev. Ladder Matches are always some of the most spectacular matches at WrestleMania -- expect jaw-dropping high spots and pure mayhem.",
     storySoFar: "The Intercontinental Championship is one of WWE's most prestigious titles, and Penta has been a fighting champion since winning it. When WWE announced a Ladder Match for WrestleMania, four Main Event qualifying bouts determined the challengers: JD McDonagh defeated Akira Tozawa, Dragon Lee beat Grayson Waller, Je'Von Evans outlasted Rayo Americano, and Rusev conquered Otis. Now all five men will put their bodies on the line in <em>what is sure to be an epic Ladder Match at The Showcase of the Immortals.</em>",
@@ -1177,12 +1262,16 @@ const MATCHES = [
     feudVideos: []
   },
   {
-    id: "match-10",
+    id: "dominik-balor",
     wrestler1: "finn-balor",
     wrestler2: "dominik-mysterio",
-    championship: "\"The Demon\" Singles Match",
+    championship: "Personal Grudge Match",
+    matchType: "grudge",
+    hype: 3,
     isTitleMatch: false,
     night: 2,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "Former Judgment Day partners turned bitter rivals. Dominik has been trying to prove himself as a solo act. Finn Balor wants to remind everyone who built that group. Former allies settling old scores is a WrestleMania tradition.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_DemonFinnDom_Tron_16x9_sunday_0.jpg",
     whyItMatters: "A <strong>betrayal within The Judgment Day.</strong> Finn Bálor co-founded The Judgment Day faction nearly 4 years ago and helped build it into one of the most dominant groups in WWE. On March 9, the faction turned on him -- beating him down and kicking him out. Bálor didn't take it quietly. He interfered in Dominik Mysterio's Intercontinental Championship match against Penta, costing Dominik the title. Now these former allies meet at WrestleMania for revenge.",
     storySoFar: "Finn Bálor spent nearly 4 years as the leader of The Judgment Day. But after challenging CM Punk for the World Heavyweight Championship, tensions grew within the group. On the March 9 episode of Raw, The Judgment Day <em>assaulted Bálor and threw him out of the faction.</em> Weeks later, Bálor got his first taste of revenge by interfering in Dominik Mysterio's Intercontinental Championship match. On the March 30 Raw, Bálor officially challenged Mysterio for WrestleMania. The Demon King is out for blood.",
@@ -1194,16 +1283,20 @@ const MATCHES = [
     feudVideos: []
   },
   {
-    id: "match-11",
+    id: "womens-tag-fatal4way",
     teams: [
       { name: "Nia Jax & Lash Legend", wrestlers: ["nia-jax", "lash-legend"], isChampion: true },
       { name: "Charlotte Flair & Alexa Bliss", wrestlers: ["charlotte-flair", "alexa-bliss"] },
       { name: "Bayley & Lyra Valkyria", wrestlers: ["bayley", "lyra-valkyria"] },
       { name: "The Bella Twins", wrestlers: ["nikki-bella", "brie-bella"] }
     ],
-    championship: "WWE Women's Tag Team Championship -- Fatal 4-Way",
+    championship: "WWE Women's Tag Team Championship",
+    matchType: "tag",
+    hype: 3,
     isTitleMatch: true,
     night: 1,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "Four teams enter, one leaves with the gold. The Bella Twins wrestled their first tag match in 8 years to earn their spot. Charlotte and Alexa make an unlikely pairing. Bayley and Lyra bring the most cohesion. Champions Nia Jax and Lash Legend have power on their side.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_WomensTag4Way_MM_16x9_Date.jpg",
     whyItMatters: "A <strong>Fatal 4-Way Tag Team Match</strong> -- four teams compete at once, and the first team to score a pinfall or submission wins the championships. That means there's no disqualification and the action will be non-stop chaos with 8 women in the match. The champions <strong>Nia Jax & Lash Legend</strong> are the most physically dominant team. <strong>Charlotte Flair & Alexa Bliss</strong> want payback after Jax and Legend cost them their previous title reign. <strong>Bayley & Lyra Valkyria</strong> are a veteran-rookie combo hungry for gold. And <strong>The Bella Twins</strong> return from the Hall of Fame for one more championship run.",
     storySoFar: "Nia Jax and Lash Legend captured the Women's Tag Team Championships from Rhea Ripley and IYO SKY in late February, establishing themselves as the most physically imposing tag team in the division. Charlotte Flair and Alexa Bliss have a score to settle -- Jax and Legend's interference cost them their <em>previous</em> tag title reign against The Kabuki Warriors. Bayley was on the outside looking in until Lyra Valkyria made it her personal mission to get Bayley back to WrestleMania. And the Hall of Fame Bella Twins have returned seeking their first-ever Tag Team Championship. Four teams, one title, and WrestleMania chaos.",
@@ -1217,12 +1310,16 @@ const MATCHES = [
     feudVideos: []
   },
   {
-    id: "match-12",
+    id: "rollins-gunther",
     wrestler1: "seth-rollins",
     wrestler2: "gunther",
     championship: "Singles Match",
+    matchType: "special",
+    hype: 4,
     isTitleMatch: false,
     night: 1,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "Injuries derailed both men's roads to WrestleMania, and they found each other. On March 30 Gunther attacked Rollins and pointed to the WrestleMania sign. No title on the line — just pride, ego, and two of the best in-ring workers on the planet.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_SethGunther_MM_16x9_saturday.jpg",
     whyItMatters: "Two of the <strong>best in-ring performers on the planet</strong> collide. Seth Rollins is a 4-time World Champion and one of the most dynamic wrestlers alive -- his matches are consistently the best on any card. Gunther held the Intercontinental Championship for a record-breaking 666 days and was the World Heavyweight Champion. This is a dream match between two elite-level competitors. Expect a clinic.",
     storySoFar: "Seth Rollins and Gunther have been on a collision course for months. Both men consider themselves the best wrestler in WWE, and neither will back down. Their paths have crossed repeatedly, with increasing tension building toward an inevitable WrestleMania showdown. This is about proving who is THE best in-ring performer in WWE today -- no titles needed, just pride and dominance.",
@@ -1234,14 +1331,18 @@ const MATCHES = [
     feudVideos: []
   },
   {
-    id: "match-13",
+    id: "sixman-tag",
     teams: [
       { name: "Logan Paul, Austin Theory & IShowSpeed", wrestlers: ["logan-paul", "austin-theory", "ishowspeed"] },
       { name: "The Usos & LA Knight", wrestlers: ["jey-uso", "jimmy-uso", "la-knight"] }
     ],
     championship: "Six-Man Tag Team Match",
+    matchType: "tag",
+    hype: 3,
     isTitleMatch: false,
     night: 1,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    story: "IShowSpeed has been pulled deeper and deeper into WWE chaos after being cursed by Danhausen. He teams with Logan Paul and Austin Theory against LA Knight and the Usos in a match that promises to be loud, chaotic, and genuinely unpredictable.",
     bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_6ManTag_MM_16x9_Sat.jpg",
     whyItMatters: "This is the <strong>celebrity spectacle match</strong> of WrestleMania. Logan Paul (YouTube megastar) and IShowSpeed (one of the biggest content creators in the world) team with Austin Theory against The Usos (the greatest tag team in WWE history) and LA Knight (one of the most popular wrestlers alive). Expect entertainment, crowd energy, and some surprisingly good action. The crowd will be LOUD for this one -- listen for the \"YEET\" chants for Jey Uso and \"YEAH!\" chants for LA Knight.",
     storySoFar: "Logan Paul has been causing chaos across WWE, using his celebrity platform and money to get whatever he wants. He recruited Austin Theory and IShowSpeed to form a villain super-team. The Usos -- Jimmy and Jey -- are wrestling royalty and part of the Anoa'i dynasty alongside Roman Reigns. LA Knight is the hottest act on SmackDown with the crowd firmly behind him. This is <em>celebrities vs. the people's champions</em> -- and the crowd will make sure you know which side they're on.",
@@ -1250,6 +1351,27 @@ const MATCHES = [
       { label: "Usos & LA Knight win", wrestler: "The Usos & LA Knight" }
     ],
     feudSubtitle: "Celebrities vs. the people's champions. The crowd will be ELECTRIC.",
+    feudVideos: []
+  },
+  {
+    id: "giulia-iyo",
+    wrestler1: "giulia",
+    wrestler2: "iyo-sky",
+    championship: "Women's United States Championship",
+    matchType: "title",
+    hype: 4,
+    isTitleMatch: true,
+    night: 2,
+    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
+    bannerImg: null,
+    whyItMatters: "Two of the most technically gifted women in WWE today. Giulia is the reigning champion who came from Japan to redefine the Women's Division. IYO SKY is a former Women's Champion hungry to collect more gold. This match will be a work of art for anyone paying attention.",
+    storySoFar: "Giulia captured the Women's United States Championship shortly after arriving on SmackDown, proving she's the real deal. IYO SKY — The Genius of the Sky — has been watching from Raw, waiting for her opportunity. Two Japanese wrestling stars, one championship, and a WrestleMania stage big enough for both of them.",
+    story: "Two of the most technically gifted women in WWE today. Giulia is the reigning champion, IYO SKY is a former Women's Champion hungry to collect more gold. This match will be a work of art for anyone paying attention.",
+    predictions: [
+      { label: "Giulia retains", wrestler: "Giulia" },
+      { label: "IYO SKY wins", wrestler: "IYO SKY" }
+    ],
+    feudSubtitle: "Two Japanese wrestling stars collide for the Women's US Championship.",
     feudVideos: []
   }
 ];
