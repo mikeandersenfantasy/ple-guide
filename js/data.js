@@ -1017,7 +1017,7 @@ const MATCHES = [
     championship: "Undisputed WWE Championship",
     isTitleMatch: true,
     night: 1,
-    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/20260306_WM42_CodyRandy_SAT_16x9_Date.jpg",
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/20260403_WM42_CodyRandyPat_MM_16x9_saturday.jpg",
     whyItMatters: "A collision of <strong>broken brotherhood.</strong> Cody Rhodes and Randy Orton were in the Legacy faction together (2008-2010) and are real-life best friends. That's what makes Orton's shocking March 13 betrayal so devastating. Orton is 45, knows his career is winding down, and desperately wants one more world title. Cody \"Finished the Story\" at WrestleMania 40 -- now his former best friend wants to end the next chapter.",
     storySoFar: "Randy Orton won the 2026 Elimination Chamber to earn his title shot against his best friend Cody Rhodes. Everything seemed amicable -- two brothers competing for the ultimate prize. Then at the contract signing on March 13, Orton shook Cody's hand... and <em>snapped.</em> He attacked Cody with steel steps, chair shots, and left him bloodied in the ring. The man who helped Cody celebrate at WrestleMania 40 has become his most dangerous enemy. Cody now faces the fight of his life against someone who knows him better than anyone.",
     predictions: [
@@ -1162,7 +1162,7 @@ const MATCHES = [
     championship: "Intercontinental Championship -- Ladder Match",
     isTitleMatch: true,
     night: 2,
-    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_ICLadder_Tron_16x9_date.jpg",
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_6ManLadder_Tron_16x9_sunday.jpg",
     whyItMatters: "This is a <strong>Ladder Match</strong> -- meaning the title belt hangs high above the ring and the only way to win is to climb a ladder and grab it. No pinfalls, no submissions -- just chaos. Five wrestlers will battle using ladders as weapons AND as tools to reach the championship. <strong>Penta</strong> is the defending champion, a fearless luchador. Four challengers won qualifying matches to earn their spots: Je'Von Evans, Dragon Lee, JD McDonagh, and the returning Rusev. Ladder Matches are always some of the most spectacular matches at WrestleMania -- expect jaw-dropping high spots and pure mayhem.",
     storySoFar: "The Intercontinental Championship is one of WWE's most prestigious titles, and Penta has been a fighting champion since winning it. When WWE announced a Ladder Match for WrestleMania, four Main Event qualifying bouts determined the challengers: JD McDonagh defeated Akira Tozawa, Dragon Lee beat Grayson Waller, Je'Von Evans outlasted Rayo Americano, and Rusev conquered Otis. Now all five men will put their bodies on the line in <em>what is sure to be an epic Ladder Match at The Showcase of the Immortals.</em>",
     predictions: [
@@ -1183,7 +1183,7 @@ const MATCHES = [
     championship: "\"The Demon\" Singles Match",
     isTitleMatch: false,
     night: 2,
-    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_FinnDom__Tron_16x9_date.jpg",
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_DemonFinnDom_Tron_16x9_sunday_0.jpg",
     whyItMatters: "A <strong>betrayal within The Judgment Day.</strong> Finn Bálor co-founded The Judgment Day faction nearly 4 years ago and helped build it into one of the most dominant groups in WWE. On March 9, the faction turned on him -- beating him down and kicking him out. Bálor didn't take it quietly. He interfered in Dominik Mysterio's Intercontinental Championship match against Penta, costing Dominik the title. Now these former allies meet at WrestleMania for revenge.",
     storySoFar: "Finn Bálor spent nearly 4 years as the leader of The Judgment Day. But after challenging CM Punk for the World Heavyweight Championship, tensions grew within the group. On the March 9 episode of Raw, The Judgment Day <em>assaulted Bálor and threw him out of the faction.</em> Weeks later, Bálor got his first taste of revenge by interfering in Dominik Mysterio's Intercontinental Championship match. On the March 30 Raw, Bálor officially challenged Mysterio for WrestleMania. The Demon King is out for blood.",
     predictions: [
@@ -1223,7 +1223,7 @@ const MATCHES = [
     championship: "Singles Match",
     isTitleMatch: false,
     night: 1,
-    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_SethGunther_Tron_16x9_date.jpg",
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_SethGunther_MM_16x9_saturday.jpg",
     whyItMatters: "Two of the <strong>best in-ring performers on the planet</strong> collide. Seth Rollins is a 4-time World Champion and one of the most dynamic wrestlers alive -- his matches are consistently the best on any card. Gunther held the Intercontinental Championship for a record-breaking 666 days and was the World Heavyweight Champion. This is a dream match between two elite-level competitors. Expect a clinic.",
     storySoFar: "Seth Rollins and Gunther have been on a collision course for months. Both men consider themselves the best wrestler in WWE, and neither will back down. Their paths have crossed repeatedly, with increasing tension building toward an inevitable WrestleMania showdown. This is about proving who is THE best in-ring performer in WWE today -- no titles needed, just pride and dominance.",
     predictions: [
@@ -1242,7 +1242,7 @@ const MATCHES = [
     championship: "Six-Man Tag Team Match",
     isTitleMatch: false,
     night: 1,
-    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/03/WM42_6ManTag_Tron_16x9_date.jpg",
+    bannerImg: "https://www.wwe.com/f/styles/wwe_16_9_xl/public/2026/04/WM42_6ManTag_MM_16x9_Sat.jpg",
     whyItMatters: "This is the <strong>celebrity spectacle match</strong> of WrestleMania. Logan Paul (YouTube megastar) and IShowSpeed (one of the biggest content creators in the world) team with Austin Theory against The Usos (the greatest tag team in WWE history) and LA Knight (one of the most popular wrestlers alive). Expect entertainment, crowd energy, and some surprisingly good action. The crowd will be LOUD for this one -- listen for the \"YEET\" chants for Jey Uso and \"YEAH!\" chants for LA Knight.",
     storySoFar: "Logan Paul has been causing chaos across WWE, using his celebrity platform and money to get whatever he wants. He recruited Austin Theory and IShowSpeed to form a villain super-team. The Usos -- Jimmy and Jey -- are wrestling royalty and part of the Anoa'i dynasty alongside Roman Reigns. LA Knight is the hottest act on SmackDown with the crowd firmly behind him. This is <em>celebrities vs. the people's champions</em> -- and the crowd will make sure you know which side they're on.",
     predictions: [
