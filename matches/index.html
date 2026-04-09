@@ -160,34 +160,31 @@
       html += '</div>';
 
       if (match.teams && match.teams.length === 4) {
-        // Fatal 4-Way: 4x2 grid, each wrestler gets their own photo cell
-        // Row 1: Team1-W1, Team1-W2, Team2-W1, Team2-W2
+        // Fatal 4-Way: 2 stacked face-off rows (like 2 singles matches)
+        // Row 1: Team1 (left) vs Team2 (right)
         // VS bar
-        // Row 2: Team3-W1, Team3-W2, Team4-W1, Team4-W2
-        html += '<div class="team-grid">';
-        // Row 1
-        for (var ti = 0; ti < 2; ti++) {
-          match.teams[ti].wrestlers.forEach(function(key) {
-            var w = WRESTLERS[key];
-            if (!w) return;
-            html += '<div class="grid-wrestler" style="background-image:url(\'' + w.img + '\')">';
-            html += '<div class="grid-name">' + w.name + '</div>';
-            html += '</div>';
-          });
+        // Row 2: Team3 (left) vs Team4 (right)
+        for (var row = 0; row < 2; row++) {
+          if (row > 0) html += '<div class="multi-vs-bar">VS</div>';
+          var tL = match.teams[row * 2];
+          var tR = match.teams[row * 2 + 1];
+          var wL = tL.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
+          var wR = tR.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
+          var bgL = wL[0] && wL[0].img ? ' style="background-image:url(\'' + wL[0].img + '\')"' : '';
+          var bgR = wR[0] && wR[0].img ? ' style="background-image:url(\'' + wR[0].img + '\')"' : '';
+          var namesL = wL.map(function(w) { return w.name; }).join(' & ');
+          var namesR = wR.map(function(w) { return w.name; }).join(' & ');
+
+          html += '<div class="stacked-faceoff">';
+          html += '<div class="card-left-panel"' + bgL + '>';
+          html += '<div class="wrestler-label left">' + namesL + '</div>';
+          html += '</div>';
+          html += '<div class="card-seam"><div class="seam-line"></div></div>';
+          html += '<div class="card-right-panel"' + bgR + '>';
+          html += '<div class="wrestler-label right">' + namesR + '</div>';
+          html += '</div>';
+          html += '</div>';
         }
-        // VS
-        html += '<div class="team-grid-vs">VS</div>';
-        // Row 2
-        for (var ti2 = 2; ti2 < 4; ti2++) {
-          match.teams[ti2].wrestlers.forEach(function(key) {
-            var w = WRESTLERS[key];
-            if (!w) return;
-            html += '<div class="grid-wrestler" style="background-image:url(\'' + w.img + '\')">';
-            html += '<div class="grid-name">' + w.name + '</div>';
-            html += '</div>';
-          });
-        }
-        html += '</div>';
 
       } else if (match.teams && match.teams.length === 2) {
         // 2-team match (3v3): face-off layout with all names
