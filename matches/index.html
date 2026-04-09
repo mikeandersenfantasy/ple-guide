@@ -151,34 +151,78 @@
 
     var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-night="' + match.night + '" data-animated="false">';
 
-    // Faceoff area wrapper
-    html += '<div class="card-faceoff-area">';
+    var isMulti = !match.wrestler1 || !match.wrestler2;
 
-    // Left panel with wrestler background
-    html += '<div class="card-left-panel"' + leftBgStyle + '>';
-    html += '<div class="wrestler-label left">' + lr.leftName + '</div>';
-    if (lr.leftRole) html += '<div class="wrestler-role left">' + lr.leftRole + '</div>';
-    html += '</div>';
+    if (!isMulti) {
+      // === SINGLES MATCH - full background images ===
+      html += '<div class="card-faceoff-area">';
 
-    // Seam
-    html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
+      html += '<div class="card-left-panel"' + leftBgStyle + '>';
+      html += '<div class="wrestler-label left">' + lr.leftName + '</div>';
+      if (lr.leftRole) html += '<div class="wrestler-role left">' + lr.leftRole + '</div>';
+      html += '</div>';
 
-    // Right panel with wrestler background
-    html += '<div class="card-right-panel"' + rightBgStyle + '>';
-    html += '<div class="wrestler-label right">' + lr.rightName + '</div>';
-    if (lr.rightRole) html += '<div class="wrestler-role right">' + lr.rightRole + '</div>';
-    html += '</div>';
+      html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
 
-    // Center stamp
-    html += '<div class="card-center-stamp">';
-    html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
-    html += '<div class="championship-title">' + match.championship + '</div>';
-    html += '</div>';
+      html += '<div class="card-right-panel"' + rightBgStyle + '>';
+      html += '<div class="wrestler-label right">' + lr.rightName + '</div>';
+      if (lr.rightRole) html += '<div class="wrestler-role right">' + lr.rightRole + '</div>';
+      html += '</div>';
 
-    // Sparks (inside faceoff area so they're clipped)
-    html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
+      html += '<div class="card-center-stamp">';
+      html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
+      html += '<div class="championship-title">' + match.championship + '</div>';
+      html += '</div>';
 
-    html += '</div>'; // end card-faceoff-area
+      html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
+      html += '</div>'; // end card-faceoff-area
+
+    } else {
+      // === MULTI-PERSON MATCH - thumbnail grid ===
+      html += '<div class="card-faceoff-area multi">';
+      html += '<div class="multi-faceoff">';
+      html += '<div class="match-badge ' + getBadgeClass(mt) + '" style="margin-bottom:8px">' + getBadgeLabel(mt) + '</div>';
+      html += '<div class="multi-championship">' + match.championship + '</div>';
+
+      if (match.teams) {
+        // Tag matches - show each team's wrestlers as thumbnails
+        html += '<div class="multi-sides">';
+        match.teams.forEach(function(team, idx) {
+          if (idx > 0) html += '<div class="multi-vs">VS</div>';
+          html += '<div class="multi-side">';
+          var roleLabel = team.isChampion ? 'Champions' : (team.role || '');
+          if (roleLabel) html += '<div class="multi-side-label">' + roleLabel + '</div>';
+          html += '<div class="multi-thumbs">';
+          team.wrestlers.forEach(function(key) {
+            var w = WRESTLERS[key];
+            if (!w) return;
+            html += '<div class="multi-thumb-wrap">';
+            html += '<div class="multi-thumb"><img src="' + w.img + '" alt="' + w.name + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+            html += '<div class="multi-thumb-name">' + w.name.split(' ')[0] + '</div>';
+            html += '</div>';
+          });
+          html += '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+
+      } else if (match.participants) {
+        // Ladder match - all participants in one grid
+        html += '<div class="ladder-grid">';
+        match.participants.forEach(function(key) {
+          var w = WRESTLERS[key];
+          if (!w) return;
+          html += '<div class="multi-thumb-wrap">';
+          html += '<div class="multi-thumb"><img src="' + w.img + '" alt="' + w.name + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+          html += '<div class="multi-thumb-name">' + w.name + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      html += '</div>'; // end multi-faceoff
+      html += '</div>'; // end card-faceoff-area
+    }
 
     // Bottom bar (in normal flow below faceoff area)
     html += '<div class="card-bottom-bar">';
