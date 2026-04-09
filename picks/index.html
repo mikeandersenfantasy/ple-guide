@@ -79,6 +79,57 @@
   var wrestlers = WRESTLERS;
   var currentPicks = {};
 
+  // === GOOGLE SHEETS API HELPERS ===
+  // Use GET for everything to avoid CORS issues entirely
+  // Data is encoded in URL params, Apps Script handles it via doGet
+
+  function saveToSheets(data, callback) {
+    var encoded = encodeURIComponent(JSON.stringify(data));
+    var img = new Image();
+    img.onload = img.onerror = function() { if (callback) callback(); };
+    img.src = API + '?action=save&data=' + encoded + '&t=' + Date.now();
+    // Also try fetch for reliability
+    fetch(API + '?action=save&data=' + encoded, { mode: 'no-cors' }).catch(function() {});
+  }
+
+  function loadFromSheets(callback) {
+    // Use script tag injection to bypass CORS (Apps Script returns JSON)
+    var script = document.createElement('script');
+    var cbName = '_wm42_' + Date.now();
+    script.src = API + '?action=load&callback=' + cbName + '&t=' + Date.now();
+
+    window[cbName] = function(data) {
+      callback(data);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+
+    script.onerror = function() {
+      if (script.parentNode) script.parentNode.removeChild(script);
+      // Fallback to localStorage
+      var pickers = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (key.startsWith('wm42-picks-')) {
+          try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
+        }
+      }
+      var results = {};
+      try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
+      callback({ pickers: pickers, results: results });
+    };
+
+    // Timeout to localStorage fallback
+    setTimeout(function() {
+      if (window[cbName]) {
+        window[cbName] = function() {};
+        script.onerror();
+      }
+    }, 6000);
+
+    document.head.appendChild(script);
+  }
+
   // === LOCK CHECK ===
   var lockDate = new Date('2026-04-17T23:59:00-04:00');
   var isLocked = Date.now() >= lockDate.getTime();
@@ -170,22 +221,13 @@
     btn.textContent = 'Saving...';
     btn.disabled = true;
 
-    var payload = JSON.stringify({ type: 'picks', name: name, saved: new Date().toISOString(), picks: currentPicks });
+    var picksData = { name: name, saved: new Date().toISOString(), picks: currentPicks };
 
     // Save locally as backup
-    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({ name: name, saved: new Date().toISOString(), picks: currentPicks }));
+    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify(picksData));
 
-    // Save to Google Sheets via fetch (text/plain to avoid CORS preflight)
-    fetch(API, {
-      method: 'POST',
-      body: payload
-    }).then(function(r) { return r.json(); }).then(function() {
-      document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
-      document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
-      btn.textContent = 'Lock In My Picks';
-      btn.disabled = false;
-    }).catch(function() {
-      // Still saved locally even if Sheets fails
+    // Save to Google Sheets
+    saveToSheets({ type: 'picks', name: name, saved: picksData.saved, picks: currentPicks }, function() {
       document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
       document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
       btn.textContent = 'Lock In My Picks';
@@ -198,22 +240,9 @@
     var lb = document.getElementById('leaderboard-container');
     lb.innerHTML = '<div class="picks-empty">Loading...</div>';
 
-    fetch(API)
-      .then(function(r) { return r.json(); })
-      .then(function(data) { renderLeaderboard(data.pickers || [], data.results || {}); })
-      .catch(function() {
-        // Fallback: load from localStorage
-        var pickers = [];
-        for (var i = 0; i < localStorage.length; i++) {
-          var key = localStorage.key(i);
-          if (key.startsWith('wm42-picks-')) {
-            try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
-          }
-        }
-        var results = {};
-        try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
-        renderLeaderboard(pickers, results);
-      });
+    loadFromSheets(function(data) {
+      renderLeaderboard(data.pickers || [], data.results || {});
+    });
   }
 
   function renderLeaderboard(pickers, results) {
@@ -255,12 +284,8 @@
     panel.style.display = 'block';
 
     // Load current results
-    fetch(API).then(function(r) { return r.json(); }).then(function(data) {
+    loadFromSheets(function(data) {
       buildAdminPanel(data.results || {});
-    }).catch(function() {
-      var results = {};
-      try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
-      buildAdminPanel(results);
     });
   });
 
@@ -294,15 +319,8 @@
       });
 
       // Save to Google Sheets
-      fetch(API, {
-        method: 'POST',
-        body: JSON.stringify({ type: 'results', results: res })
-      }).then(function(r) { return r.json(); }).then(function() {
-        localStorage.setItem('wm42-results', JSON.stringify(res));
-        loadLeaderboard();
-        panel.style.display = 'none';
-      }).catch(function() {
-        localStorage.setItem('wm42-results', JSON.stringify(res));
+      localStorage.setItem('wm42-results', JSON.stringify(res));
+      saveToSheets({ type: 'results', results: res }, function() {
         loadLeaderboard();
         panel.style.display = 'none';
       });
