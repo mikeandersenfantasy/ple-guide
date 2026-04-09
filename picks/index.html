@@ -55,7 +55,7 @@
 <!-- LEADERBOARD TAB -->
 <section class="section picks-panel" id="panel-leaderboard" style="display:none;padding-top:20px">
   <div class="inner">
-    <div id="leaderboard-container"></div>
+    <div id="leaderboard-container"><div class="picks-empty">Loading leaderboard...</div></div>
     <div style="text-align:center;margin-top:30px">
       <button class="picks-admin-btn" id="admin-btn">Enter Match Results</button>
     </div>
@@ -74,6 +74,7 @@
 <script src="../js/main.js"></script>
 <script>
 (function() {
+  var API = 'https://script.google.com/macros/s/AKfycbyuaTPvpsYHObAOmYSWwmr-o-QiqZenJeaF7IoCFDXcpybzM38KCClYiUoXchvQ3ZedCw/exec';
   var matches = MATCHES;
   var wrestlers = WRESTLERS;
   var currentPicks = {};
@@ -89,7 +90,7 @@
       document.querySelectorAll('.picks-panel').forEach(function(p) { p.style.display = 'none'; });
       tab.classList.add('active');
       document.getElementById('panel-' + tab.dataset.tab).style.display = '';
-      if (tab.dataset.tab === 'leaderboard') renderLeaderboard();
+      if (tab.dataset.tab === 'leaderboard') loadLeaderboard();
     });
   });
 
@@ -111,21 +112,6 @@
     return [];
   }
 
-  function getAllPickers() {
-    var pickers = [];
-    for (var i = 0; i < localStorage.length; i++) {
-      var key = localStorage.key(i);
-      if (key.startsWith('wm42-picks-')) {
-        try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
-      }
-    }
-    return pickers;
-  }
-
-  function getResults() {
-    try { return JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) { return {}; }
-  }
-
   // === RENDER PICKS ===
   var container = document.getElementById('picks-container');
   var night1 = matches.filter(function(m) { return m.night === 1; });
@@ -143,18 +129,13 @@
     var sides = getSides(match);
     var mt = match.matchType || 'special';
     var badge = mt === 'title' ? 'Title' : mt === 'grudge' ? 'Grudge' : mt === 'ladder' ? 'Ladder' : mt === 'tag' ? 'Tag' : 'Special';
-
     var html = '<div class="pick-card" data-match="' + match.id + '">';
     html += '<div class="pick-header"><span class="pick-badge pick-badge--' + mt + '">' + badge + '</span><span class="pick-night">Night ' + match.night + '</span></div>';
     html += '<div class="pick-title">' + match.championship + '</div>';
-
     if (sides.length <= 2) {
       html += '<div class="pick-sides">';
       sides.forEach(function(s) {
-        html += '<button class="pick-side' + (currentPicks[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + s.id + '">';
-        html += '<div class="pick-name">' + s.name + '</div>';
-        if (s.role) html += '<div class="pick-role">' + s.role + '</div>';
-        html += '</button>';
+        html += '<button class="pick-side' + (currentPicks[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + s.id + '"><div class="pick-name">' + s.name + '</div>' + (s.role ? '<div class="pick-role">' + s.role + '</div>' : '') + '</button>';
       });
       html += '</div>';
     } else {
@@ -178,36 +159,68 @@
     currentPicks[btn.dataset.match] = btn.dataset.pick;
   });
 
-  // === SAVE ===
+  // === SAVE TO GOOGLE SHEETS ===
   document.getElementById('save-btn').addEventListener('click', function() {
     var name = document.getElementById('picker-name').value.trim();
-    if (!name) {
-      document.getElementById('save-msg').textContent = 'Type your name first!';
-      document.getElementById('picker-name').focus();
-      return;
-    }
+    if (!name) { document.getElementById('save-msg').textContent = 'Type your name first!'; document.getElementById('picker-name').focus(); return; }
     var count = Object.keys(currentPicks).length;
-    if (count === 0) {
-      document.getElementById('save-msg').textContent = 'Pick at least one winner!';
-      return;
-    }
-    // Same name = overwrite (no duplicates)
-    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({
-      name: name, saved: new Date().toISOString(), picks: currentPicks
-    }));
-    document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
-    document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
+    if (count === 0) { document.getElementById('save-msg').textContent = 'Pick at least one winner!'; return; }
+
+    var btn = document.getElementById('save-btn');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    fetch(API, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'picks', name: name, saved: new Date().toISOString(), picks: currentPicks })
+    }).then(function() {
+      // Also save locally as backup
+      localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({ name: name, saved: new Date().toISOString(), picks: currentPicks }));
+      document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
+      document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
+      btn.textContent = 'Lock In My Picks';
+      btn.disabled = false;
+    }).catch(function() {
+      // Fallback to localStorage
+      localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({ name: name, saved: new Date().toISOString(), picks: currentPicks }));
+      document.getElementById('save-msg').innerHTML = 'Saved locally! Good luck, <strong>' + name + '</strong>!';
+      document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
+      btn.textContent = 'Lock In My Picks';
+      btn.disabled = false;
+    });
   });
 
-  // === LEADERBOARD ===
-  function renderLeaderboard() {
-    var pickers = getAllPickers();
-    var results = getResults();
-    var hasResults = Object.keys(results).length > 0;
+  // === LOAD LEADERBOARD FROM GOOGLE SHEETS ===
+  function loadLeaderboard() {
     var lb = document.getElementById('leaderboard-container');
+    lb.innerHTML = '<div class="picks-empty">Loading...</div>';
+
+    fetch(API)
+      .then(function(r) { return r.json(); })
+      .then(function(data) { renderLeaderboard(data.pickers || [], data.results || {}); })
+      .catch(function() {
+        // Fallback: load from localStorage
+        var pickers = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i);
+          if (key.startsWith('wm42-picks-')) {
+            try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
+          }
+        }
+        var results = {};
+        try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
+        renderLeaderboard(pickers, results);
+      });
+  }
+
+  function renderLeaderboard(pickers, results) {
+    var lb = document.getElementById('leaderboard-container');
+    var hasResults = Object.keys(results).length > 0;
 
     if (pickers.length === 0) {
-      lb.innerHTML = '<div class="picks-empty">No picks saved yet!</div>';
+      lb.innerHTML = '<div class="picks-empty">No picks saved yet. Be the first!</div>';
       return;
     }
 
@@ -219,7 +232,7 @@
       });
       return { name: p.name, picks: count, score: score };
     });
-    rows.sort(function(a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+    rows.sort(function(a, b) { return b.score - a.score || b.picks - a.picks || a.name.localeCompare(b.name); });
 
     var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
     var html = '<table class="lb-table"><tr><th>#</th><th>Name</th><th>Picks</th><th>Score</th></tr>';
@@ -236,17 +249,26 @@
     var panel = document.getElementById('admin-panel');
     if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
     panel.style.display = 'block';
-    var results = getResults();
 
+    // Load current results
+    fetch(API).then(function(r) { return r.json(); }).then(function(data) {
+      buildAdminPanel(data.results || {});
+    }).catch(function() {
+      var results = {};
+      try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
+      buildAdminPanel(results);
+    });
+  });
+
+  function buildAdminPanel(results) {
+    var panel = document.getElementById('admin-panel');
     var html = '<div class="admin-header">Tap the actual winner of each match:</div>';
     matches.forEach(function(match) {
       var sides = getSides(match);
-      html += '<div class="admin-match" data-match="' + match.id + '">';
-      html += '<div class="admin-title">' + match.championship + '</div>';
+      html += '<div class="admin-match" data-match="' + match.id + '"><div class="admin-title">' + match.championship + '</div>';
       html += '<div class="admin-sides' + (sides.length > 2 ? ' admin-multi' : '') + '">';
       sides.forEach(function(s) {
-        var sel = results[match.id] === s.id ? ' selected' : '';
-        html += '<button class="admin-side' + sel + '" data-match="' + match.id + '" data-result="' + s.id + '">' + s.name + '</button>';
+        html += '<button class="admin-side' + (results[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-result="' + s.id + '">' + s.name + '</button>';
       });
       html += '</div></div>';
     });
@@ -266,11 +288,24 @@
         var sel = card.querySelector('[data-result].selected');
         if (sel) res[card.dataset.match] = sel.dataset.result;
       });
-      localStorage.setItem('wm42-results', JSON.stringify(res));
-      renderLeaderboard();
-      panel.style.display = 'none';
+
+      // Save to Google Sheets
+      fetch(API, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'results', results: res })
+      }).then(function() {
+        localStorage.setItem('wm42-results', JSON.stringify(res));
+        loadLeaderboard();
+        panel.style.display = 'none';
+      }).catch(function() {
+        localStorage.setItem('wm42-results', JSON.stringify(res));
+        loadLeaderboard();
+        panel.style.display = 'none';
+      });
     });
-  });
+  }
 
   // === INIT ===
   if (isLocked) {
