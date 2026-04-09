@@ -176,8 +176,38 @@ function initTagline() {
   }, 4000);
 }
 
+// ===== HYPE INTRO (plays once per session, on any page) =====
+function initHypeIntro() {
+  if (sessionStorage.getItem('wm42-intro-seen')) return;
+  var intro = document.createElement('div');
+  intro.id = 'hype-intro';
+  intro.innerHTML = '<button class="skip-btn" id="intro-skip">Skip ›</button>' +
+    '<div class="intro-title" id="intro-title">WrestleMania Vegas</div>' +
+    '<div class="intro-sub" id="intro-sub">April 18 & 19 · Allegiant Stadium · Las Vegas</div>' +
+    '<div class="intro-line" id="intro-line"></div>';
+  document.body.appendChild(intro);
+
+  function dismissIntro() {
+    intro.style.opacity = '0';
+    setTimeout(function() { intro.remove(); }, 600);
+    sessionStorage.setItem('wm42-intro-seen', '1');
+  }
+
+  document.getElementById('intro-skip').addEventListener('click', function() {
+    intro.style.opacity = '0';
+    setTimeout(function() { intro.remove(); }, 300);
+    sessionStorage.setItem('wm42-intro-seen', '1');
+  });
+
+  setTimeout(function() { document.getElementById('intro-title').classList.add('animate'); }, 200);
+  setTimeout(function() { document.getElementById('intro-sub').classList.add('visible'); }, 1000);
+  setTimeout(function() { document.getElementById('intro-line').classList.add('animate'); }, 1700);
+  setTimeout(dismissIntro, 2400);
+}
+
 // ===== INIT ALL =====
 document.addEventListener('DOMContentLoaded', () => {
+  initHypeIntro();
   initCountdown();
   initNav();
   setActiveNav();
