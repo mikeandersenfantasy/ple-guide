@@ -313,8 +313,10 @@ document.addEventListener('DOMContentLoaded', function() {
       multiGrid.className = 'roster-grid';
 
       // Set columns based on wrestler count: 6=3cols, 8=4cols, else half
+      // On mobile, always use 2 columns
       var count = wrestlerKeys.length;
-      var cols = count <= 4 ? 2 : count <= 6 ? 3 : 4;
+      var isMobile = window.innerWidth <= 768;
+      var cols = isMobile ? 2 : (count <= 4 ? 2 : count <= 6 ? 3 : 4);
       multiGrid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
       multiGrid.style.justifyItems = 'center';
 

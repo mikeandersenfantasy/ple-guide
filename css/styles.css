@@ -1778,8 +1778,21 @@ ul { list-style: none; }
 
 /* === WRESTLERS PAGE MOBILE === */
 @media (max-width: 768px) {
-  /* Grid spacing */
-  .roster-grid { gap: 10px; }
+  /* Force all wrestler grids to 2 columns on mobile (overrides inline JS styles) */
+  .roster-grid { gap: 10px; grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Prevent name text overflow */
+  .w-card-overlay h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+  .w-card-overlay .nick {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
 
   /* Card: keep aspect-ratio but allow badges to breathe */
   .w-card { border-radius: 12px; }
