@@ -170,22 +170,23 @@
     btn.textContent = 'Saving...';
     btn.disabled = true;
 
+    var payload = JSON.stringify({ type: 'picks', name: name, saved: new Date().toISOString(), picks: currentPicks });
+
+    // Save locally as backup
+    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({ name: name, saved: new Date().toISOString(), picks: currentPicks }));
+
+    // Save to Google Sheets via fetch (text/plain to avoid CORS preflight)
     fetch(API, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'picks', name: name, saved: new Date().toISOString(), picks: currentPicks })
-    }).then(function() {
-      // Also save locally as backup
-      localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({ name: name, saved: new Date().toISOString(), picks: currentPicks }));
+      body: payload
+    }).then(function(r) { return r.json(); }).then(function() {
       document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
       document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
       btn.textContent = 'Lock In My Picks';
       btn.disabled = false;
     }).catch(function() {
-      // Fallback to localStorage
-      localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({ name: name, saved: new Date().toISOString(), picks: currentPicks }));
-      document.getElementById('save-msg').innerHTML = 'Saved locally! Good luck, <strong>' + name + '</strong>!';
+      // Still saved locally even if Sheets fails
+      document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
       document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
       btn.textContent = 'Lock In My Picks';
       btn.disabled = false;
@@ -241,7 +242,10 @@
       html += '<tr><td>' + m + (i + 1) + '</td><td>' + r.name + '</td><td>' + r.picks + '/' + matches.length + '</td><td class="lb-score">' + (hasResults ? r.score + '/' + matches.length : '—') + '</td></tr>';
     });
     html += '</table>';
+    html += '<div style="text-align:center;margin-top:16px"><button class="picks-admin-btn" id="refresh-lb">Refresh Leaderboard</button></div>';
     lb.innerHTML = html;
+    var refreshBtn = document.getElementById('refresh-lb');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadLeaderboard);
   }
 
   // === ADMIN: ENTER RESULTS ===
@@ -292,10 +296,8 @@
       // Save to Google Sheets
       fetch(API, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'results', results: res })
-      }).then(function() {
+      }).then(function(r) { return r.json(); }).then(function() {
         localStorage.setItem('wm42-results', JSON.stringify(res));
         loadLeaderboard();
         panel.style.display = 'none';
