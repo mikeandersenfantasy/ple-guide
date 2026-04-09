@@ -332,6 +332,8 @@
 
   // === CARD CLICK / TOGGLE ===
   document.addEventListener('click', function(e) {
+    // Don't toggle card if clicking a glossary tooltip
+    if (e.target.closest('.glossary-tip')) return;
     var card = e.target.closest('.cinematic-card');
     if (!card) return;
     var storyPanel = card.querySelector('.card-story-panel');

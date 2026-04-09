@@ -238,8 +238,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
-    // Click to expand
-    card.addEventListener('click', function() {
+    // Click to expand (but not if clicking entrance button)
+    card.addEventListener('click', function(e) {
+      if (e.target.closest('.entrance-btn')) return;
       var wasActive = expanded.classList.contains('active');
       closeExpanded();
       if (!wasActive) {
