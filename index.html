@@ -81,7 +81,25 @@
 (function() {
   var grid = document.getElementById('home-match-grid');
   if (!grid || typeof MATCHES === 'undefined') return;
-  MATCHES.forEach(function(match) {
+
+  // Sort by night
+  var night1 = MATCHES.filter(function(m) { return m.night === 1; });
+  var night2 = MATCHES.filter(function(m) { return m.night === 2; });
+
+  // Night 1 header
+  var h1 = document.createElement('div');
+  h1.style.cssText = 'grid-column:1/-1;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
+  h1.textContent = 'NIGHT 1 — Saturday · April 18';
+  grid.appendChild(h1);
+
+  night1.concat(night2).forEach(function(match, idx) {
+    // Insert Night 2 header before first Night 2 match
+    if (idx === night1.length) {
+      var h2 = document.createElement('div');
+      h2.style.cssText = 'grid-column:1/-1;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-top:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
+      h2.textContent = 'NIGHT 2 — Sunday · April 19';
+      grid.appendChild(h2);
+    }
     var altText = match.championship;
     if (match.wrestler1 && match.wrestler2) {
       altText = WRESTLERS[match.wrestler1].name + ' vs ' + WRESTLERS[match.wrestler2].name;

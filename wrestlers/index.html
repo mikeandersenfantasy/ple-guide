@@ -307,10 +307,17 @@ document.addEventListener('DOMContentLoaded', function() {
       section.appendChild(card1.expanded);
       section.appendChild(card2.expanded);
     } else {
-      // Multi-person match -- roster grid layout
+      // Multi-person match -- centered grid layout
       section.appendChild(title);
       var multiGrid = document.createElement('div');
       multiGrid.className = 'roster-grid';
+
+      // Set columns based on wrestler count: 6=3cols, 8=4cols, else half
+      var count = wrestlerKeys.length;
+      var cols = count <= 4 ? 2 : count <= 6 ? 3 : 4;
+      multiGrid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+      multiGrid.style.justifyItems = 'center';
+
       var expandedPanels = [];
 
       wrestlerKeys.forEach(function(key) {
