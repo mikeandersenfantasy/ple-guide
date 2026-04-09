@@ -536,7 +536,7 @@ const WRESTLERS = {
     alignmentDesc: "Kicked out of The Judgment Day",
     isChampion: false,
     title: null,
-    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/02/Finn_Balor_PROFILE.png",
+    img: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/afabd1f2-46f0-4ff5-985f-0c15429d2afd/ddy1jsq-107cc3b7-2e87-4c44-a1a2-9b45c8daf6b3.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9hZmFiZDFmMi00NmYwLTRmZjUtOTg1Zi0wYzE1NDI5ZDJhZmQvZGR5MWpzcS0xMDdjYzNiNy0yZTg3LTRjNDQtYTFhMi05YjQ1YzhkYWY2YjMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.sbuCMpiX_0gM9VTLCQaedwVC5XBqREWjfraCu902m6Y",
     about: "Finn Bálor is an Irish wrestling legend who was the first-ever Universal Champion and a worldwide star in Japan as \"Prince Devitt\" before joining WWE. He co-founded The Judgment Day faction but was violently expelled in March 2026 after nearly 4 years. Now he's out for revenge against the faction, starting with Dominik Mysterio at WrestleMania.",
     finisher: "Coup de Grâce",
     finisherDesc: "A devastating double foot stomp from the top rope, landing on the opponent's chest. When he paints up as \"The Demon,\" he's nearly unbeatable.",
