@@ -39,12 +39,15 @@
 
 <!-- PICKS TAB -->
 <section class="section picks-panel" id="panel-picks" style="padding-top:20px">
+  <div class="inner">
+    <div class="picks-name-box">
+      <label class="picks-name-label">Who's making picks?</label>
+      <input type="text" id="picker-name" class="picks-input" placeholder="Enter your name" maxlength="20">
+    </div>
+  </div>
   <div class="inner" id="picks-container"></div>
   <div class="inner picks-save-area" id="save-area" style="display:none">
-    <div class="picks-save-box">
-      <input type="text" id="picker-name" class="picks-input" placeholder="Enter your name" maxlength="20">
-      <button class="btn btn-gold picks-save-btn" id="save-btn">Save My Picks</button>
-    </div>
+    <button class="btn btn-gold picks-save-btn" id="save-btn" style="width:100%;max-width:400px">Lock In My Picks</button>
     <div id="save-msg" class="picks-msg"></div>
   </div>
 </section>
@@ -181,19 +184,28 @@
   });
 
   function updateSaveArea() {
-    var total = matches.length;
-    var picked = Object.keys(currentPicks).length;
-    document.getElementById('save-area').style.display = picked > 0 ? '' : 'none';
+    document.getElementById('save-area').style.display = '';
   }
 
   // === SAVE PICKS ===
   document.getElementById('save-btn').addEventListener('click', function() {
     var name = document.getElementById('picker-name').value.trim();
-    if (!name) { document.getElementById('save-msg').textContent = 'Please enter your name!'; return; }
+    if (!name) {
+      document.getElementById('save-msg').textContent = 'Enter your name at the top first!';
+      document.getElementById('picker-name').focus();
+      document.getElementById('picker-name').style.borderColor = '#c0392b';
+      setTimeout(function() { document.getElementById('picker-name').style.borderColor = ''; }, 2000);
+      return;
+    }
+    var pickedCount = Object.keys(currentPicks).length;
+    if (pickedCount === 0) {
+      document.getElementById('save-msg').textContent = 'Pick at least one winner first!';
+      return;
+    }
 
     var data = { name: name, saved: new Date().toISOString(), picks: currentPicks };
     localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify(data));
-    document.getElementById('save-msg').innerHTML = 'Good luck, <strong>' + name + '</strong>! &#x1F91E;';
+    document.getElementById('save-msg').innerHTML = 'Locked in! Good luck, <strong>' + name + '</strong>! &#x1F91E; (' + pickedCount + '/' + matches.length + ' picks)';
     document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
   });
 
