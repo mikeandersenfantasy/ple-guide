@@ -1454,22 +1454,37 @@ ul { list-style: none; }
   flex-direction: row;
   padding: 0;
   background: none;
+  /* Override the hidden initial state from singles panels */
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
+/* Disable the dark ::after overlay (slices have their own overlays) */
+.card-multi-panel::after { display: none; }
 .card-left-panel.card-multi-panel {
   clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
 }
 .card-right-panel.card-multi-panel {
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
 }
+/* Override animation for multi-panels - they're always visible */
+.cinematic-card.panel-in .card-multi-panel {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
 .multi-slice {
   position: relative;
   flex: 1;
+  min-width: 0;
   height: 100%;
   background-size: cover;
   background-position: center 10%;
   background-repeat: no-repeat;
   background-color: #0f111a;
   overflow: hidden;
+  z-index: 2;
 }
 .slice-name {
   position: absolute;
