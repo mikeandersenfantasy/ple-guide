@@ -187,7 +187,8 @@ function initHypeIntro() {
     home:      { title: 'WrestleMania 42', sub: 'Your Family\'s Guide to the Biggest Event in Wrestling' },
     matches:   { title: 'The Match Card', sub: '13 Matches · Two Nights · Las Vegas' },
     wrestlers: { title: 'Meet the Superstars', sub: '42 Wrestlers · Finishers · Entrance Themes' },
-    videos:    { title: 'Learn the Music', sub: 'Know Every Entrance Theme Before the Show' }
+    videos:    { title: 'Learn the Music', sub: 'Know Every Entrance Theme Before the Show' },
+    legal:     { title: 'Fan Project', sub: 'Non-Commercial · Educational · Made with Love' }
   };
 
   // Also check for the repo subdirectory on GitHub Pages

@@ -150,10 +150,12 @@
       html += '</div>'; // end card-faceoff-area
 
     } else {
-      // === MULTI-PERSON MATCH - large wrestler strips ===
+      // === MULTI-PERSON MATCH ===
       html += '<div class="card-faceoff-area multi">';
-      html += '<div class="multi-faceoff">';
-      html += '<div class="match-badge ' + getBadgeClass(mt) + '" style="margin-bottom:8px">' + getBadgeLabel(mt) + '</div>';
+
+      // Header with badge + championship
+      html += '<div class="multi-header">';
+      html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
       html += '<div class="multi-championship">' + match.championship + '</div>';
       html += '</div>';
 
@@ -163,17 +165,34 @@
           var roleLabel = team.isChampion ? 'Champions' : (team.role || team.name);
           html += '<div class="team-section">';
           html += '<div class="team-section-label">' + roleLabel + '</div>';
-          team.wrestlers.forEach(function(key) {
-            var w = WRESTLERS[key];
-            if (!w) return;
-            html += '<div class="wrestler-strip" style="background-image:url(\'' + w.img + '\')">';
-            html += '<div class="strip-name">' + w.name + '</div>';
+
+          if (team.wrestlers.length === 2) {
+            // 2-person team: side-by-side face-off panels (like singles)
+            var tw1 = WRESTLERS[team.wrestlers[0]];
+            var tw2 = WRESTLERS[team.wrestlers[1]];
+            var tw1Img = tw1 && tw1.img ? ' style="background-image:url(\'' + tw1.img + '\')"' : '';
+            var tw2Img = tw2 && tw2.img ? ' style="background-image:url(\'' + tw2.img + '\')"' : '';
+            html += '<div class="mini-faceoff">';
+            html += '<div class="card-left-panel"' + tw1Img + '><div class="wrestler-label left">' + (tw1 ? tw1.name : '') + '</div></div>';
+            html += '<div class="card-seam"><div class="seam-line"></div></div>';
+            html += '<div class="card-right-panel"' + tw2Img + '><div class="wrestler-label right">' + (tw2 ? tw2.name : '') + '</div></div>';
             html += '</div>';
-          });
+          } else {
+            // 3+ person team: full-width strips
+            team.wrestlers.forEach(function(key) {
+              var w = WRESTLERS[key];
+              if (!w) return;
+              html += '<div class="wrestler-strip" style="background-image:url(\'' + w.img + '\')">';
+              html += '<div class="strip-name">' + w.name + '</div>';
+              html += '</div>';
+            });
+          }
+
           html += '</div>';
         });
 
       } else if (match.participants) {
+        // Ladder match: full-width strips for each participant
         match.participants.forEach(function(key) {
           var w = WRESTLERS[key];
           if (!w) return;

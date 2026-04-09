@@ -1451,49 +1451,64 @@ ul { list-style: none; }
 .badge--special{ background: #8e44ad; color: #ffffff; }
 
 /* Multi-person card layout */
-.multi-faceoff {
-  width: 100%;
+.multi-header {
   text-align: center;
+  padding: 12px 14px 8px;
 }
-.multi-faceoff .multi-championship {
-  font-size: 0.65rem;
+.multi-header .multi-championship {
+  font-size: 0.6rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 3px;
   color: #D4A83C;
-  margin-bottom: 12px;
+  margin-top: 6px;
 }
-/* Wrestler strip - large photo row for each wrestler */
+
+/* Mini face-off for 2-person teams (reuses the panel aesthetic) */
+.mini-faceoff {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+}
+.mini-faceoff .card-left-panel,
+.mini-faceoff .card-right-panel {
+  height: 100%;
+}
+
+/* Full-width wrestler strip for individuals/3-person teams */
 .wrestler-strip {
   position: relative;
-  height: 72px;
+  height: 90px;
   background-size: cover;
   background-position: center 15%;
+  background-repeat: no-repeat;
   display: flex;
   align-items: flex-end;
-  padding: 8px 14px;
+  padding: 10px 16px;
   overflow: hidden;
 }
 .wrestler-strip::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(10,12,18,0.3) 0%, rgba(10,12,18,0.7) 60%, rgba(10,12,18,0.95) 100%);
+  background: linear-gradient(to right, rgba(10,12,18,0.2) 0%, rgba(10,12,18,0.6) 50%, rgba(10,12,18,0.9) 100%);
   z-index: 1;
 }
 .wrestler-strip > * { position: relative; z-index: 2; }
 .wrestler-strip .strip-name {
   font-family: Impact, 'Arial Narrow', sans-serif;
-  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+  font-size: clamp(0.95rem, 3vw, 1.3rem);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #fff;
   margin-left: auto;
   text-align: right;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
+
 /* Team section divider */
 .team-section {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .team-section-label {
   font-size: 0.6rem;
@@ -1507,9 +1522,9 @@ ul { list-style: none; }
 }
 .multi-vs-bar {
   text-align: center;
-  padding: 4px 0;
+  padding: 3px 0;
   font-family: Impact, sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--wwe-red);
   text-shadow: 0 1px 6px rgba(204,26,43,0.3);
   letter-spacing: 0.15em;
