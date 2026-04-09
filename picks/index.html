@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predictions - WrestleMania 42 Fan Guide</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-logo"><span style="letter-spacing:1px">WrestleMania</span> <span style="color:#D4A83C">42</span> <span style="color:#D4A83C">Guide</span></a>
+    <div class="nav-links">
+      <a href="../">Home</a>
+      <a href="../matches/">Matches</a>
+      <a href="../wrestlers/">Wrestlers</a>
+      <a href="../videos/">Entrances</a>
+      <a href="../picks/">Picks</a>
+      <a href="../legal/">Legal</a>
+    </div>
+    <button class="hamburger" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding:40px 30px 30px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
+  <div class="hero-label">WrestleMania 42</div>
+  <h1>Family <span style="color:#fff">Predictions</span></h1>
+  <p class="hero-sub">Pick your winners. Lock your picks. See who knows wrestling best.</p>
+</section>
+
+<!-- TABS -->
+<div class="picks-tabs">
+  <button class="picks-tab active" data-tab="picks">My Picks</button>
+  <button class="picks-tab" data-tab="leaderboard">Leaderboard</button>
+</div>
+
+<!-- PICKS TAB -->
+<section class="section picks-panel" id="panel-picks" style="padding-top:20px">
+  <div class="inner" id="picks-container"></div>
+  <div class="inner picks-save-area" id="save-area" style="display:none">
+    <div class="picks-save-box">
+      <input type="text" id="picker-name" class="picks-input" placeholder="Enter your name" maxlength="20">
+      <button class="btn btn-gold picks-save-btn" id="save-btn">Save My Picks</button>
+    </div>
+    <div id="save-msg" class="picks-msg"></div>
+  </div>
+</section>
+
+<!-- LEADERBOARD TAB -->
+<section class="section picks-panel" id="panel-leaderboard" style="display:none;padding-top:20px">
+  <div class="inner">
+    <div id="leaderboard-container"></div>
+    <div style="text-align:center;margin-top:30px">
+      <button class="picks-admin-btn" id="admin-btn">Enter Match Results (Admin)</button>
+    </div>
+    <div id="admin-panel" style="display:none"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WrestleMania 42 &bull; April 18-19, 2026 &bull; Las Vegas</p>
+  <p>Data sourced from <a href="https://www.wwe.com/shows/wrestlemania" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets. Last updated April 2026.</p>
+</footer>
+
+<button class="scroll-top" id="scrollTop">&#8593;</button>
+<script src="../js/data.js"></script>
+<script src="../js/main.js"></script>
+<script>
+(function() {
+  var matches = MATCHES;
+  var wrestlers = WRESTLERS;
+  var currentPicks = {};
+
+  // === TAB SWITCHING ===
+  document.querySelectorAll('.picks-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.picks-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.picks-panel').forEach(function(p) { p.style.display = 'none'; });
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).style.display = '';
+      if (tab.dataset.tab === 'leaderboard') renderLeaderboard();
+    });
+  });
+
+  // === GET SIDES FOR A MATCH ===
+  function getSides(match) {
+    if (match.wrestler1 && match.wrestler2) {
+      var w1 = wrestlers[match.wrestler1];
+      var w2 = wrestlers[match.wrestler2];
+      return [
+        { id: match.wrestler1, name: w1 ? w1.name : match.wrestler1, role: w1 && w1.isChampion ? 'Champion' : 'Challenger' },
+        { id: match.wrestler2, name: w2 ? w2.name : match.wrestler2, role: w2 && w2.isChampion ? 'Champion' : 'Challenger' }
+      ];
+    }
+    if (match.teams) {
+      return match.teams.map(function(t) {
+        return { id: t.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: t.name, role: t.isChampion ? 'Champions' : '' };
+      });
+    }
+    if (match.participants) {
+      return match.participants.map(function(key) {
+        var w = wrestlers[key];
+        return { id: key, name: w ? w.name : key, role: '' };
+      });
+    }
+    return [];
+  }
+
+  // === RENDER PICK CARDS ===
+  var container = document.getElementById('picks-container');
+  var night1 = matches.filter(function(m) { return m.night === 1; });
+  var night2 = matches.filter(function(m) { return m.night === 2; });
+
+  function renderPickCards() {
+    var html = '';
+    html += '<div class="picks-night-header">Night 1 — Saturday</div>';
+    night1.forEach(function(m) { html += buildPickCard(m); });
+    html += '<div class="picks-night-header" style="margin-top:20px">Night 2 — Sunday</div>';
+    night2.forEach(function(m) { html += buildPickCard(m); });
+    container.innerHTML = html;
+    updateSaveArea();
+  }
+
+  function buildPickCard(match) {
+    var sides = getSides(match);
+    var mt = match.matchType || 'special';
+    var badgeLabel = mt === 'title' ? 'Title' : mt === 'grudge' ? 'Grudge' : mt === 'ladder' ? 'Ladder' : mt === 'tag' ? 'Tag' : 'Special';
+    var nightLabel = 'Night ' + match.night;
+
+    var html = '<div class="pick-card" data-match="' + match.id + '">';
+    html += '<div class="pick-header">';
+    html += '<span class="pick-badge pick-badge--' + mt + '">' + badgeLabel + '</span>';
+    html += '<span class="pick-night">' + nightLabel + '</span>';
+    html += '</div>';
+    html += '<div class="pick-title">' + match.championship + '</div>';
+
+    if (sides.length === 2) {
+      // Two-sided pick
+      html += '<div class="pick-sides">';
+      sides.forEach(function(side) {
+        var sel = currentPicks[match.id] === side.id ? ' selected' : '';
+        html += '<button class="pick-side' + sel + '" data-match="' + match.id + '" data-pick="' + side.id + '">';
+        html += '<div class="pick-name">' + side.name + '</div>';
+        if (side.role) html += '<div class="pick-role">' + side.role + '</div>';
+        html += '</button>';
+      });
+      html += '</div>';
+    } else {
+      // Multi-option (ladder match, etc.)
+      html += '<div class="pick-multi">';
+      sides.forEach(function(side) {
+        var sel = currentPicks[match.id] === side.id ? ' selected' : '';
+        html += '<button class="pick-option' + sel + '" data-match="' + match.id + '" data-pick="' + side.id + '">';
+        html += side.name;
+        html += '</button>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  // === PICK SELECTION ===
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-pick]');
+    if (!btn) return;
+    var matchId = btn.dataset.match;
+    var pickId = btn.dataset.pick;
+    currentPicks[matchId] = pickId;
+
+    // Update UI for this match
+    var card = btn.closest('.pick-card');
+    card.querySelectorAll('[data-pick]').forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    updateSaveArea();
+  });
+
+  function updateSaveArea() {
+    var total = matches.length;
+    var picked = Object.keys(currentPicks).length;
+    document.getElementById('save-area').style.display = picked > 0 ? '' : 'none';
+  }
+
+  // === SAVE PICKS ===
+  document.getElementById('save-btn').addEventListener('click', function() {
+    var name = document.getElementById('picker-name').value.trim();
+    if (!name) { document.getElementById('save-msg').textContent = 'Please enter your name!'; return; }
+
+    var data = { name: name, saved: new Date().toISOString(), picks: currentPicks };
+    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify(data));
+    document.getElementById('save-msg').innerHTML = 'Good luck, <strong>' + name + '</strong>! &#x1F91E;';
+    document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
+  });
+
+  // === LEADERBOARD ===
+  function getAllPickers() {
+    var pickers = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      if (key.startsWith('wm42-picks-')) {
+        try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
+      }
+    }
+    return pickers;
+  }
+
+  function getResults() {
+    try { return JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) { return {}; }
+  }
+
+  function calculateScore(picksObj, resultsObj) {
+    var score = 0, total = 0;
+    Object.keys(resultsObj).forEach(function(matchId) {
+      if (picksObj.picks && picksObj.picks[matchId]) {
+        total++;
+        if (picksObj.picks[matchId] === resultsObj[matchId]) score++;
+      }
+    });
+    return { score: score, total: total };
+  }
+
+  function renderLeaderboard() {
+    var pickers = getAllPickers();
+    var results = getResults();
+    var hasResults = Object.keys(results).length > 0;
+    var lb = document.getElementById('leaderboard-container');
+
+    if (pickers.length === 0) {
+      lb.innerHTML = '<div class="picks-empty">No predictions saved yet. Be the first!</div>';
+      return;
+    }
+
+    // Calculate scores and sort
+    var rows = pickers.map(function(p) {
+      var picksCount = p.picks ? Object.keys(p.picks).length : 0;
+      var sc = hasResults ? calculateScore(p, results) : { score: 0, total: 0 };
+      return { name: p.name, picks: picksCount, score: sc.score, total: sc.total };
+    });
+    rows.sort(function(a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+
+    var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
+    var html = '<table class="lb-table">';
+    html += '<tr><th>Rank</th><th>Name</th><th>Picks</th><th>Score</th></tr>';
+    rows.forEach(function(row, i) {
+      var medal = i < 3 && hasResults ? medals[i] + ' ' : '';
+      var rank = hasResults ? medal + (i + 1) : '';
+      var scoreText = hasResults ? row.score + '/' + matches.length : '—';
+      html += '<tr><td>' + rank + '</td><td>' + row.name + '</td><td>' + row.picks + '/' + matches.length + '</td><td class="lb-score">' + scoreText + '</td></tr>';
+    });
+    html += '</table>';
+    lb.innerHTML = html;
+  }
+
+  // === ADMIN: ENTER RESULTS ===
+  document.getElementById('admin-btn').addEventListener('click', function() {
+    var panel = document.getElementById('admin-panel');
+    if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+    var results = getResults();
+
+    var html = '<div class="admin-header">Tap the winner of each match:</div>';
+    matches.forEach(function(match) {
+      var sides = getSides(match);
+      html += '<div class="admin-match" data-match="' + match.id + '">';
+      html += '<div class="admin-title">' + match.championship + '</div>';
+      if (sides.length <= 2) {
+        html += '<div class="admin-sides">';
+        sides.forEach(function(side) {
+          var sel = results[match.id] === side.id ? ' selected' : '';
+          html += '<button class="admin-side' + sel + '" data-match="' + match.id + '" data-result="' + side.id + '">' + side.name + '</button>';
+        });
+        html += '</div>';
+      } else {
+        html += '<div class="admin-multi">';
+        sides.forEach(function(side) {
+          var sel = results[match.id] === side.id ? ' selected' : '';
+          html += '<button class="admin-option' + sel + '" data-match="' + match.id + '" data-result="' + side.id + '">' + side.name + '</button>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '<button class="btn btn-gold" id="save-results" style="margin-top:20px;width:100%">Save Results</button>';
+    panel.innerHTML = html;
+
+    // Result selection
+    panel.addEventListener('click', function(e) {
+      var btn = e.target.closest('[data-result]');
+      if (!btn) return;
+      var card = btn.closest('.admin-match');
+      card.querySelectorAll('[data-result]').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+    });
+
+    // Save results
+    panel.querySelector('#save-results').addEventListener('click', function() {
+      var res = {};
+      panel.querySelectorAll('.admin-match').forEach(function(card) {
+        var sel = card.querySelector('[data-result].selected');
+        if (sel) res[card.dataset.match] = sel.dataset.result;
+      });
+      localStorage.setItem('wm42-results', JSON.stringify(res));
+      renderLeaderboard();
+      panel.style.display = 'none';
+    });
+  });
+
+  renderPickCards();
+})();
+</script>
+</body>
+</html>

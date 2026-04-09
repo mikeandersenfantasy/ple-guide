@@ -188,6 +188,7 @@ function initHypeIntro() {
     matches:   { title: 'The Match Card', sub: '13 Matches · Two Nights · Las Vegas' },
     wrestlers: { title: 'Meet the Superstars', sub: '42 Wrestlers · Finishers · Entrance Themes' },
     videos:    { title: 'Learn the Music', sub: 'Know Every Entrance Theme Before the Show' },
+    picks:     { title: 'Lock It In', sub: 'Pick Your Winners · Family Prediction Game' },
     legal:     { title: 'Fan Project', sub: 'Non-Commercial · Educational · Made with Love' }
   };
 
