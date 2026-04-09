@@ -1377,13 +1377,11 @@ ul { list-style: none; }
   font-size: clamp(1rem, 3.5vw, 1.5rem);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  line-height: 1.1;
+  line-height: 1.15;
   color: #ffffff;
   opacity: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 38vw;
+  max-width: 42%;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
 }
 .cinematic-card.panel-in .wrestler-label {
   animation: labelFadeIn 0.3s ease-out 0.5s forwards;
@@ -1462,17 +1460,6 @@ ul { list-style: none; }
   letter-spacing: 3px;
   color: #D4A83C;
   margin-top: 6px;
-}
-
-/* Mini face-off for 2-person teams (reuses the panel aesthetic) */
-.mini-faceoff {
-  position: relative;
-  height: 140px;
-  overflow: hidden;
-}
-.mini-faceoff .card-left-panel,
-.mini-faceoff .card-right-panel {
-  height: 100%;
 }
 
 /* Full-width wrestler strip for individuals/3-person teams */

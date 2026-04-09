@@ -160,36 +160,44 @@
       html += '</div>';
 
       if (match.teams) {
-        match.teams.forEach(function(team, idx) {
-          if (idx > 0) html += '<div class="multi-vs-bar">VS</div>';
-          var roleLabel = team.isChampion ? 'Champions' : (team.role || team.name);
-          html += '<div class="team-section">';
-          html += '<div class="team-section-label">' + roleLabel + '</div>';
+        // Pair teams into face-off rows (2 teams per row)
+        for (var t = 0; t < match.teams.length; t += 2) {
+          var teamA = match.teams[t];
+          var teamB = match.teams[t + 1];
 
-          if (team.wrestlers.length === 2) {
-            // 2-person team: side-by-side face-off panels (like singles)
-            var tw1 = WRESTLERS[team.wrestlers[0]];
-            var tw2 = WRESTLERS[team.wrestlers[1]];
-            var tw1Img = tw1 && tw1.img ? ' style="background-image:url(\'' + tw1.img + '\')"' : '';
-            var tw2Img = tw2 && tw2.img ? ' style="background-image:url(\'' + tw2.img + '\')"' : '';
-            html += '<div class="mini-faceoff">';
-            html += '<div class="card-left-panel"' + tw1Img + '><div class="wrestler-label left">' + (tw1 ? tw1.name : '') + '</div></div>';
-            html += '<div class="card-seam"><div class="seam-line"></div></div>';
-            html += '<div class="card-right-panel"' + tw2Img + '><div class="wrestler-label right">' + (tw2 ? tw2.name : '') + '</div></div>';
+          if (t > 0) html += '<div class="multi-vs-bar">VS</div>';
+
+          if (teamA && teamB) {
+            // Face-off row: Team A (left) vs Team B (right)
+            var leftW = teamA.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
+            var rightW = teamB.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
+            var leftBg = leftW[0] && leftW[0].img ? ' style="background-image:url(\'' + leftW[0].img + '\')"' : '';
+            var rightBg = rightW[0] && rightW[0].img ? ' style="background-image:url(\'' + rightW[0].img + '\')"' : '';
+            var leftNames = leftW.map(function(w) { return w.name; }).join(' & ');
+            var rightNames = rightW.map(function(w) { return w.name; }).join(' & ');
+            var leftRole = teamA.isChampion ? 'Champions' : (teamA.role || '');
+            var rightRole = teamB.isChampion ? 'Champions' : (teamB.role || '');
+
+            html += '<div class="card-faceoff-area">';
+            html += '<div class="card-left-panel"' + leftBg + '>';
+            html += '<div class="wrestler-label left">' + leftNames + '</div>';
+            if (leftRole) html += '<div class="wrestler-role left">' + leftRole + '</div>';
             html += '</div>';
-          } else {
-            // 3+ person team: full-width strips
-            team.wrestlers.forEach(function(key) {
-              var w = WRESTLERS[key];
-              if (!w) return;
-              html += '<div class="wrestler-strip" style="background-image:url(\'' + w.img + '\')">';
-              html += '<div class="strip-name">' + w.name + '</div>';
-              html += '</div>';
-            });
+            html += '<div class="card-seam"><div class="seam-line"></div></div>';
+            html += '<div class="card-right-panel"' + rightBg + '>';
+            html += '<div class="wrestler-label right">' + rightNames + '</div>';
+            if (rightRole) html += '<div class="wrestler-role right">' + rightRole + '</div>';
+            html += '</div>';
+            html += '</div>';
+          } else if (teamA) {
+            // Odd team out - show as strip
+            var soloW = teamA.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
+            var soloBg = soloW[0] && soloW[0].img ? soloW[0].img : '';
+            html += '<div class="wrestler-strip" style="background-image:url(\'' + soloBg + '\')">';
+            html += '<div class="strip-name">' + soloW.map(function(w) { return w.name; }).join(' & ') + '</div>';
+            html += '</div>';
           }
-
-          html += '</div>';
-        });
+        }
 
       } else if (match.participants) {
         // Ladder match: full-width strips for each participant
