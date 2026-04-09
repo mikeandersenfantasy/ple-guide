@@ -77,6 +77,26 @@
   var matches = MATCHES;
   var wrestlers = WRESTLERS;
   var currentPicks = {};
+  var lastSavedName = '';
+
+  // === LOAD LAST SAVED PICKS (persist across refresh) ===
+  // Check localStorage for the most recently saved picker
+  var mostRecent = null;
+  for (var i = 0; i < localStorage.length; i++) {
+    var key = localStorage.key(i);
+    if (key.startsWith('wm42-picks-')) {
+      try {
+        var entry = JSON.parse(localStorage.getItem(key));
+        if (!mostRecent || (entry.saved && entry.saved > mostRecent.saved)) {
+          mostRecent = entry;
+        }
+      } catch(e) {}
+    }
+  }
+  if (mostRecent && mostRecent.picks) {
+    currentPicks = mostRecent.picks;
+    lastSavedName = mostRecent.name || '';
+  }
 
   // === PICKS LOCK DEADLINE: Friday April 17, 2026 at 11:59 PM ET ===
   var lockDate = new Date('2026-04-17T23:59:00-04:00');
@@ -87,6 +107,12 @@
     if (nameBox) nameBox.innerHTML = '<div class="picks-locked-msg">Picks are LOCKED! WrestleMania has begun.</div>';
     var saveArea = document.getElementById('save-area');
     if (saveArea) saveArea.style.display = 'none';
+  }
+
+  // Pre-fill name from last save
+  if (lastSavedName) {
+    var nameInput = document.getElementById('picker-name');
+    if (nameInput) nameInput.value = lastSavedName;
   }
 
   // === TAB SWITCHING ===
@@ -214,9 +240,13 @@
       return;
     }
 
+    var storageKey = 'wm42-picks-' + name.toLowerCase();
+    var isUpdate = localStorage.getItem(storageKey) !== null;
     var data = { name: name, saved: new Date().toISOString(), picks: currentPicks };
-    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify(data));
-    document.getElementById('save-msg').innerHTML = 'Locked in! Good luck, <strong>' + name + '</strong>! &#x1F91E; (' + pickedCount + '/' + matches.length + ' picks)';
+    localStorage.setItem(storageKey, JSON.stringify(data));
+    lastSavedName = name;
+    var verb = isUpdate ? 'Updated' : 'Locked in';
+    document.getElementById('save-msg').innerHTML = verb + '! Good luck, <strong>' + name + '</strong>! &#x1F91E; (' + pickedCount + '/' + matches.length + ' picks)';
     document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
   });
 
