@@ -190,14 +190,25 @@
     html += '<div class="expand-hint">Tap for the story ↓</div>';
     html += '</div>';
 
-    // Story panel (in normal flow, hidden by CSS, no hidden attribute)
+    // Story panel (in normal flow, hidden by CSS)
     html += '<div class="card-story-panel">';
     html += '<div class="story-bar"></div>';
-    html += '<p class="story-text">' + (match.story || match.whyItMatters || '') + '</p>';
-    if (match.spotifyTrackId) {
-      html += '<div class="spotify-row" data-track-id="' + match.spotifyTrackId + '">';
-      html += '<span class="mood-label">SET THE MOOD</span>';
-      html += '<div class="spotify-placeholder"></div>';
+    if (match.whyItMatters) {
+      html += '<div class="story-section">';
+      html += '<div class="story-section-title">Why This Match Matters</div>';
+      html += '<div class="story-text">' + match.whyItMatters + '</div>';
+      html += '</div>';
+    }
+    if (match.storySoFar) {
+      html += '<div class="story-section">';
+      html += '<div class="story-section-title">The Story So Far</div>';
+      html += '<div class="story-text">' + match.storySoFar + '</div>';
+      html += '</div>';
+    }
+    if (!match.whyItMatters && !match.storySoFar && match.story) {
+      html += '<div class="story-section">';
+      html += '<div class="story-section-title">The Story</div>';
+      html += '<div class="story-text">' + match.story + '</div>';
       html += '</div>';
     }
     html += '</div>';
@@ -247,20 +258,6 @@
     var isOpen = storyPanel.classList.contains('open');
     storyPanel.classList.toggle('open', !isOpen);
     if (hint) hint.textContent = isOpen ? 'Tap for the story ↓' : 'Close ↑';
-
-    // Spotify embed
-    var spotifyRow = storyPanel.querySelector('.spotify-row');
-    var spotifyPlaceholder = storyPanel.querySelector('.spotify-placeholder');
-    if (spotifyRow && spotifyPlaceholder) {
-      var trackId = spotifyRow.dataset.trackId;
-      if (trackId) {
-        if (!isOpen) {
-          spotifyPlaceholder.innerHTML = '<iframe src="https://open.spotify.com/embed/track/' + trackId + '?utm_source=generator" width="100%" height="80" frameBorder="0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" style="border-radius:8px"></iframe>';
-        } else {
-          spotifyPlaceholder.innerHTML = '';
-        }
-      }
-    }
 
     if (!isOpen && storyPanel) {
       setTimeout(function() { storyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
