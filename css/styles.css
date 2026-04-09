@@ -2004,6 +2004,120 @@ ul { list-style: none; }
 .admin-side.selected, .admin-option.selected { border-color: #27ae60; background: rgba(39,174,96,0.15); color: #fff; }
 .admin-multi { display: flex; flex-wrap: wrap; gap: 6px; }
 
+/* === ENTRANCE BUTTON === */
+.entrance-btn {
+  width: 100%;
+  padding: 6px 10px;
+  background: rgba(212,168,60,0.08);
+  border: 1px solid rgba(212,168,60,0.25);
+  border-radius: 4px;
+  color: rgba(212,168,60,0.8);
+  font-size: 0.65rem;
+  font-family: Impact, sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s, border-color 0.15s;
+  pointer-events: auto;
+}
+.entrance-btn:hover, .entrance-btn:active {
+  background: rgba(212,168,60,0.18);
+  border-color: rgba(212,168,60,0.6);
+  color: #D4A83C;
+}
+
+/* === ENTRANCE MODAL === */
+.entrance-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.entrance-modal {
+  background: #0f111a;
+  border: 1px solid rgba(212,168,60,0.3);
+  border-radius: 10px;
+  padding: 1.25rem;
+  width: 100%;
+  max-width: 480px;
+}
+.entrance-modal-title {
+  font-family: Impact, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: #D4A83C;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.entrance-modal-artist {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 1rem;
+}
+.entrance-modal iframe {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: none;
+  border-radius: 6px;
+}
+.entrance-modal-close {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  font-family: inherit;
+}
+.entrance-modal-close:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+/* === GLOSSARY TOOLTIPS === */
+.glossary-tip {
+  color: #D4A83C;
+  cursor: pointer;
+  border-bottom: 1px dotted rgba(212,168,60,0.5);
+  position: relative;
+}
+.glossary-tip sup {
+  font-size: 0.55rem;
+  color: rgba(212,168,60,0.7);
+  margin-left: 1px;
+}
+.glossary-tip::after {
+  content: attr(data-def);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1c2a;
+  border: 1px solid rgba(212,168,60,0.4);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.85);
+  white-space: normal;
+  width: 200px;
+  text-align: center;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 100;
+  font-family: inherit;
+}
+.glossary-tip.tip-active::after { opacity: 1; }
+.glossary-tip.tip-below::after { bottom: auto; top: calc(100% + 6px); }
+
 /* ===== PRINT ===== */
 @media print {
   .nav, .scroll-top, .hamburger, .prediction-box, .btn, .spotify-embed { display: none !important; }

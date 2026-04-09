@@ -167,6 +167,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Portrait card
     var card = document.createElement('div');
     card.className = 'w-card ' + glowClass;
+    var ytId = w.entranceVideo && w.entranceVideo.id ? w.entranceVideo.id : '';
+    var entrBtn = ytId ? '<button class="entrance-btn" data-youtube="' + ytId + '" data-song="' + w.entranceTheme + '" data-artist="' + w.entranceArtist + '" onclick="event.stopPropagation()">&#9654; Entrance Theme</button>' : '';
+
     card.innerHTML =
       '<img class="w-card-portrait" src="' + w.img + '" alt="' + w.name + '">' +
       '<div class="w-card-overlay">' +
@@ -176,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
           '<span class="w-badge ' + alignClass + '">' + w.alignment + '</span>' +
           (w.isChampion ? '<span class="w-badge champ">' + w.title + '</span>' : '') +
         '</div>' +
+        entrBtn +
       '</div>';
 
     // Expanded panel
@@ -338,6 +342,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     container.appendChild(section);
+  });
+
+  // === ENTRANCE THEME MODAL ===
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.entrance-btn');
+    if (btn) {
+      var ytId = btn.dataset.youtube;
+      var song = btn.dataset.song;
+      var artist = btn.dataset.artist;
+      var overlay = document.createElement('div');
+      overlay.className = 'entrance-modal-overlay';
+      overlay.innerHTML = '<div class="entrance-modal">' +
+        '<div class="entrance-modal-title">' + song + '</div>' +
+        '<div class="entrance-modal-artist">' + artist + '</div>' +
+        '<iframe src="https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>' +
+        '<button class="entrance-modal-close">&#10005; Close</button>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      return;
+    }
+    if (e.target.closest('.entrance-modal-close') || e.target.classList.contains('entrance-modal-overlay')) {
+      var ov = document.querySelector('.entrance-modal-overlay');
+      if (ov) ov.remove();
+    }
   });
 });
 </script>

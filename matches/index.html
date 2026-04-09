@@ -85,6 +85,31 @@
     return { leftName: '', leftRole: '', rightName: '', rightRole: '' };
   }
 
+  // === GLOSSARY TOOLTIP WRAPPER ===
+  var glossaryTerms = {
+    'heel turn': 'When a good guy wrestler switches to being a villain.',
+    'face': 'The hero / good guy that the crowd cheers for.',
+    'heel': 'The villain / bad guy that the crowd boos.',
+    'kayfabe': 'Treating the scripted storylines as if they are real.',
+    'finisher': "A wrestler's signature big move that usually ends the match.",
+    'unsanctioned': 'No rules, no disqualifications — anything goes.',
+    'Royal Rumble': '30-person battle royal — last one standing earns a WrestleMania title shot.',
+    'Elimination Chamber': '6 wrestlers locked in a steel chamber, eliminated one by one.',
+    'put over': 'When a wrestler loses intentionally to make their opponent look strong.',
+    'promo': 'A mic speech used to hype a match or trash talk an opponent.',
+    'pop': 'The explosive crowd reaction to an exciting moment.'
+  };
+
+  function wrapGlossary(text) {
+    var result = text;
+    Object.keys(glossaryTerms).forEach(function(term) {
+      var def = glossaryTerms[term].replace(/"/g, '&quot;');
+      var regex = new RegExp('\\b(' + term + ')\\b', 'gi');
+      result = result.replace(regex, '<span class="glossary-tip" data-def="' + def + '" tabindex="0">$1<sup>?</sup></span>');
+    });
+    return result;
+  }
+
   function getBadgeClass(mt) {
     if (mt === 'title') return 'badge--title';
     if (mt === 'grudge') return 'badge--grudge';
@@ -243,19 +268,19 @@
     if (match.whyItMatters) {
       html += '<div class="story-section">';
       html += '<div class="story-section-title">Why This Match Matters</div>';
-      html += '<div class="story-text">' + match.whyItMatters + '</div>';
+      html += '<div class="story-text">' + wrapGlossary(match.whyItMatters) + '</div>';
       html += '</div>';
     }
     if (match.storySoFar) {
       html += '<div class="story-section">';
       html += '<div class="story-section-title">The Story So Far</div>';
-      html += '<div class="story-text">' + match.storySoFar + '</div>';
+      html += '<div class="story-text">' + wrapGlossary(match.storySoFar) + '</div>';
       html += '</div>';
     }
     if (!match.whyItMatters && !match.storySoFar && match.story) {
       html += '<div class="story-section">';
       html += '<div class="story-section-title">The Story</div>';
-      html += '<div class="story-text">' + match.story + '</div>';
+      html += '<div class="story-text">' + wrapGlossary(match.story) + '</div>';
       html += '</div>';
     }
     html += '</div>';
@@ -319,6 +344,26 @@
 
     if (!isOpen && storyPanel) {
       setTimeout(function() { storyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+    }
+  });
+
+  // === GLOSSARY TOOLTIP TOGGLE ===
+  document.addEventListener('click', function(e) {
+    // Close any open tooltip
+    document.querySelectorAll('.glossary-tip.tip-active').forEach(function(t) {
+      if (t !== e.target.closest('.glossary-tip')) t.classList.remove('tip-active');
+    });
+    var tip = e.target.closest('.glossary-tip');
+    if (tip) {
+      tip.classList.toggle('tip-active');
+      // Position below if near top of screen
+      var rect = tip.getBoundingClientRect();
+      if (rect.top < window.innerHeight / 2) {
+        tip.classList.add('tip-below');
+      } else {
+        tip.classList.remove('tip-below');
+      }
+      e.stopPropagation();
     }
   });
 })();
