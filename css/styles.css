@@ -1218,15 +1218,19 @@ ul { list-style: none; }
 /* === CINEMATIC CARDS === */
 .cinematic-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: #0a0c12;
   border: 1px solid rgba(212, 168, 60, 0.2);
   border-radius: 8px;
   margin-bottom: 1.25rem;
   cursor: pointer;
-  min-height: 120px;
   display: flex;
   flex-direction: column;
+}
+.card-faceoff-area {
+  position: relative;
+  height: 130px;
+  overflow: hidden;
 }
 .card-left-panel,
 .card-right-panel {
@@ -1238,10 +1242,12 @@ ul { list-style: none; }
   flex-direction: column;
   justify-content: center;
   padding: 1.25rem 1rem;
+  background-size: cover;
+  background-position: center top;
 }
 .card-left-panel {
   left: 0;
-  background: linear-gradient(135deg, #0f111a 0%, #12151f 100%);
+  background-color: #0f111a;
   clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
   transform: translateX(-100%) rotate(-2deg);
   filter: blur(4px);
@@ -1249,12 +1255,28 @@ ul { list-style: none; }
 }
 .card-right-panel {
   right: 0;
-  background: linear-gradient(225deg, #111520 0%, #0d1018 100%);
+  background-color: #111520;
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
   transform: translateX(100%) rotate(2deg);
   filter: blur(4px);
   opacity: 0;
 }
+/* Dark overlays on panels so text is readable over wrestler images */
+.card-left-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(10,12,18,0.45) 0%, rgba(10,12,18,0.75) 70%, rgba(10,12,18,0.95) 100%);
+  z-index: 1;
+}
+.card-right-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, rgba(10,12,18,0.45) 0%, rgba(10,12,18,0.75) 70%, rgba(10,12,18,0.95) 100%);
+  z-index: 1;
+}
+.card-left-panel > *, .card-right-panel > * { position: relative; z-index: 2; }
 .cinematic-card.panel-in .card-left-panel {
   animation: panelSlideLeft 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -1349,6 +1371,10 @@ ul { list-style: none; }
   line-height: 1.1;
   color: #ffffff;
   opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 38vw;
 }
 .cinematic-card.panel-in .wrestler-label {
   animation: labelFadeIn 0.3s ease-out 0.5s forwards;
@@ -1423,7 +1449,6 @@ ul { list-style: none; }
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  margin-top: 80px;
   border-top: 1px solid rgba(212,168,60,0.1);
 }
 .hype-label {
@@ -1462,9 +1487,13 @@ ul { list-style: none; }
 
 /* Story panel */
 .card-story-panel {
+  display: none;
   padding: 1rem 1.25rem 1.25rem;
   border-top: 1px solid rgba(212,168,60,0.15);
   background: rgba(0,0,0,0.3);
+}
+.card-story-panel.open {
+  display: block;
 }
 .story-bar {
   height: 2px;
@@ -1532,16 +1561,18 @@ ul { list-style: none; }
 
 /* Mobile cinematic */
 @media(max-width:600px) {
+  .card-faceoff-area { height: auto; }
   .card-left-panel, .card-right-panel { width: 100%; position: relative; clip-path: none; padding: 1rem; }
+  .card-left-panel::after, .card-right-panel::after { background: linear-gradient(to bottom, rgba(10,12,18,0.5) 0%, rgba(10,12,18,0.8) 100%); }
   .card-right-panel { border-top: 1px solid rgba(212,168,60,0.1); }
   .card-left-panel { transform: translateX(-100%); filter: blur(4px); }
   .card-right-panel { transform: translateX(100%); filter: blur(4px); }
+  .wrestler-label { max-width: 100%; white-space: normal; }
   .wrestler-label.left, .wrestler-label.right { text-align: center; }
   .wrestler-role.right { text-align: center; }
   .card-seam { display: none; }
   .card-center-stamp { position: relative; top: auto; left: auto; transform: none; width: auto; padding: 0.5rem; opacity: 1; }
   .cinematic-card.panel-in .card-center-stamp { animation: none; opacity: 1; transform: none; }
-  .card-bottom-bar { margin-top: 0; }
   .spark { display: none; }
   .night-header { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
 }

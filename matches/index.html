@@ -128,15 +128,34 @@
     return 'Special Match';
   }
 
+  function getWrestlerImg(key) {
+    var w = WRESTLERS[key];
+    return w && w.img ? w.img : '';
+  }
+
   function buildCinematicCard(match) {
     var lr = getLeftRight(match);
     var mt = match.matchType || 'special';
     var hype = match.hype || 3;
 
+    // Get wrestler images for background panels
+    var leftImg = '';
+    var rightImg = '';
+    if (match.wrestler1 && match.wrestler2) {
+      leftImg = getWrestlerImg(match.wrestler1);
+      rightImg = getWrestlerImg(match.wrestler2);
+    }
+
+    var leftBgStyle = leftImg ? ' style="background-image:url(\'' + leftImg + '\')"' : '';
+    var rightBgStyle = rightImg ? ' style="background-image:url(\'' + rightImg + '\')"' : '';
+
     var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-night="' + match.night + '" data-animated="false">';
 
-    // Left panel
-    html += '<div class="card-left-panel">';
+    // Faceoff area wrapper
+    html += '<div class="card-faceoff-area">';
+
+    // Left panel with wrestler background
+    html += '<div class="card-left-panel"' + leftBgStyle + '>';
     html += '<div class="wrestler-label left">' + lr.leftName + '</div>';
     if (lr.leftRole) html += '<div class="wrestler-role left">' + lr.leftRole + '</div>';
     html += '</div>';
@@ -144,8 +163,8 @@
     // Seam
     html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
 
-    // Right panel
-    html += '<div class="card-right-panel">';
+    // Right panel with wrestler background
+    html += '<div class="card-right-panel"' + rightBgStyle + '>';
     html += '<div class="wrestler-label right">' + lr.rightName + '</div>';
     if (lr.rightRole) html += '<div class="wrestler-role right">' + lr.rightRole + '</div>';
     html += '</div>';
@@ -156,7 +175,12 @@
     html += '<div class="championship-title">' + match.championship + '</div>';
     html += '</div>';
 
-    // Bottom bar
+    // Sparks (inside faceoff area so they're clipped)
+    html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
+
+    html += '</div>'; // end card-faceoff-area
+
+    // Bottom bar (in normal flow below faceoff area)
     html += '<div class="card-bottom-bar">';
     html += '<div class="hype-meter"><span class="hype-label">HYPE</span><div class="hype-pips">';
     for (var i = 0; i < 5; i++) {
@@ -166,8 +190,8 @@
     html += '<div class="expand-hint">Tap for the story ↓</div>';
     html += '</div>';
 
-    // Story panel
-    html += '<div class="card-story-panel" hidden>';
+    // Story panel (in normal flow, hidden by CSS, no hidden attribute)
+    html += '<div class="card-story-panel">';
     html += '<div class="story-bar"></div>';
     html += '<p class="story-text">' + (match.story || match.whyItMatters || '') + '</p>';
     if (match.spotifyTrackId) {
@@ -178,10 +202,7 @@
     }
     html += '</div>';
 
-    // Sparks
-    html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
-
-    html += '</div>';
+    html += '</div>'; // end cinematic-card
     return html;
   }
 
@@ -224,7 +245,6 @@
     if (!storyPanel) return;
 
     var isOpen = storyPanel.classList.contains('open');
-    storyPanel.hidden = isOpen;
     storyPanel.classList.toggle('open', !isOpen);
     if (hint) hint.textContent = isOpen ? 'Tap for the story ↓' : 'Close ↑';
 
