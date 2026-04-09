@@ -88,8 +88,6 @@
     var img = new Image();
     img.onload = img.onerror = function() { if (callback) callback(); };
     img.src = API + '?action=save&data=' + encoded + '&t=' + Date.now();
-    // Also try fetch for reliability
-    fetch(API + '?action=save&data=' + encoded, { mode: 'no-cors' }).catch(function() {});
   }
 
   function loadFromSheets(callback) {
