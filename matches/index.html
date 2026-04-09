@@ -275,23 +275,34 @@
 
   container.innerHTML = html;
 
-  // === INTERSECTION OBSERVER ===
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting && entry.target.dataset.animated === 'false') {
-        var card = entry.target;
-        card.dataset.animated = 'true';
-        card.classList.add('panel-in');
-        setTimeout(function() { card.classList.add('impact'); }, 420);
-        setTimeout(function() { card.classList.remove('impact'); }, 800);
-        observer.unobserve(card);
-      }
-    });
-  }, { threshold: 0.2 });
+  // === ANIMATION TRIGGER ===
+  var isMobile = window.innerWidth <= 768;
 
-  document.querySelectorAll('.cinematic-card').forEach(function(card) {
-    observer.observe(card);
-  });
+  if (isMobile) {
+    // Mobile: show all cards instantly, no animation overhead
+    document.querySelectorAll('.cinematic-card').forEach(function(card) {
+      card.classList.add('panel-in');
+      card.dataset.animated = 'true';
+    });
+  } else {
+    // Desktop: IntersectionObserver for scroll-triggered animations
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && entry.target.dataset.animated === 'false') {
+          var card = entry.target;
+          card.dataset.animated = 'true';
+          card.classList.add('panel-in');
+          setTimeout(function() { card.classList.add('impact'); }, 420);
+          setTimeout(function() { card.classList.remove('impact'); }, 800);
+          observer.unobserve(card);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.cinematic-card').forEach(function(card) {
+      observer.observe(card);
+    });
+  }
 
   // === CARD CLICK / TOGGLE ===
   document.addEventListener('click', function(e) {
