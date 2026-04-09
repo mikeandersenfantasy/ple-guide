@@ -1776,6 +1776,68 @@ ul { list-style: none; }
   .championship-title { font-size: 0.55rem; }
 }
 
+/* === WRESTLERS PAGE MOBILE === */
+@media (max-width: 768px) {
+  /* Grid spacing */
+  .roster-grid { gap: 10px; }
+
+  /* Card: keep aspect-ratio but allow badges to breathe */
+  .w-card { border-radius: 12px; }
+
+  /* Overlay: tighter padding on mobile */
+  .w-card-overlay { padding: 12px; }
+
+  /* Wrestler name: smaller so it fits on 1-2 lines */
+  .w-card-overlay h3 {
+    font-size: clamp(0.95rem, 4.5vw, 1.15rem);
+    line-height: 1.2;
+    margin-bottom: 1px;
+  }
+
+  /* Nickname: compact */
+  .w-card-overlay .nick {
+    font-size: 0.7rem;
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  /* Badges: allow championship badge to wrap, smaller sizing */
+  .w-badge {
+    font-size: 0.6rem;
+    padding: 2px 7px;
+    letter-spacing: 0.08em;
+    white-space: normal;
+    line-height: 1.3;
+  }
+
+  /* Championship badge specifically: allow multi-line */
+  .w-badge.champ {
+    white-space: normal;
+    line-height: 1.3;
+    font-size: 0.55rem;
+    padding: 3px 7px;
+  }
+
+  /* Matchup section title (championship label above each match group) */
+  .matchup-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+  }
+
+  /* Matchup section spacing */
+  .matchup { margin-bottom: 30px; }
+}
+
+@media (max-width: 390px) {
+  .roster-grid { gap: 8px; }
+  .w-card-overlay { padding: 8px; }
+  .w-card-overlay h3 { font-size: 0.85rem; }
+  .w-card-overlay .nick { font-size: 0.6rem; }
+  .w-badge { font-size: 0.55rem; padding: 2px 6px; }
+}
+
 /* === HYPE INTRO === */
 #hype-intro {
   position: fixed;
