@@ -78,6 +78,17 @@
   var wrestlers = WRESTLERS;
   var currentPicks = {};
 
+  // === PICKS LOCK DEADLINE: Friday April 17, 2026 at 11:59 PM ET ===
+  var lockDate = new Date('2026-04-17T23:59:00-04:00');
+  var isLocked = Date.now() >= lockDate.getTime();
+
+  if (isLocked) {
+    var nameBox = document.querySelector('.picks-name-box');
+    if (nameBox) nameBox.innerHTML = '<div class="picks-locked-msg">Picks are LOCKED! WrestleMania has begun.</div>';
+    var saveArea = document.getElementById('save-area');
+    if (saveArea) saveArea.style.display = 'none';
+  }
+
   // === TAB SWITCHING ===
   document.querySelectorAll('.picks-tab').forEach(function(tab) {
     tab.addEventListener('click', function() {
@@ -171,7 +182,7 @@
   // === PICK SELECTION ===
   container.addEventListener('click', function(e) {
     var btn = e.target.closest('[data-pick]');
-    if (!btn) return;
+    if (!btn || isLocked) return;
     var matchId = btn.dataset.match;
     var pickId = btn.dataset.pick;
     currentPicks[matchId] = pickId;

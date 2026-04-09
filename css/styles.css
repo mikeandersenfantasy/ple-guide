@@ -1870,6 +1870,10 @@ ul { list-style: none; }
   text-transform: uppercase;
   letter-spacing: 0.6em;
   opacity: 0;
+  text-align: center;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 #hype-intro .intro-title.animate {
   animation: titleSlam 0.7s ease-out forwards;
@@ -1880,6 +1884,9 @@ ul { list-style: none; }
   margin-top: 16px;
   opacity: 0;
   transition: opacity 0.5s ease;
+  text-align: center;
+  width: 100%;
+  padding: 0 20px;
 }
 #hype-intro .intro-sub.visible { opacity: 1; }
 #hype-intro .intro-line {
@@ -1977,6 +1984,7 @@ ul { list-style: none; }
 .picks-msg { margin-top: 16px; font-size: 1rem; color: rgba(255,255,255,0.6); }
 .picks-msg--success { color: #D4A83C; font-weight: 700; font-size: 1.1rem; }
 .picks-empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.4); font-size: 1rem; }
+.picks-locked-msg { font-family: Impact, sans-serif; font-size: 1.1rem; color: var(--wwe-red); text-transform: uppercase; letter-spacing: 0.1em; text-align: center; }
 
 /* Leaderboard table */
 .lb-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
