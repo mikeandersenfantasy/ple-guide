@@ -150,73 +150,80 @@
       html += '</div>'; // end card-faceoff-area
 
     } else {
-      // === MULTI-PERSON MATCH ===
-      html += '<div class="card-faceoff-area multi">';
+      // === MULTI-PERSON MATCH — cinematic full-bleed slices ===
 
-      // Header with badge + championship
-      html += '<div class="multi-header">';
-      html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
-      html += '<div class="multi-championship">' + match.championship + '</div>';
-      html += '</div>';
+      function buildSlices(wrestlerKeys, side) {
+        // side: 'left' or 'right' — determines overlay gradient direction
+        var overlays;
+        if (wrestlerKeys.length === 2) {
+          overlays = side === 'left' ? ['slice-overlay--left', 'slice-overlay--right-fade'] : ['slice-overlay--left-fade', 'slice-overlay--right'];
+        } else {
+          overlays = side === 'left' ? ['slice-overlay--left', 'slice-overlay--mid', 'slice-overlay--right-fade'] : ['slice-overlay--left-fade', 'slice-overlay--mid', 'slice-overlay--right'];
+        }
+        var h = '';
+        wrestlerKeys.forEach(function(key, i) {
+          var w = WRESTLERS[key];
+          if (!w) return;
+          var bgImg = w.img ? "background-image:url('" + w.img + "')" : "background:linear-gradient(135deg,#12151f,#0a0c12)";
+          h += '<div class="multi-slice" style="' + bgImg + '">';
+          h += '<div class="slice-overlay ' + (overlays[i] || 'slice-overlay--mid') + '"></div>';
+          h += '<span class="slice-name">' + w.name + '</span>';
+          h += '</div>';
+        });
+        return h;
+      }
+
+      function buildFaceoffRow(leftKeys, rightKeys) {
+        var h = '<div class="faceoff-row">';
+        h += '<div class="card-left-panel card-multi-panel">' + buildSlices(leftKeys, 'left') + '</div>';
+        h += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
+        h += '<div class="card-right-panel card-multi-panel">' + buildSlices(rightKeys, 'right') + '</div>';
+        h += '</div>';
+        return h;
+      }
 
       if (match.teams && match.teams.length === 4) {
-        // Fatal 4-Way: 2 stacked face-off rows (like 2 singles matches)
-        // Row 1: Team1 (left) vs Team2 (right)
-        // VS bar
-        // Row 2: Team3 (left) vs Team4 (right)
-        for (var row = 0; row < 2; row++) {
-          if (row > 0) html += '<div class="multi-vs-bar">VS</div>';
-          var tL = match.teams[row * 2];
-          var tR = match.teams[row * 2 + 1];
-          var wL = tL.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
-          var wR = tR.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
-          var bgL = wL[0] && wL[0].img ? ' style="background-image:url(\'' + wL[0].img + '\')"' : '';
-          var bgR = wR[0] && wR[0].img ? ' style="background-image:url(\'' + wR[0].img + '\')"' : '';
-          var namesL = wL.map(function(w) { return w.name; }).join(' & ');
-          var namesR = wR.map(function(w) { return w.name; }).join(' & ');
-
-          html += '<div class="stacked-faceoff">';
-          html += '<div class="card-left-panel"' + bgL + '>';
-          html += '<div class="wrestler-label left">' + namesL + '</div>';
-          html += '</div>';
-          html += '<div class="card-seam"><div class="seam-line"></div></div>';
-          html += '<div class="card-right-panel"' + bgR + '>';
-          html += '<div class="wrestler-label right">' + namesR + '</div>';
-          html += '</div>';
-          html += '</div>';
-        }
+        // Fatal 4-Way: two stacked face-off rows
+        html += '<div class="card-faceoff-area card-faceoff-area--double">';
+        html += buildFaceoffRow(match.teams[0].wrestlers, match.teams[1].wrestlers);
+        html += '<div class="row-divider"></div>';
+        html += buildFaceoffRow(match.teams[2].wrestlers, match.teams[3].wrestlers);
+        html += '<div class="card-center-stamp card-center-stamp--tall">';
+        html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
+        html += '<div class="championship-title">' + match.championship + '</div>';
+        html += '</div>';
+        html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
+        html += '</div>';
 
       } else if (match.teams && match.teams.length === 2) {
-        // 2-team match (3v3): face-off layout with all names
-        var tA = match.teams[0];
-        var tB = match.teams[1];
-        var wA = tA.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
-        var wB = tB.wrestlers.map(function(k) { return WRESTLERS[k]; }).filter(Boolean);
-        var bgA = wA[0] && wA[0].img ? ' style="background-image:url(\'' + wA[0].img + '\')"' : '';
-        var bgB = wB[0] && wB[0].img ? ' style="background-image:url(\'' + wB[0].img + '\')"' : '';
-
+        // 3v3 tag: single face-off row with 3 slices per side
         html += '<div class="card-faceoff-area">';
-        html += '<div class="card-left-panel"' + bgA + '>';
-        html += '<div class="wrestler-label left">' + wA.map(function(w) { return w.name; }).join(', ') + '</div>';
+        html += '<div class="card-left-panel card-multi-panel">' + buildSlices(match.teams[0].wrestlers, 'left') + '</div>';
+        html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
+        html += '<div class="card-right-panel card-multi-panel">' + buildSlices(match.teams[1].wrestlers, 'right') + '</div>';
+        html += '<div class="card-center-stamp">';
+        html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
+        html += '<div class="championship-title">' + match.championship + '</div>';
         html += '</div>';
-        html += '<div class="card-seam"><div class="seam-line"></div></div>';
-        html += '<div class="card-right-panel"' + bgB + '>';
-        html += '<div class="wrestler-label right">' + wB.map(function(w) { return w.name; }).join(', ') + '</div>';
-        html += '</div>';
+        html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
         html += '</div>';
 
       } else if (match.participants) {
-        // Ladder match: full-width strips for each participant
-        match.participants.forEach(function(key) {
-          var w = WRESTLERS[key];
-          if (!w) return;
-          html += '<div class="wrestler-strip" style="background-image:url(\'' + w.img + '\')">';
-          html += '<div class="strip-name">' + w.name + '</div>';
-          html += '</div>';
-        });
+        // Ladder match: split participants 3-left, 3-right
+        var half = Math.ceil(match.participants.length / 2);
+        var leftP = match.participants.slice(0, half);
+        var rightP = match.participants.slice(half);
+        html += '<div class="card-faceoff-area">';
+        html += '<div class="card-left-panel card-multi-panel">' + buildSlices(leftP, 'left') + '</div>';
+        html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
+        html += '<div class="card-right-panel card-multi-panel">' + buildSlices(rightP, 'right') + '</div>';
+        html += '<div class="card-center-stamp">';
+        html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
+        html += '<div class="championship-title">' + match.championship + '</div>';
+        html += '</div>';
+        html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
+        html += '</div>';
       }
-
-      html += '</div>'; // end card-faceoff-area
     }
 
     // Bottom bar (in normal flow below faceoff area)

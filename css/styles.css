@@ -1448,87 +1448,99 @@ ul { list-style: none; }
 .badge--tag    { background: #2980b9; color: #ffffff; }
 .badge--special{ background: #8e44ad; color: #ffffff; }
 
-/* Multi-person card layout */
-.multi-header {
-  text-align: center;
-  padding: 10px 14px 6px;
+/* === MULTI-PERSON CARDS === */
+.card-multi-panel {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  background: none;
 }
-.multi-header .multi-championship {
-  font-size: 0.6rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #D4A83C;
-  margin-top: 6px;
+.card-left-panel.card-multi-panel {
+  clip-path: polygon(0 0, 95% 0, 100% 100%, 0 100%);
 }
-
-/* Full-width wrestler strip for individuals/3-person teams */
-.wrestler-strip {
+.card-right-panel.card-multi-panel {
+  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
+}
+.multi-slice {
   position: relative;
-  height: 140px;
+  flex: 1;
+  height: 100%;
   background-size: cover;
   background-position: center 10%;
   background-repeat: no-repeat;
-  display: flex;
-  align-items: flex-end;
-  padding: 12px 20px;
+  background-color: #0f111a;
   overflow: hidden;
-  border-bottom: 1px solid rgba(212,168,60,0.1);
 }
-.wrestler-strip:last-child { border-bottom: none; }
-.wrestler-strip::after {
-  content: '';
+.slice-name {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(10,12,18,0.15) 0%, rgba(10,12,18,0.5) 45%, rgba(10,12,18,0.85) 100%);
-  z-index: 1;
-}
-.wrestler-strip > * { position: relative; z-index: 2; }
-.wrestler-strip .strip-name {
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-family: Impact, 'Arial Narrow', sans-serif;
-  font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+  font-size: clamp(0.55rem, 1.5vw, 0.85rem);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #fff;
-  margin-left: auto;
-  text-align: right;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.95);
+  z-index: 3;
+  padding: 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.slice-overlay { position: absolute; inset: 0; z-index: 2; }
+.slice-overlay--left {
+  background: linear-gradient(to right, rgba(10,12,18,0.5) 0%, rgba(10,12,18,0.15) 60%, rgba(10,12,18,0.1) 100%);
+}
+.slice-overlay--mid {
+  background: linear-gradient(to bottom, rgba(10,12,18,0.3) 0%, rgba(10,12,18,0.02) 35%, rgba(10,12,18,0.02) 65%, rgba(10,12,18,0.5) 100%);
+}
+.slice-overlay--right-fade {
+  background: linear-gradient(to right, rgba(10,12,18,0.05) 0%, rgba(10,12,18,0.25) 55%, rgba(10,12,18,0.85) 100%);
+}
+.slice-overlay--left-fade {
+  background: linear-gradient(to right, rgba(10,12,18,0.85) 0%, rgba(10,12,18,0.25) 45%, rgba(10,12,18,0.05) 100%);
+}
+.slice-overlay--right {
+  background: linear-gradient(to right, rgba(10,12,18,0.1) 0%, rgba(10,12,18,0.15) 60%, rgba(10,12,18,0.5) 100%);
 }
 
-/* Stacked face-off rows for multi-team matches */
-.stacked-faceoff {
+/* Double-row faceoff for Fatal 4-Way */
+.card-faceoff-area--double { height: 440px; }
+.faceoff-row {
   position: relative;
   height: 220px;
   overflow: hidden;
 }
-.stacked-faceoff .card-left-panel,
-.stacked-faceoff .card-right-panel {
+.faceoff-row .card-left-panel,
+.faceoff-row .card-right-panel {
+  position: absolute;
+  top: 0;
+  width: 52%;
   height: 100%;
 }
-
-/* Team section divider */
-.team-section-label {
-  font-size: 0.55rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: rgba(212,168,60,0.7);
-  padding: 4px 14px 3px;
-  background: rgba(212,168,60,0.05);
-  border-left: 3px solid rgba(212,168,60,0.4);
+.faceoff-row .card-left-panel { left: 0; }
+.faceoff-row .card-right-panel { right: 0; }
+.faceoff-row .card-seam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  transform: translateX(-50%) skewX(-4deg);
+  z-index: 10;
+  pointer-events: none;
 }
-.multi-vs-bar {
-  text-align: center;
-  padding: 3px 0;
-  font-family: Impact, sans-serif;
-  font-size: 0.8rem;
-  color: var(--wwe-red);
-  text-shadow: 0 1px 6px rgba(204,26,43,0.3);
-  letter-spacing: 0.15em;
-  background: rgba(204,26,43,0.08);
-  border-top: 1px solid rgba(212,168,60,0.15);
-  border-bottom: 1px solid rgba(212,168,60,0.15);
+.row-divider {
+  position: absolute;
+  left: 0; right: 0;
+  top: 220px;
+  height: 2px;
+  background: linear-gradient(to right, transparent 0%, rgba(212,168,60,0.5) 20%, rgba(212,168,60,0.8) 50%, rgba(212,168,60,0.5) 80%, transparent 100%);
+  z-index: 15;
 }
+.card-center-stamp--tall { top: 50%; }
 
 /* Bottom bar */
 .card-bottom-bar {
