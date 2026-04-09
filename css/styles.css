@@ -1270,19 +1270,19 @@ ul { list-style: none; }
   filter: blur(4px);
   opacity: 0;
 }
-/* Dark overlays on panels so text is readable over wrestler images */
+/* Light overlays on panels - just enough for text readability near seam */
 .card-left-panel::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(10,12,18,0.45) 0%, rgba(10,12,18,0.75) 70%, rgba(10,12,18,0.95) 100%);
+  background: linear-gradient(to right, rgba(10,12,18,0.1) 0%, rgba(10,12,18,0.3) 60%, rgba(10,12,18,0.8) 100%);
   z-index: 1;
 }
 .card-right-panel::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to left, rgba(10,12,18,0.45) 0%, rgba(10,12,18,0.75) 70%, rgba(10,12,18,0.95) 100%);
+  background: linear-gradient(to left, rgba(10,12,18,0.1) 0%, rgba(10,12,18,0.3) 60%, rgba(10,12,18,0.8) 100%);
   z-index: 1;
 }
 .card-left-panel > *, .card-right-panel > * { position: relative; z-index: 2; }

@@ -873,7 +873,7 @@ const WRESTLERS = {
     alignmentDesc: "Celebrity wildcard",
     isChampion: false,
     title: null,
-    img: "https://www.wwe.com/f/styles/wwe_16_9_s/public/2025/02/playlistspeedmoms_ntwk--c64036be917f4fe0d63af5d479e6923b.jpeg",
+    img: "https://www.thesmackdownhotel.com/images/wrestling/wrestlers/full-body/ishowspeed.png",
     about: "IShowSpeed is one of the biggest content creators in the world with millions of followers across YouTube and social media. Known for his wild energy and over-the-top personality, he teams with Logan Paul and Austin Theory at WrestleMania 42 in a Six-Man Tag Team Match. Expect chaos, unpredictability, and entertainment.",
     finisher: "Speed Kick",
     finisherDesc: "A running soccer-style kick. Speed brings his YouTube energy to the ring.",
