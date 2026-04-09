@@ -160,10 +160,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function buildEntranceCard(w) {
+  function buildEntranceCard(w, slug) {
     if (w.entranceVideo) {
       var ev = w.entranceVideo;
-      return '<div class="vid-card fade-in">' +
+      return '<div class="vid-card fade-in" id="entrance-' + (slug || '') + '">' +
         '<div class="vid-embed">' +
           '<iframe src="https://www.youtube.com/embed/' + ev.id + '?start=' + ev.start + '" title="' + w.name + ' Entrance" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
         '</div>' +
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         '</div>' +
       '</div>';
     } else {
-      return '<div class="vid-card vid-card--placeholder fade-in">' +
+      return '<div class="vid-card vid-card--placeholder fade-in" id="entrance-' + (slug || '') + '">' +
         '<div class="vid-embed">' +
           '<div class="vid-placeholder-inner">' +
             '<div class="icon">&#127908;</div>' +
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
     html += '<div class="' + gridClass + '">';
     wrestlerKeys.forEach(function(key) {
       var w = wrestlers[key];
-      if (w) html += buildEntranceCard(w);
+      if (w) html += buildEntranceCard(w, key);
     });
     html += '</div>';
 
