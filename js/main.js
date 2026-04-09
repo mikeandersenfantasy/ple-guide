@@ -176,27 +176,47 @@ function initTagline() {
   }, 4000);
 }
 
-// ===== HYPE INTRO (plays once per session, on any page) =====
+// ===== HYPE INTRO (unique per page, plays once per session per page) =====
 function initHypeIntro() {
-  if (sessionStorage.getItem('wm42-intro-seen')) return;
+  var path = window.location.pathname.toLowerCase().replace(/\/+$/, '');
+  var segments = path.split('/').filter(Boolean);
+  var page = segments[segments.length - 1] || 'home';
+  if (page === 'index.html' || page === 'index') page = segments.length >= 2 ? segments[segments.length - 2] : 'home';
+
+  var intros = {
+    home:      { title: 'WrestleMania 42', sub: 'Your Family\'s Guide to the Biggest Event in Wrestling' },
+    matches:   { title: 'The Match Card', sub: '13 Matches · Two Nights · Las Vegas' },
+    wrestlers: { title: 'Meet the Superstars', sub: '42 Wrestlers · Finishers · Entrance Themes' },
+    videos:    { title: 'Learn the Music', sub: 'Know Every Entrance Theme Before the Show' }
+  };
+
+  // Also check for the repo subdirectory on GitHub Pages
+  if (page === 'wrestlemania-42-guide') page = 'home';
+
+  var config = intros[page];
+  if (!config) return;
+
+  var storageKey = 'wm42-intro-' + page;
+  if (sessionStorage.getItem(storageKey)) return;
+
   var intro = document.createElement('div');
   intro.id = 'hype-intro';
   intro.innerHTML = '<button class="skip-btn" id="intro-skip">Skip ›</button>' +
-    '<div class="intro-title" id="intro-title">WrestleMania Vegas</div>' +
-    '<div class="intro-sub" id="intro-sub">April 18 & 19 · Allegiant Stadium · Las Vegas</div>' +
+    '<div class="intro-title" id="intro-title">' + config.title + '</div>' +
+    '<div class="intro-sub" id="intro-sub">' + config.sub + '</div>' +
     '<div class="intro-line" id="intro-line"></div>';
   document.body.appendChild(intro);
 
   function dismissIntro() {
     intro.style.opacity = '0';
     setTimeout(function() { intro.remove(); }, 600);
-    sessionStorage.setItem('wm42-intro-seen', '1');
+    sessionStorage.setItem(storageKey, '1');
   }
 
   document.getElementById('intro-skip').addEventListener('click', function() {
     intro.style.opacity = '0';
     setTimeout(function() { intro.remove(); }, 300);
-    sessionStorage.setItem('wm42-intro-seen', '1');
+    sessionStorage.setItem(storageKey, '1');
   });
 
   setTimeout(function() { document.getElementById('intro-title').classList.add('animate'); }, 200);
