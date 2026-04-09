@@ -27,7 +27,7 @@
 <section class="hero" style="padding:50px 30px 40px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
   <div class="hero-label">WrestleMania 42</div>
   <h1>The Match <span style="color:#fff">Card</span></h1>
-  <p class="hero-sub" id="hero-sub">14 confirmed matches across two nights. Tap any match to see the story.</p>
+  <p class="hero-sub" id="hero-sub">13 confirmed matches across two nights. Tap any match to see the story.</p>
 </section>
 
 <section class="section">
@@ -79,181 +79,173 @@
     setTimeout(dismissIntro, 2400);
   }
 
-  // === BUILD MATCH CARDS ===
+  // === RENDER MATCHES ===
   var night1 = MATCHES.filter(function(m) { return m.night === 1; });
   var night2 = MATCHES.filter(function(m) { return m.night === 2; });
 
-  function buildNightSection(nightNum, title, subtitle, nightMatches) {
-    var html = '<div class="night-section">';
-    html += '<div class="night-section-header">';
-    html += '<span class="night-badge">Night ' + nightNum + '</span>';
-    html += '<span class="night-section-title">' + title + '</span>';
-    html += '<span class="night-section-sub">' + subtitle + '</span>';
-    html += '</div>';
-    nightMatches.forEach(function(match) {
-      html += buildFaceoffCard(match);
-    });
-    html += '</div>';
-    return html;
-  }
-
-  function getBadgeClass(matchType) {
-    switch (matchType) {
-      case 'title': return 'badge--title';
-      case 'grudge': return 'badge--grudge';
-      case 'ladder': return 'badge--ladder';
-      default: return 'badge--standard';
-    }
-  }
-
-  function buildHypeMeter(hype) {
-    var html = '<div class="hype-meter">';
-    for (var i = 0; i < 5; i++) {
-      html += '<div class="hype-pip' + (i < hype ? ' filled' : '') + '"></div>';
-    }
-    html += '</div>';
-    return html;
-  }
-
-  function buildFaceoffCard(match) {
-    var badgeClass = getBadgeClass(match.matchType || 'special');
-    var badgeLabel = match.matchType === 'title' ? 'Title Match' : match.matchType === 'grudge' ? 'Grudge Match' : match.matchType === 'ladder' ? 'Ladder Match' : match.matchType === 'tag' ? 'Tag Match' : 'Special Match';
-
-    var html = '<div class="faceoff-card" data-match-id="' + match.id + '">';
-
+  function getLeftRight(match) {
     if (match.wrestler1 && match.wrestler2) {
-      // Singles match face-off layout
       var w1 = WRESTLERS[match.wrestler1];
       var w2 = WRESTLERS[match.wrestler2];
-      var align1 = w1.alignment === 'Face' ? 'face-ring' : 'heel-ring';
-      var align2 = w2.alignment === 'Face' ? 'face-ring' : 'heel-ring';
-
-      html += '<div class="faceoff-top">';
-      html += '<span class="badge--match ' + badgeClass + '">' + badgeLabel + '</span>';
-      html += buildHypeMeter(match.hype || 3);
-      html += '<span class="faceoff-championship">' + match.championship + '</span>';
-
-      html += '<div class="faceoff-wrestler left">';
-      html += '<div class="faceoff-img ' + align1 + '"><img src="' + w1.img + '" alt="' + w1.name + '" loading="lazy"></div>';
-      html += '<div class="faceoff-name">' + w1.name + '</div>';
-      if (w1.nickname) html += '<div class="faceoff-nickname">"' + w1.nickname + '"</div>';
-      html += '</div>';
-
-      html += '<div class="faceoff-vs">VS</div>';
-
-      html += '<div class="faceoff-wrestler right">';
-      html += '<div class="faceoff-img ' + align2 + '"><img src="' + w2.img + '" alt="' + w2.name + '" loading="lazy"></div>';
-      html += '<div class="faceoff-name">' + w2.name + '</div>';
-      if (w2.nickname) html += '<div class="faceoff-nickname">"' + w2.nickname + '"</div>';
-      html += '</div>';
-
-      html += '</div>';
-    } else {
-      // Multi-person / tag match layout
-      html += '<div class="faceoff-top" style="flex-direction:column;align-items:center">';
-      html += '<span class="badge--match ' + badgeClass + '" style="position:static;margin-bottom:12px">' + badgeLabel + '</span>';
-      html += '<div class="faceoff-multi">';
-      html += '<div class="multi-championship">' + match.championship + '</div>';
-
-      if (match.teams) {
-        html += '<div class="multi-teams">';
-        match.teams.forEach(function(team) {
-          var roleLabel = team.isChampion ? 'Champions' : (team.role || 'Challengers');
-          html += '<div class="team-block">';
-          html += '<div class="team-role">' + roleLabel + '</div>';
-          html += '<div class="team-name">' + team.name + '</div>';
-          html += '</div>';
-        });
-        html += '</div>';
-      } else if (match.participants) {
-        html += '<div class="participants-list">';
-        match.participants.forEach(function(key) {
-          var w = WRESTLERS[key];
-          if (w) html += '<span class="participant-tag">' + w.name + '</span>';
-        });
-        html += '</div>';
-      }
-
-      html += '</div>';
-      html += buildHypeMeter(match.hype || 3);
-      html += '</div>';
+      return {
+        leftName: w1 ? w1.name : match.wrestler1,
+        leftRole: w1 && w1.isChampion ? 'Champion' : 'Challenger',
+        rightName: w2 ? w2.name : match.wrestler2,
+        rightRole: w2 && w2.isChampion ? 'Champion' : 'Challenger'
+      };
     }
-
-    // Story section (hidden until clicked)
-    html += '<div class="card-story">';
-    html += '<div class="gold-bar"></div>';
-    html += '<div class="story-text">' + (match.story || match.whyItMatters || '') + '</div>';
-    if (match.spotifyTrackId) {
-      html += '<div class="spotify-row">';
-      html += '<div class="spotify-label">Set the mood ›</div>';
-      html += '<iframe class="spotify-embed-frame" data-src="https://open.spotify.com/embed/track/' + match.spotifyTrackId + '?utm_source=generator" width="100%" height="80" frameBorder="0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" style="border-radius:8px"></iframe>';
-      html += '</div>';
+    if (match.teams) {
+      var left = match.teams[0] ? match.teams[0].name : '';
+      var right = match.teams.length > 2
+        ? match.teams[1].name + ' & more'
+        : (match.teams[1] ? match.teams[1].name : '');
+      var leftRole = match.teams[0] && match.teams[0].isChampion ? 'Champions' : (match.teams[0] && match.teams[0].role ? match.teams[0].role : '');
+      var rightRole = match.teams[1] && match.teams[1].role ? match.teams[1].role : '';
+      return { leftName: left, leftRole: leftRole, rightName: right, rightRole: rightRole };
     }
-    html += '<div class="close-hint">Tap to close ↑</div>';
+    if (match.participants) {
+      var names = match.participants.map(function(k) { return WRESTLERS[k] ? WRESTLERS[k].name : k; });
+      var leftNames = names.slice(0, 3).join(' · ');
+      var rightNames = names.length > 3 ? names.slice(3).join(' · ') : '';
+      return { leftName: leftNames, leftRole: '', rightName: rightNames, rightRole: '' };
+    }
+    return { leftName: '', leftRole: '', rightName: '', rightRole: '' };
+  }
+
+  function getBadgeClass(mt) {
+    if (mt === 'title') return 'badge--title';
+    if (mt === 'grudge') return 'badge--grudge';
+    if (mt === 'ladder') return 'badge--ladder';
+    if (mt === 'tag') return 'badge--tag';
+    return 'badge--special';
+  }
+
+  function getBadgeLabel(mt) {
+    if (mt === 'title') return 'Title Match';
+    if (mt === 'grudge') return 'Grudge Match';
+    if (mt === 'ladder') return 'Ladder Match';
+    if (mt === 'tag') return 'Tag Match';
+    return 'Special Match';
+  }
+
+  function buildCinematicCard(match) {
+    var lr = getLeftRight(match);
+    var mt = match.matchType || 'special';
+    var hype = match.hype || 3;
+
+    var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-night="' + match.night + '" data-animated="false">';
+
+    // Left panel
+    html += '<div class="card-left-panel">';
+    html += '<div class="wrestler-label left">' + lr.leftName + '</div>';
+    if (lr.leftRole) html += '<div class="wrestler-role left">' + lr.leftRole + '</div>';
     html += '</div>';
+
+    // Seam
+    html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
+
+    // Right panel
+    html += '<div class="card-right-panel">';
+    html += '<div class="wrestler-label right">' + lr.rightName + '</div>';
+    if (lr.rightRole) html += '<div class="wrestler-role right">' + lr.rightRole + '</div>';
+    html += '</div>';
+
+    // Center stamp
+    html += '<div class="card-center-stamp">';
+    html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
+    html += '<div class="championship-title">' + match.championship + '</div>';
+    html += '</div>';
+
+    // Bottom bar
+    html += '<div class="card-bottom-bar">';
+    html += '<div class="hype-meter"><span class="hype-label">HYPE</span><div class="hype-pips">';
+    for (var i = 0; i < 5; i++) {
+      html += '<div class="pip' + (i < hype ? ' lit' : '') + '"></div>';
+    }
+    html += '</div></div>';
+    html += '<div class="expand-hint">Tap for the story ↓</div>';
+    html += '</div>';
+
+    // Story panel
+    html += '<div class="card-story-panel" hidden>';
+    html += '<div class="story-bar"></div>';
+    html += '<p class="story-text">' + (match.story || match.whyItMatters || '') + '</p>';
+    if (match.spotifyTrackId) {
+      html += '<div class="spotify-row" data-track-id="' + match.spotifyTrackId + '">';
+      html += '<span class="mood-label">SET THE MOOD</span>';
+      html += '<div class="spotify-placeholder"></div>';
+      html += '</div>';
+    }
+    html += '</div>';
+
+    // Sparks
+    html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
 
     html += '</div>';
     return html;
   }
 
-  // Render nights
-  if (night1.length > 0) {
-    container.innerHTML += buildNightSection(1, 'Saturday · April 18', 'Allegiant Stadium · Las Vegas', night1);
-  }
+  // Night 1
+  var html = '<div class="night-header night-1"><div class="night-badge">NIGHT 1</div><div class="night-info"><span class="night-date">Saturday · April 18</span><span class="night-venue">Allegiant Stadium · Las Vegas</span></div></div>';
+  night1.forEach(function(m) { html += buildCinematicCard(m); });
 
-  // Visual divider between nights
-  container.innerHTML += '<div style="height:2px;background:linear-gradient(90deg,transparent,rgba(212,168,60,0.4),transparent);margin:40px 0"></div>';
+  html += '<div class="night-divider"></div>';
 
-  if (night2.length > 0) {
-    container.innerHTML += buildNightSection(2, 'Sunday · April 19', 'The Main Event', night2);
-  }
+  // Night 2
+  html += '<div class="night-header night-2"><div class="night-badge">NIGHT 2</div><div class="night-info"><span class="night-date">Sunday · April 19</span><span class="night-venue">The Main Event</span></div></div>';
+  night2.forEach(function(m) { html += buildCinematicCard(m); });
 
-  // === CARD CLICK / TOGGLE ===
-  container.addEventListener('click', function(e) {
-    var card = e.target.closest('.faceoff-card');
-    if (!card) return;
+  container.innerHTML = html;
 
-    var wasOpen = card.classList.contains('open');
-
-    // Close all open cards
-    document.querySelectorAll('.faceoff-card.open').forEach(function(c) {
-      c.classList.remove('open');
-      var iframe = c.querySelector('.spotify-embed-frame');
-      if (iframe) iframe.src = '';
-    });
-
-    // Toggle clicked card
-    if (!wasOpen) {
-      card.classList.add('open');
-      // Lazy-load Spotify embed
-      var iframe = card.querySelector('.spotify-embed-frame');
-      if (iframe && iframe.dataset.src) {
-        iframe.src = iframe.dataset.src;
-      }
-      // Scroll story into view
-      var story = card.querySelector('.card-story');
-      if (story) {
-        setTimeout(function() { story.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
-      }
-    }
-  });
-
-  // === INTERSECTION OBSERVER FOR ANIMATIONS ===
+  // === INTERSECTION OBSERVER ===
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.isIntersecting && !entry.target.getAttribute('data-animated')) {
-        entry.target.setAttribute('data-animated', 'true');
+      if (entry.isIntersecting && entry.target.dataset.animated === 'false') {
+        var card = entry.target;
+        card.dataset.animated = 'true';
+        card.classList.add('panel-in');
+        setTimeout(function() { card.classList.add('impact'); }, 420);
+        setTimeout(function() { card.classList.remove('impact'); }, 800);
+        observer.unobserve(card);
       }
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.2 });
 
-  document.querySelectorAll('.faceoff-card').forEach(function(card) {
+  document.querySelectorAll('.cinematic-card').forEach(function(card) {
     observer.observe(card);
   });
 
-  // Animate first visible card immediately
-  var firstCard = document.querySelector('.faceoff-card');
-  if (firstCard) firstCard.setAttribute('data-animated', 'true');
+  // === CARD CLICK / TOGGLE ===
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.cinematic-card');
+    if (!card) return;
+    var storyPanel = card.querySelector('.card-story-panel');
+    var hint = card.querySelector('.expand-hint');
+    if (!storyPanel) return;
+
+    var isOpen = storyPanel.classList.contains('open');
+    storyPanel.hidden = isOpen;
+    storyPanel.classList.toggle('open', !isOpen);
+    if (hint) hint.textContent = isOpen ? 'Tap for the story ↓' : 'Close ↑';
+
+    // Spotify embed
+    var spotifyRow = storyPanel.querySelector('.spotify-row');
+    var spotifyPlaceholder = storyPanel.querySelector('.spotify-placeholder');
+    if (spotifyRow && spotifyPlaceholder) {
+      var trackId = spotifyRow.dataset.trackId;
+      if (trackId) {
+        if (!isOpen) {
+          spotifyPlaceholder.innerHTML = '<iframe src="https://open.spotify.com/embed/track/' + trackId + '?utm_source=generator" width="100%" height="80" frameBorder="0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" style="border-radius:8px"></iframe>';
+        } else {
+          spotifyPlaceholder.innerHTML = '';
+        }
+      }
+    }
+
+    if (!isOpen && storyPanel) {
+      setTimeout(function() { storyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+    }
+  });
 })();
 </script>
 </body>

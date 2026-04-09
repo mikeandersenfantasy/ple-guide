@@ -1352,27 +1352,6 @@ const MATCHES = [
     ],
     feudSubtitle: "Celebrities vs. the people's champions. The crowd will be ELECTRIC.",
     feudVideos: []
-  },
-  {
-    id: "giulia-iyo",
-    wrestler1: "giulia",
-    wrestler2: "iyo-sky",
-    championship: "Women's United States Championship",
-    matchType: "title",
-    hype: 4,
-    isTitleMatch: true,
-    night: 2,
-    spotifyTrackId: "3hfqg43UEiEKN3vFBqUFtn",
-    bannerImg: null,
-    whyItMatters: "Two of the most technically gifted women in WWE today. Giulia is the reigning champion who came from Japan to redefine the Women's Division. IYO SKY is a former Women's Champion hungry to collect more gold. This match will be a work of art for anyone paying attention.",
-    storySoFar: "Giulia captured the Women's United States Championship shortly after arriving on SmackDown, proving she's the real deal. IYO SKY — The Genius of the Sky — has been watching from Raw, waiting for her opportunity. Two Japanese wrestling stars, one championship, and a WrestleMania stage big enough for both of them.",
-    story: "Two of the most technically gifted women in WWE today. Giulia is the reigning champion, IYO SKY is a former Women's Champion hungry to collect more gold. This match will be a work of art for anyone paying attention.",
-    predictions: [
-      { label: "Giulia retains", wrestler: "Giulia" },
-      { label: "IYO SKY wins", wrestler: "IYO SKY" }
-    ],
-    feudSubtitle: "Two Japanese wrestling stars collide for the Women's US Championship.",
-    feudVideos: []
   }
 ];
 
