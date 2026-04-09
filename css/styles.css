@@ -1495,10 +1495,55 @@ ul { list-style: none; }
   text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 
-/* Team section divider */
-.team-section {
-  margin-bottom: 0;
+/* 4-way grid: 4 columns, 2 rows of wrestler photo cells */
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2px;
 }
+.team-grid-vs {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2px 0;
+  font-family: Impact, sans-serif;
+  font-size: 0.8rem;
+  color: var(--wwe-red);
+  letter-spacing: 0.15em;
+  background: rgba(204,26,43,0.06);
+}
+.grid-wrestler {
+  position: relative;
+  height: 180px;
+  background-size: cover;
+  background-position: center 10%;
+  background-repeat: no-repeat;
+  background-color: #0f111a;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 10px 6px;
+  overflow: hidden;
+}
+.grid-wrestler::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,12,18,0.85) 0%, rgba(10,12,18,0.2) 40%, rgba(10,12,18,0.05) 100%);
+  z-index: 1;
+}
+.grid-wrestler > * { position: relative; z-index: 2; }
+.grid-wrestler .grid-name {
+  font-family: Impact, 'Arial Narrow', sans-serif;
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  line-height: 1.15;
+}
+
+/* Team section divider */
 .team-section-label {
   font-size: 0.55rem;
   font-weight: 800;
