@@ -28,12 +28,12 @@
 <section class="hero" style="padding:40px 30px 30px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
   <div class="hero-label">WrestleMania 42</div>
   <h1>Family <span style="color:#fff">Predictions</span></h1>
-  <p class="hero-sub">Pick your winners. Lock your picks. See who knows wrestling best.</p>
+  <p class="hero-sub">Pick your winners. See who knows wrestling best.</p>
 </section>
 
 <!-- TABS -->
 <div class="picks-tabs">
-  <button class="picks-tab active" data-tab="picks">My Picks</button>
+  <button class="picks-tab active" data-tab="picks">Make Picks</button>
   <button class="picks-tab" data-tab="leaderboard">Leaderboard</button>
 </div>
 
@@ -41,12 +41,12 @@
 <section class="section picks-panel" id="panel-picks" style="padding-top:20px">
   <div class="inner">
     <div class="picks-name-box">
-      <label class="picks-name-label">Who's making picks?</label>
-      <input type="text" id="picker-name" class="picks-input" placeholder="Enter your name" maxlength="20">
+      <label class="picks-name-label">Your name</label>
+      <input type="text" id="picker-name" class="picks-input" placeholder="Type your name here" maxlength="20">
     </div>
   </div>
   <div class="inner" id="picks-container"></div>
-  <div class="inner picks-save-area" id="save-area" style="display:none">
+  <div class="inner picks-save-area" id="save-area">
     <button class="btn btn-gold picks-save-btn" id="save-btn" style="width:100%;max-width:400px">Lock In My Picks</button>
     <div id="save-msg" class="picks-msg"></div>
   </div>
@@ -57,7 +57,7 @@
   <div class="inner">
     <div id="leaderboard-container"></div>
     <div style="text-align:center;margin-top:30px">
-      <button class="picks-admin-btn" id="admin-btn">Enter Match Results (Admin)</button>
+      <button class="picks-admin-btn" id="admin-btn">Enter Match Results</button>
     </div>
     <div id="admin-panel" style="display:none"></div>
   </div>
@@ -77,43 +77,10 @@
   var matches = MATCHES;
   var wrestlers = WRESTLERS;
   var currentPicks = {};
-  var lastSavedName = '';
 
-  // === LOAD LAST SAVED PICKS (persist across refresh) ===
-  // Check localStorage for the most recently saved picker
-  var mostRecent = null;
-  for (var i = 0; i < localStorage.length; i++) {
-    var key = localStorage.key(i);
-    if (key.startsWith('wm42-picks-')) {
-      try {
-        var entry = JSON.parse(localStorage.getItem(key));
-        if (!mostRecent || (entry.saved && entry.saved > mostRecent.saved)) {
-          mostRecent = entry;
-        }
-      } catch(e) {}
-    }
-  }
-  if (mostRecent && mostRecent.picks) {
-    currentPicks = mostRecent.picks;
-    lastSavedName = mostRecent.name || '';
-  }
-
-  // === PICKS LOCK DEADLINE: Friday April 17, 2026 at 11:59 PM ET ===
+  // === LOCK CHECK ===
   var lockDate = new Date('2026-04-17T23:59:00-04:00');
   var isLocked = Date.now() >= lockDate.getTime();
-
-  if (isLocked) {
-    var nameBox = document.querySelector('.picks-name-box');
-    if (nameBox) nameBox.innerHTML = '<div class="picks-locked-msg">Picks are LOCKED! WrestleMania has begun.</div>';
-    var saveArea = document.getElementById('save-area');
-    if (saveArea) saveArea.style.display = 'none';
-  }
-
-  // Pre-fill name from last save
-  if (lastSavedName) {
-    var nameInput = document.getElementById('picker-name');
-    if (nameInput) nameInput.value = lastSavedName;
-  }
 
   // === TAB SWITCHING ===
   document.querySelectorAll('.picks-tab').forEach(function(tab) {
@@ -126,131 +93,24 @@
     });
   });
 
-  // === GET SIDES FOR A MATCH ===
+  // === HELPERS ===
   function getSides(match) {
     if (match.wrestler1 && match.wrestler2) {
-      var w1 = wrestlers[match.wrestler1];
-      var w2 = wrestlers[match.wrestler2];
+      var w1 = wrestlers[match.wrestler1], w2 = wrestlers[match.wrestler2];
       return [
-        { id: match.wrestler1, name: w1 ? w1.name : match.wrestler1, role: w1 && w1.isChampion ? 'Champion' : 'Challenger' },
-        { id: match.wrestler2, name: w2 ? w2.name : match.wrestler2, role: w2 && w2.isChampion ? 'Champion' : 'Challenger' }
+        { id: match.wrestler1, name: w1 ? w1.name : match.wrestler1, role: w1 && w1.isChampion ? 'Champion' : '' },
+        { id: match.wrestler2, name: w2 ? w2.name : match.wrestler2, role: w2 && w2.isChampion ? 'Champion' : '' }
       ];
     }
-    if (match.teams) {
-      return match.teams.map(function(t) {
-        return { id: t.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: t.name, role: t.isChampion ? 'Champions' : '' };
-      });
-    }
-    if (match.participants) {
-      return match.participants.map(function(key) {
-        var w = wrestlers[key];
-        return { id: key, name: w ? w.name : key, role: '' };
-      });
-    }
+    if (match.teams) return match.teams.map(function(t) {
+      return { id: t.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: t.name, role: t.isChampion ? 'Champions' : '' };
+    });
+    if (match.participants) return match.participants.map(function(key) {
+      var w = wrestlers[key]; return { id: key, name: w ? w.name : key, role: '' };
+    });
     return [];
   }
 
-  // === RENDER PICK CARDS ===
-  var container = document.getElementById('picks-container');
-  var night1 = matches.filter(function(m) { return m.night === 1; });
-  var night2 = matches.filter(function(m) { return m.night === 2; });
-
-  function renderPickCards() {
-    var html = '';
-    html += '<div class="picks-night-header">Night 1 — Saturday</div>';
-    night1.forEach(function(m) { html += buildPickCard(m); });
-    html += '<div class="picks-night-header" style="margin-top:20px">Night 2 — Sunday</div>';
-    night2.forEach(function(m) { html += buildPickCard(m); });
-    container.innerHTML = html;
-    updateSaveArea();
-  }
-
-  function buildPickCard(match) {
-    var sides = getSides(match);
-    var mt = match.matchType || 'special';
-    var badgeLabel = mt === 'title' ? 'Title' : mt === 'grudge' ? 'Grudge' : mt === 'ladder' ? 'Ladder' : mt === 'tag' ? 'Tag' : 'Special';
-    var nightLabel = 'Night ' + match.night;
-
-    var html = '<div class="pick-card" data-match="' + match.id + '">';
-    html += '<div class="pick-header">';
-    html += '<span class="pick-badge pick-badge--' + mt + '">' + badgeLabel + '</span>';
-    html += '<span class="pick-night">' + nightLabel + '</span>';
-    html += '</div>';
-    html += '<div class="pick-title">' + match.championship + '</div>';
-
-    if (sides.length === 2) {
-      // Two-sided pick
-      html += '<div class="pick-sides">';
-      sides.forEach(function(side) {
-        var sel = currentPicks[match.id] === side.id ? ' selected' : '';
-        html += '<button class="pick-side' + sel + '" data-match="' + match.id + '" data-pick="' + side.id + '">';
-        html += '<div class="pick-name">' + side.name + '</div>';
-        if (side.role) html += '<div class="pick-role">' + side.role + '</div>';
-        html += '</button>';
-      });
-      html += '</div>';
-    } else {
-      // Multi-option (ladder match, etc.)
-      html += '<div class="pick-multi">';
-      sides.forEach(function(side) {
-        var sel = currentPicks[match.id] === side.id ? ' selected' : '';
-        html += '<button class="pick-option' + sel + '" data-match="' + match.id + '" data-pick="' + side.id + '">';
-        html += side.name;
-        html += '</button>';
-      });
-      html += '</div>';
-    }
-
-    html += '</div>';
-    return html;
-  }
-
-  // === PICK SELECTION ===
-  container.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-pick]');
-    if (!btn || isLocked) return;
-    var matchId = btn.dataset.match;
-    var pickId = btn.dataset.pick;
-    currentPicks[matchId] = pickId;
-
-    // Update UI for this match
-    var card = btn.closest('.pick-card');
-    card.querySelectorAll('[data-pick]').forEach(function(b) { b.classList.remove('selected'); });
-    btn.classList.add('selected');
-    updateSaveArea();
-  });
-
-  function updateSaveArea() {
-    document.getElementById('save-area').style.display = '';
-  }
-
-  // === SAVE PICKS ===
-  document.getElementById('save-btn').addEventListener('click', function() {
-    var name = document.getElementById('picker-name').value.trim();
-    if (!name) {
-      document.getElementById('save-msg').textContent = 'Enter your name at the top first!';
-      document.getElementById('picker-name').focus();
-      document.getElementById('picker-name').style.borderColor = '#c0392b';
-      setTimeout(function() { document.getElementById('picker-name').style.borderColor = ''; }, 2000);
-      return;
-    }
-    var pickedCount = Object.keys(currentPicks).length;
-    if (pickedCount === 0) {
-      document.getElementById('save-msg').textContent = 'Pick at least one winner first!';
-      return;
-    }
-
-    var storageKey = 'wm42-picks-' + name.toLowerCase();
-    var isUpdate = localStorage.getItem(storageKey) !== null;
-    var data = { name: name, saved: new Date().toISOString(), picks: currentPicks };
-    localStorage.setItem(storageKey, JSON.stringify(data));
-    lastSavedName = name;
-    var verb = isUpdate ? 'Updated' : 'Locked in';
-    document.getElementById('save-msg').innerHTML = verb + '! Good luck, <strong>' + name + '</strong>! &#x1F91E; (' + pickedCount + '/' + matches.length + ' picks)';
-    document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
-  });
-
-  // === LEADERBOARD ===
   function getAllPickers() {
     var pickers = [];
     for (var i = 0; i < localStorage.length; i++) {
@@ -266,17 +126,80 @@
     try { return JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) { return {}; }
   }
 
-  function calculateScore(picksObj, resultsObj) {
-    var score = 0, total = 0;
-    Object.keys(resultsObj).forEach(function(matchId) {
-      if (picksObj.picks && picksObj.picks[matchId]) {
-        total++;
-        if (picksObj.picks[matchId] === resultsObj[matchId]) score++;
-      }
-    });
-    return { score: score, total: total };
+  // === RENDER PICKS ===
+  var container = document.getElementById('picks-container');
+  var night1 = matches.filter(function(m) { return m.night === 1; });
+  var night2 = matches.filter(function(m) { return m.night === 2; });
+
+  function renderPickCards() {
+    var html = '<div class="picks-night-header">Night 1 — Saturday</div>';
+    night1.forEach(function(m) { html += buildPickCard(m); });
+    html += '<div class="picks-night-header" style="margin-top:16px">Night 2 — Sunday</div>';
+    night2.forEach(function(m) { html += buildPickCard(m); });
+    container.innerHTML = html;
   }
 
+  function buildPickCard(match) {
+    var sides = getSides(match);
+    var mt = match.matchType || 'special';
+    var badge = mt === 'title' ? 'Title' : mt === 'grudge' ? 'Grudge' : mt === 'ladder' ? 'Ladder' : mt === 'tag' ? 'Tag' : 'Special';
+
+    var html = '<div class="pick-card" data-match="' + match.id + '">';
+    html += '<div class="pick-header"><span class="pick-badge pick-badge--' + mt + '">' + badge + '</span><span class="pick-night">Night ' + match.night + '</span></div>';
+    html += '<div class="pick-title">' + match.championship + '</div>';
+
+    if (sides.length <= 2) {
+      html += '<div class="pick-sides">';
+      sides.forEach(function(s) {
+        html += '<button class="pick-side' + (currentPicks[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + s.id + '">';
+        html += '<div class="pick-name">' + s.name + '</div>';
+        if (s.role) html += '<div class="pick-role">' + s.role + '</div>';
+        html += '</button>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="pick-multi">';
+      sides.forEach(function(s) {
+        html += '<button class="pick-option' + (currentPicks[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + s.id + '">' + s.name + '</button>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // === PICK SELECTION ===
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-pick]');
+    if (!btn || isLocked) return;
+    var card = btn.closest('.pick-card');
+    card.querySelectorAll('[data-pick]').forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    currentPicks[btn.dataset.match] = btn.dataset.pick;
+  });
+
+  // === SAVE ===
+  document.getElementById('save-btn').addEventListener('click', function() {
+    var name = document.getElementById('picker-name').value.trim();
+    if (!name) {
+      document.getElementById('save-msg').textContent = 'Type your name first!';
+      document.getElementById('picker-name').focus();
+      return;
+    }
+    var count = Object.keys(currentPicks).length;
+    if (count === 0) {
+      document.getElementById('save-msg').textContent = 'Pick at least one winner!';
+      return;
+    }
+    // Same name = overwrite (no duplicates)
+    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify({
+      name: name, saved: new Date().toISOString(), picks: currentPicks
+    }));
+    document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
+    document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
+  });
+
+  // === LEADERBOARD ===
   function renderLeaderboard() {
     var pickers = getAllPickers();
     var results = getResults();
@@ -284,26 +207,25 @@
     var lb = document.getElementById('leaderboard-container');
 
     if (pickers.length === 0) {
-      lb.innerHTML = '<div class="picks-empty">No predictions saved yet. Be the first!</div>';
+      lb.innerHTML = '<div class="picks-empty">No picks saved yet!</div>';
       return;
     }
 
-    // Calculate scores and sort
     var rows = pickers.map(function(p) {
-      var picksCount = p.picks ? Object.keys(p.picks).length : 0;
-      var sc = hasResults ? calculateScore(p, results) : { score: 0, total: 0 };
-      return { name: p.name, picks: picksCount, score: sc.score, total: sc.total };
+      var count = p.picks ? Object.keys(p.picks).length : 0;
+      var score = 0;
+      if (hasResults) Object.keys(results).forEach(function(mid) {
+        if (p.picks && p.picks[mid] === results[mid]) score++;
+      });
+      return { name: p.name, picks: count, score: score };
     });
     rows.sort(function(a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
 
     var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
-    var html = '<table class="lb-table">';
-    html += '<tr><th>Rank</th><th>Name</th><th>Picks</th><th>Score</th></tr>';
-    rows.forEach(function(row, i) {
-      var medal = i < 3 && hasResults ? medals[i] + ' ' : '';
-      var rank = hasResults ? medal + (i + 1) : '';
-      var scoreText = hasResults ? row.score + '/' + matches.length : '—';
-      html += '<tr><td>' + rank + '</td><td>' + row.name + '</td><td>' + row.picks + '/' + matches.length + '</td><td class="lb-score">' + scoreText + '</td></tr>';
+    var html = '<table class="lb-table"><tr><th>#</th><th>Name</th><th>Picks</th><th>Score</th></tr>';
+    rows.forEach(function(r, i) {
+      var m = hasResults && i < 3 ? medals[i] : '';
+      html += '<tr><td>' + m + (i + 1) + '</td><td>' + r.name + '</td><td>' + r.picks + '/' + matches.length + '</td><td class="lb-score">' + (hasResults ? r.score + '/' + matches.length : '—') + '</td></tr>';
     });
     html += '</table>';
     lb.innerHTML = html;
@@ -316,41 +238,28 @@
     panel.style.display = 'block';
     var results = getResults();
 
-    var html = '<div class="admin-header">Tap the winner of each match:</div>';
+    var html = '<div class="admin-header">Tap the actual winner of each match:</div>';
     matches.forEach(function(match) {
       var sides = getSides(match);
       html += '<div class="admin-match" data-match="' + match.id + '">';
       html += '<div class="admin-title">' + match.championship + '</div>';
-      if (sides.length <= 2) {
-        html += '<div class="admin-sides">';
-        sides.forEach(function(side) {
-          var sel = results[match.id] === side.id ? ' selected' : '';
-          html += '<button class="admin-side' + sel + '" data-match="' + match.id + '" data-result="' + side.id + '">' + side.name + '</button>';
-        });
-        html += '</div>';
-      } else {
-        html += '<div class="admin-multi">';
-        sides.forEach(function(side) {
-          var sel = results[match.id] === side.id ? ' selected' : '';
-          html += '<button class="admin-option' + sel + '" data-match="' + match.id + '" data-result="' + side.id + '">' + side.name + '</button>';
-        });
-        html += '</div>';
-      }
-      html += '</div>';
+      html += '<div class="admin-sides' + (sides.length > 2 ? ' admin-multi' : '') + '">';
+      sides.forEach(function(s) {
+        var sel = results[match.id] === s.id ? ' selected' : '';
+        html += '<button class="admin-side' + sel + '" data-match="' + match.id + '" data-result="' + s.id + '">' + s.name + '</button>';
+      });
+      html += '</div></div>';
     });
-    html += '<button class="btn btn-gold" id="save-results" style="margin-top:20px;width:100%">Save Results</button>';
+    html += '<button class="btn btn-gold" id="save-results" style="margin-top:16px;width:100%">Save Results</button>';
     panel.innerHTML = html;
 
-    // Result selection
     panel.addEventListener('click', function(e) {
       var btn = e.target.closest('[data-result]');
       if (!btn) return;
-      var card = btn.closest('.admin-match');
-      card.querySelectorAll('[data-result]').forEach(function(b) { b.classList.remove('selected'); });
+      btn.closest('.admin-match').querySelectorAll('[data-result]').forEach(function(b) { b.classList.remove('selected'); });
       btn.classList.add('selected');
     });
 
-    // Save results
     panel.querySelector('#save-results').addEventListener('click', function() {
       var res = {};
       panel.querySelectorAll('.admin-match').forEach(function(card) {
@@ -363,6 +272,11 @@
     });
   });
 
+  // === INIT ===
+  if (isLocked) {
+    document.querySelector('.picks-name-box').innerHTML = '<div class="picks-locked-msg">Picks are LOCKED! WrestleMania has begun.</div>';
+    document.getElementById('save-area').style.display = 'none';
+  }
   renderPickCards();
 })();
 </script>
