@@ -1149,13 +1149,16 @@ ul { list-style: none; }
 }
 
 /* ===== MATCH PREVIEW GRID (Homepage) ===== */
-.match-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.match-preview-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.match-preview-link { width: calc(33.33% - 11px); }
+@media(max-width:1024px) { .match-preview-link { width: calc(50% - 8px); } }
+@media(max-width:520px) { .match-preview-link { width: 100%; } }
+.match-preview-grid .night-label { width: 100%; }
 .match-preview-link { border-radius: 14px; overflow: hidden; display: block; border: 2px solid rgba(255,255,255,0.08); transition: all .3s ease; text-decoration: none; position: relative; }
 .match-preview-link:hover { border-color: var(--wm-gold); transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.3), 0 0 20px rgba(212,168,60,0.15); }
 .match-preview-link img { width: 100%; display: block; }
 .match-preview-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 12px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--wm-gold); text-align: center; pointer-events: none; }
-@media(max-width:1024px) { .match-preview-grid { grid-template-columns: repeat(2, 1fr); } }
-@media(max-width:520px) { .match-preview-grid { grid-template-columns: 1fr; } }
+/* match-preview responsive handled by flex above */
 
 /* ===== GOLD ACCENT HOVERS ===== */
 .glossary-item, .quick-link, .tip-card { border-top: 3px solid transparent; }

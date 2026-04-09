@@ -88,7 +88,8 @@
 
   // Night 1 header
   var h1 = document.createElement('div');
-  h1.style.cssText = 'grid-column:1/-1;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
+  h1.className = 'night-label';
+  h1.style.cssText = 'font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
   h1.textContent = 'NIGHT 1 — Saturday · April 18';
   grid.appendChild(h1);
 
@@ -96,7 +97,8 @@
     // Insert Night 2 header before first Night 2 match
     if (idx === night1.length) {
       var h2 = document.createElement('div');
-      h2.style.cssText = 'grid-column:1/-1;font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-top:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
+      h2.className = 'night-label';
+      h2.style.cssText = 'font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-top:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
       h2.textContent = 'NIGHT 2 — Sunday · April 19';
       grid.appendChild(h2);
     }
