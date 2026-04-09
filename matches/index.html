@@ -178,49 +178,39 @@
       html += '</div>'; // end card-faceoff-area
 
     } else {
-      // === MULTI-PERSON MATCH - thumbnail grid ===
+      // === MULTI-PERSON MATCH - large wrestler strips ===
       html += '<div class="card-faceoff-area multi">';
       html += '<div class="multi-faceoff">';
       html += '<div class="match-badge ' + getBadgeClass(mt) + '" style="margin-bottom:8px">' + getBadgeLabel(mt) + '</div>';
       html += '<div class="multi-championship">' + match.championship + '</div>';
+      html += '</div>';
 
       if (match.teams) {
-        // Tag matches - show each team's wrestlers as thumbnails
-        html += '<div class="multi-sides">';
         match.teams.forEach(function(team, idx) {
-          if (idx > 0) html += '<div class="multi-vs">VS</div>';
-          html += '<div class="multi-side">';
-          var roleLabel = team.isChampion ? 'Champions' : (team.role || '');
-          if (roleLabel) html += '<div class="multi-side-label">' + roleLabel + '</div>';
-          html += '<div class="multi-thumbs">';
+          if (idx > 0) html += '<div class="multi-vs-bar">VS</div>';
+          var roleLabel = team.isChampion ? 'Champions' : (team.role || team.name);
+          html += '<div class="team-section">';
+          html += '<div class="team-section-label">' + roleLabel + '</div>';
           team.wrestlers.forEach(function(key) {
             var w = WRESTLERS[key];
             if (!w) return;
-            html += '<div class="multi-thumb-wrap">';
-            html += '<div class="multi-thumb"><img src="' + w.img + '" alt="' + w.name + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
-            html += '<div class="multi-thumb-name">' + w.name.split(' ')[0] + '</div>';
+            html += '<div class="wrestler-strip" style="background-image:url(\'' + w.img + '\')">';
+            html += '<div class="strip-name">' + w.name + '</div>';
             html += '</div>';
           });
           html += '</div>';
-          html += '</div>';
         });
-        html += '</div>';
 
       } else if (match.participants) {
-        // Ladder match - all participants in one grid
-        html += '<div class="ladder-grid">';
         match.participants.forEach(function(key) {
           var w = WRESTLERS[key];
           if (!w) return;
-          html += '<div class="multi-thumb-wrap">';
-          html += '<div class="multi-thumb"><img src="' + w.img + '" alt="' + w.name + '" loading="lazy" onerror="this.style.display=\'none\'"></div>';
-          html += '<div class="multi-thumb-name">' + w.name + '</div>';
+          html += '<div class="wrestler-strip" style="background-image:url(\'' + w.img + '\')">';
+          html += '<div class="strip-name">' + w.name + '</div>';
           html += '</div>';
         });
-        html += '</div>';
       }
 
-      html += '</div>'; // end multi-faceoff
       html += '</div>'; // end card-faceoff-area
     }
 

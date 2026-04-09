@@ -1461,86 +1461,59 @@ ul { list-style: none; }
   text-transform: uppercase;
   letter-spacing: 3px;
   color: #D4A83C;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
-.multi-sides {
+/* Wrestler strip - large photo row for each wrestler */
+.wrestler-strip {
+  position: relative;
+  height: 72px;
+  background-size: cover;
+  background-position: center 15%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.multi-side {
-  flex: 1;
-  min-width: 0;
-}
-.multi-side-label {
-  font-family: Impact, 'Arial Narrow', sans-serif;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(212,168,60,0.7);
-  margin-bottom: 8px;
-  text-align: center;
-}
-.multi-thumbs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.multi-thumb {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  align-items: flex-end;
+  padding: 8px 14px;
   overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.15);
-  background: #0f111a;
-  flex-shrink: 0;
 }
-.multi-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 15%;
+.wrestler-strip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(10,12,18,0.3) 0%, rgba(10,12,18,0.7) 60%, rgba(10,12,18,0.95) 100%);
+  z-index: 1;
 }
-.multi-thumb-name {
-  font-size: 0.55rem;
-  color: rgba(255,255,255,0.6);
-  text-align: center;
-  margin-top: 3px;
+.wrestler-strip > * { position: relative; z-index: 2; }
+.wrestler-strip .strip-name {
+  font-family: Impact, 'Arial Narrow', sans-serif;
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: #fff;
+  margin-left: auto;
+  text-align: right;
 }
-.multi-thumb-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 60px;
+/* Team section divider */
+.team-section {
+  margin-bottom: 4px;
 }
-.multi-vs {
+.team-section-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(212,168,60,0.7);
+  padding: 6px 14px 4px;
+  background: rgba(212,168,60,0.05);
+  border-left: 3px solid rgba(212,168,60,0.4);
+}
+.multi-vs-bar {
+  text-align: center;
+  padding: 4px 0;
   font-family: Impact, sans-serif;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   color: var(--wwe-red);
-  text-shadow: 0 2px 8px rgba(204,26,43,0.3);
-  flex-shrink: 0;
-  padding: 0 4px;
-}
-/* Ladder match - all participants in one grid */
-.ladder-grid {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-@media(max-width:600px) {
-  .multi-sides { flex-direction: column; gap: 8px; }
-  .multi-vs { font-size: 1rem; }
-  .multi-thumb { width: 48px; height: 48px; }
-  .multi-thumb-wrap { width: 52px; }
-  .multi-thumb-name { font-size: 0.5rem; }
+  text-shadow: 0 1px 6px rgba(204,26,43,0.3);
+  letter-spacing: 0.15em;
+  background: rgba(204,26,43,0.06);
 }
 
 /* Bottom bar */
