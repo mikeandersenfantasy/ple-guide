@@ -2336,6 +2336,151 @@ ul { list-style: none; }
   .past-event-card { padding: 1rem 1.25rem; }
 }
 
+/* === EVENT HERO === */
+.event-hero {
+  background: linear-gradient(to bottom, rgba(10,12,18,0.3) 0%, rgba(10,12,18,0.85) 60%, #0b0f1a 100%), url('') center/cover no-repeat;
+  background-color: #0b0f1a;
+  padding: 3rem 1.5rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(212,168,60,0.15);
+}
+.event-hero-inner { max-width: 900px; margin: 0 auto; }
+.event-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(212,168,60,0.7);
+  margin-bottom: 0.75rem;
+}
+.event-title {
+  font-family: Impact, 'Arial Narrow', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.event-meta {
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: rgba(255,255,255,0.6);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.event-sep { color: rgba(212,168,60,0.4); }
+.event-network {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+.event-status-live {
+  font-family: Impact, sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--wm-gold);
+  text-align: center;
+  text-transform: uppercase;
+  padding: 1.5rem 0;
+}
+@media (max-width: 768px) {
+  .event-meta { flex-direction: column; gap: 0.25rem; }
+  .event-sep { display: none; }
+}
+
+/* === TBA NOTICE === */
+.tba-notice {
+  background: rgba(212,168,60,0.06);
+  border: 1px solid rgba(212,168,60,0.2);
+  border-left: 4px solid rgba(212,168,60,0.5);
+  border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.tba-notice strong { color: rgba(212,168,60,0.8); }
+.tba-icon { margin-right: 6px; }
+
+/* === UNCONFIRMED BADGE === */
+.unconfirmed-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.3);
+  z-index: 20;
+  pointer-events: none;
+}
+.confirmed-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(39,174,96,0.15);
+  border: 1px solid rgba(39,174,96,0.4);
+  color: rgba(39,174,96,0.9);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* === PICKS CALLOUT === */
+.picks-callout { padding: 2rem 0; }
+.picks-callout-card {
+  background: #0f111a;
+  border: 1px solid rgba(212,168,60,0.2);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.picks-callout-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.picks-callout-title {
+  font-family: Impact, sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+.picks-callout-text {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.picks-status {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.picks-status--open   { background: rgba(39,174,96,0.15); color: #27ae60; border: 1px solid rgba(39,174,96,0.3); }
+.picks-status--locked { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); }
+.picks-status--soon   { background: rgba(212,168,60,0.1); color: rgba(212,168,60,0.7); border: 1px solid rgba(212,168,60,0.2); }
+
 /* ===== PRINT ===== */
 @media print {
   .nav, .scroll-top, .hamburger, .prediction-box, .btn, .spotify-embed { display: none !important; }

@@ -7,8 +7,9 @@
 var NEXT_EVENT = {
   name: 'Backlash 2026',
   subtitle: 'One Night Only',
-  date: '2026-05-09T19:00:00-04:00',  // 7pm ET May 9
-  location: 'TBA',
+  date: '2026-05-09T18:00:00-04:00',  // 6pm ET May 9 — confirmed start time
+  location: 'Tampa, Florida',
+  venue: 'Benchmark International Arena',
   night: null,
   eventUrl: 'events/backlash/backlash-2026/',
   status: 'upcoming'                    // 'upcoming' | 'live' | 'complete'
@@ -17,8 +18,10 @@ var NEXT_EVENT = {
 var PAST_EVENTS = [
   {
     name: 'WrestleMania 42',
+    shortName: 'WM42',
     dates: 'April 18–19, 2026',
     location: 'Las Vegas, NV',
+    venue: 'Allegiant Stadium',
     nights: 2,
     matchCount: 13,
     eventUrl: 'events/wrestlemania/wm42/',
@@ -73,7 +76,11 @@ function initHomepageEvents() {
       var d = new Date(NEXT_EVENT.date);
       dateLabel = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     } catch (e) { dateLabel = ''; }
-    nextLoc.textContent = (dateLabel ? dateLabel + ' · ' : '') + (NEXT_EVENT.location || '');
+    var parts = [];
+    if (dateLabel) parts.push(dateLabel);
+    if (NEXT_EVENT.location) parts.push(NEXT_EVENT.location);
+    if (NEXT_EVENT.venue) parts.push(NEXT_EVENT.venue);
+    nextLoc.textContent = parts.join(' · ');
   }
   if (heroBtn) heroBtn.href = NEXT_EVENT.eventUrl;
 

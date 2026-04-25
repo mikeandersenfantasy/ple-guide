@@ -30,21 +30,67 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" style="padding:40px 30px 30px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
-  <div class="hero-label">WWE PLE Guide</div>
-  <h1>Backlash <span style="color:#fff">2026</span></h1>
-  <p class="hero-sub">May 9, 2026 &middot; Location TBA</p>
+<!-- EVENT HERO -->
+<section class="event-hero">
+  <div class="event-hero-inner">
+    <div class="event-label">WWE Premium Live Event</div>
+    <h1 class="event-title">BACKLASH 2026</h1>
+    <div class="event-meta">
+      <span class="event-date">Saturday, May 9, 2026</span>
+      <span class="event-sep">·</span>
+      <span class="event-location">Tampa, Florida</span>
+      <span class="event-sep">·</span>
+      <span class="event-venue">Benchmark International Arena</span>
+    </div>
+    <div class="event-network">Available on ESPN Unlimited (US) &middot; Netflix (International)</div>
+  </div>
 </section>
 
-<section class="section">
-  <div class="inner" style="text-align:center;padding:4rem 1rem">
-    <span class="status-badge status-badge--upcoming" style="margin-bottom:20px">Upcoming</span>
-    <h2 style="font-family:Impact,sans-serif;font-size:2rem;color:#D4A83C;margin-top:20px;text-transform:uppercase;letter-spacing:0.05em">In Progress</h2>
-    <p style="color:rgba(255,255,255,0.5);max-width:480px;margin:16px auto 0;line-height:1.7">
-      Match card, wrestler profiles, and storylines coming soon.
-      Check back as we get closer to the event!
-    </p>
+<!-- COUNTDOWN -->
+<section class="section" style="padding: 1.5rem 0 1rem">
+  <div class="inner">
+    <div class="countdown" id="countdown">
+      <div class="countdown-item"><span class="num" id="cd-days">--</span><span class="unit">Days</span></div>
+      <div class="countdown-item"><span class="num" id="cd-hours">--</span><span class="unit">Hours</span></div>
+      <div class="countdown-item"><span class="num" id="cd-mins">--</span><span class="unit">Mins</span></div>
+      <div class="countdown-item"><span class="num" id="cd-secs">--</span><span class="unit">Secs</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MATCH CARD -->
+<section class="section" style="padding-top: 1rem">
+  <div class="inner">
+    <div class="text-center" style="margin-bottom: 20px">
+      <div class="section-label">The Card</div>
+      <h2 class="section-title">Expected Matches</h2>
+      <p class="section-subtitle mx-auto">Matches will be updated as WWE makes official announcements.</p>
+    </div>
+
+    <div class="tba-notice">
+      <span class="tba-icon">&#128203;</span>
+      No matches have been officially confirmed by WWE yet.
+      Cards below reflect expected matchups based on post-WrestleMania storylines.
+      <strong>All listings are subject to change.</strong>
+    </div>
+
+    <div id="backlash-matches-container"></div>
+  </div>
+</section>
+
+<!-- PICKS CALLOUT -->
+<section class="picks-callout">
+  <div class="inner">
+    <div class="picks-callout-card">
+      <div class="picks-callout-icon">&#127919;</div>
+      <h3 class="picks-callout-title">Make Your Picks</h3>
+      <p class="picks-callout-text">
+        Think you know who wins at Backlash? Lock in your predictions before the show.
+        Compete against the family on the leaderboard.
+      </p>
+      <div class="picks-callout-status" id="backlash-picks-status"></div>
+      <a href="../../../picks/" class="btn btn-gold">Go to Picks &rarr;</a>
+    </div>
   </div>
 </section>
 
@@ -55,6 +101,251 @@
 </footer>
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
+<script src="../../../js/data.js"></script>
 <script src="../../../js/main.js"></script>
+<script>
+(function() {
+
+  // === BACKLASH 2026 MATCHES (page-local data) ===
+  var BACKLASH_MATCHES = [
+    {
+      id: 'reigns-fatu-backlash',
+      championship: 'World Heavyweight Championship',
+      matchType: 'title',
+      confirmed: false,
+      hype: 5,
+      wrestler1: { key: 'roman-reigns', name: 'Roman Reigns', role: 'Champion', side: 'The Tribal Chief' },
+      wrestler2: { key: 'jacob-fatu', name: 'Jacob Fatu', role: 'Challenger', side: 'The Samoan Werewolf' },
+      story: 'After winning the World Heavyweight title at WrestleMania 42, Roman Reigns was immediately challenged by his cousin Jacob Fatu on the Raw after Mania. Fatu told Reigns he needed the gold for the benefit of his family. This Anoa\'i family showdown is expected to headline Backlash in Tampa.',
+      spotifyTrackId: '1CS7Sd1u5tWkstBhpssyjP'
+    },
+    {
+      id: 'morgan-vaquer-backlash',
+      championship: "Women's World Championship",
+      matchType: 'title',
+      confirmed: false,
+      hype: 4,
+      wrestler1: { key: 'liv-morgan', name: 'Liv Morgan', role: 'Champion', side: 'Backlash Rematch' },
+      wrestler2: { key: 'stephanie-vaquer', name: 'Stephanie Vaquer', role: 'Challenger', side: 'Former Champion' },
+      story: 'Their WrestleMania 42 match was widely considered too short. Vaquer immediately made clear on Raw she was not done with Liv Morgan. A rematch at Backlash gives both women the time they deserve to settle this rivalry properly.',
+      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
+    },
+    {
+      id: 'rollins-breakker-backlash',
+      championship: 'Personal Grudge',
+      matchType: 'grudge',
+      confirmed: false,
+      hype: 4,
+      wrestler1: { key: 'seth-rollins', name: 'Seth Rollins', role: 'The Visionary', side: '+ Street Profits' },
+      wrestler2: { key: 'bron-breakker', name: 'Bron Breakker', role: 'The Vision', side: '+ Logan Paul & Theory' },
+      story: 'Breakker returned from injury to cost Rollins his match against Gunther at WrestleMania. On Raw after Mania, Rollins attacked the Vision with a steel chair before the numbers game took over. The Street Profits returned to even the odds. A six-man tag at Backlash is the expected first chapter.',
+      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
+    },
+    {
+      id: 'iyo-asuka-backlash',
+      championship: 'Singles Match',
+      matchType: 'special',
+      confirmed: false,
+      hype: 5,
+      wrestler1: { key: 'iyo-sky', name: 'IYO SKY', role: 'The Genius of the Sky', side: '' },
+      wrestler2: { key: 'asuka', name: 'Asuka', role: 'The Empress', side: '' },
+      story: 'WWE had this match planned for WrestleMania 42 but held it back. Reports from Wrestling Observer indicate it was specifically saved for Backlash. Once best friends, now bitter rivals — with Kairi Sane caught in the middle. This is a must-see match with years of real history behind it.',
+      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
+    },
+    {
+      id: 'gunther-knight-backlash',
+      championship: 'Title Contender Match',
+      matchType: 'special',
+      confirmed: false,
+      hype: 3,
+      wrestler1: { key: 'gunther', name: 'GUNTHER', role: 'The Ring General', side: 'SmackDown' },
+      wrestler2: { key: 'la-knight', name: 'LA Knight', role: 'YEAH!', side: 'SmackDown' },
+      story: 'Both men won at WrestleMania 42. Both met backstage on Raw. A showdown between Gunther and LA Knight serves as a credible Number One Contender match for the World title picture heading into SummerSlam season.',
+      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
+    },
+    {
+      id: 'us-title-backlash',
+      championship: 'WWE United States Championship',
+      matchType: 'title',
+      confirmed: false,
+      hype: 4,
+      wrestler1: { key: 'trick-williams', name: 'Trick Williams', role: 'Champion', side: 'New Champion' },
+      wrestler2: { key: 'sami-zayn', name: 'Sami Zayn', role: 'Former Champion', side: 'Rematch Clause' },
+      story: 'Trick Williams dethroned Sami Zayn at WrestleMania 42. Zayn is reportedly heading toward a heel turn, and a rematch at Backlash — possibly expanded to a fatal four-way with Carmelo Hayes and Ilja Dragunov — continues their unfinished story.',
+      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
+    }
+  ];
+
+  // === COUNTDOWN ===
+  var els = {
+    days: document.getElementById('cd-days'),
+    hours: document.getElementById('cd-hours'),
+    mins: document.getElementById('cd-mins'),
+    secs: document.getElementById('cd-secs')
+  };
+  var target = new Date('2026-05-09T18:00:00-04:00').getTime();
+  function tick() {
+    var diff = target - Date.now();
+    if (diff <= 0) {
+      var c = document.getElementById('countdown');
+      if (c) c.outerHTML = '<div class="event-status-live">THE EVENT HAS CONCLUDED</div>';
+      return;
+    }
+    if (els.days) els.days.textContent = Math.floor(diff / 86400000);
+    if (els.hours) els.hours.textContent = Math.floor((diff % 86400000) / 3600000);
+    if (els.mins) els.mins.textContent = Math.floor((diff % 3600000) / 60000);
+    if (els.secs) els.secs.textContent = Math.floor((diff % 60000) / 1000);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // === MATCH CARD HELPERS ===
+  function getBadgeClass(mt) {
+    if (mt === 'title') return 'badge--title';
+    if (mt === 'grudge') return 'badge--grudge';
+    if (mt === 'ladder') return 'badge--ladder';
+    if (mt === 'tag') return 'badge--tag';
+    return 'badge--special';
+  }
+  function getBadgeLabel(mt) {
+    if (mt === 'title') return 'Title Match';
+    if (mt === 'grudge') return 'Grudge Match';
+    if (mt === 'ladder') return 'Ladder Match';
+    if (mt === 'tag') return 'Tag Match';
+    return 'Special Match';
+  }
+  function getWrestlerImg(key) {
+    if (typeof WRESTLERS === 'undefined') return '';
+    var w = WRESTLERS[key];
+    return w && w.img ? w.img : '';
+  }
+
+  // === BUILD CINEMATIC CARD (matches WM42 structure) ===
+  function buildCinematicCard(match) {
+    var mt = match.matchType || 'special';
+    var hype = match.hype || 3;
+
+    var leftImg = getWrestlerImg(match.wrestler1.key);
+    var rightImg = getWrestlerImg(match.wrestler2.key);
+    var leftBgStyle = leftImg ? ' style="background-image:url(\'' + leftImg + '\')"' : '';
+    var rightBgStyle = rightImg ? ' style="background-image:url(\'' + rightImg + '\')"' : '';
+
+    var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-animated="false">';
+
+    // Faceoff area
+    html += '<div class="card-faceoff-area">';
+
+    html += '<div class="card-left-panel"' + leftBgStyle + '>';
+    html += '<div class="wrestler-label left">' + match.wrestler1.name + '</div>';
+    if (match.wrestler1.role) html += '<div class="wrestler-role left">' + match.wrestler1.role + '</div>';
+    html += '</div>';
+
+    html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
+
+    html += '<div class="card-right-panel"' + rightBgStyle + '>';
+    html += '<div class="wrestler-label right">' + match.wrestler2.name + '</div>';
+    if (match.wrestler2.role) html += '<div class="wrestler-role right">' + match.wrestler2.role + '</div>';
+    html += '</div>';
+
+    html += '<div class="card-center-stamp">';
+    html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
+    html += '<div class="championship-title">' + match.championship + '</div>';
+    html += '</div>';
+
+    // Confirmed/Unconfirmed badge in top-right
+    var badgeClass = match.confirmed ? 'confirmed-badge' : 'unconfirmed-badge';
+    var badgeText = match.confirmed ? 'Confirmed' : 'Unconfirmed';
+    html += '<div class="' + badgeClass + '">' + badgeText + '</div>';
+
+    html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
+    html += '</div>'; // end card-faceoff-area
+
+    // Bottom bar
+    html += '<div class="card-bottom-bar">';
+    html += '<div class="hype-meter"><span class="hype-label">HYPE</span><div class="hype-pips">';
+    for (var i = 0; i < 5; i++) {
+      html += '<div class="pip' + (i < hype ? ' lit' : '') + '"></div>';
+    }
+    html += '</div></div>';
+    html += '<div class="expand-hint">Tap for the story &darr;</div>';
+    html += '</div>';
+
+    // Story panel
+    html += '<div class="card-story-panel">';
+    html += '<div class="story-bar"></div>';
+    html += '<div class="story-section">';
+    html += '<div class="story-section-title">The Story</div>';
+    html += '<div class="story-text">' + match.story + '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '</div>'; // end cinematic-card
+    return html;
+  }
+
+  // Render matches
+  var container = document.getElementById('backlash-matches-container');
+  if (container) {
+    var html = '';
+    BACKLASH_MATCHES.forEach(function(m) { html += buildCinematicCard(m); });
+    container.innerHTML = html;
+  }
+
+  // === ANIMATION TRIGGER (mobile = instant, desktop = scroll) ===
+  var isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.querySelectorAll('.cinematic-card').forEach(function(card) {
+      card.classList.add('panel-in');
+      card.dataset.animated = 'true';
+    });
+  } else {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && entry.target.dataset.animated === 'false') {
+          var card = entry.target;
+          card.dataset.animated = 'true';
+          card.classList.add('panel-in');
+          setTimeout(function() { card.classList.add('impact'); }, 420);
+          setTimeout(function() { card.classList.remove('impact'); }, 800);
+          observer.unobserve(card);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.cinematic-card').forEach(function(card) { observer.observe(card); });
+  }
+
+  // === CARD CLICK / TOGGLE ===
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.glossary-tip')) return;
+    var card = e.target.closest('.cinematic-card');
+    if (!card) return;
+    var storyPanel = card.querySelector('.card-story-panel');
+    var hint = card.querySelector('.expand-hint');
+    if (!storyPanel) return;
+    var isOpen = storyPanel.classList.contains('open');
+    storyPanel.classList.toggle('open', !isOpen);
+    if (hint) hint.innerHTML = isOpen ? 'Tap for the story &darr;' : 'Close &uarr;';
+    if (!isOpen) {
+      setTimeout(function() { storyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+    }
+  });
+
+  // === PICKS STATUS ===
+  var backlashDate = new Date('2026-05-09T18:00:00-04:00');
+  var picksOpenDate = new Date('2026-05-07T00:00:00-04:00'); // opens May 7
+  var now = new Date();
+  var statusEl = document.getElementById('backlash-picks-status');
+  if (statusEl) {
+    if (now >= backlashDate) {
+      statusEl.innerHTML = '<span class="picks-status picks-status--locked">&#128274; Picks Closed &mdash; Event Complete</span>';
+    } else if (now >= picksOpenDate) {
+      statusEl.innerHTML = '<span class="picks-status picks-status--open">&#128994; Picks Are Open!</span>';
+    } else {
+      var daysUntilOpen = Math.ceil((picksOpenDate - now) / (1000 * 60 * 60 * 24));
+      statusEl.innerHTML = '<span class="picks-status picks-status--soon">Picks open in ' + daysUntilOpen + ' days</span>';
+    }
+  }
+})();
+</script>
 </body>
 </html>
