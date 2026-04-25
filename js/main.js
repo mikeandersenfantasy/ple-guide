@@ -193,7 +193,7 @@ function initHypeIntro() {
   };
 
   // Also check for the repo subdirectory on GitHub Pages
-  if (page === 'wrestlemania-42-guide') page = 'home';
+  if (page === 'ple-guide') page = 'home';
 
   var config = intros[page];
   if (!config) return;
