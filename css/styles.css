@@ -2275,6 +2275,67 @@ ul { list-style: none; }
 .status-badge--upcoming { background: rgba(212,168,60,0.15); color: #D4A83C; border: 1px solid rgba(212,168,60,0.3); }
 .status-badge--soon     { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); }
 
+/* === EVERGREEN HERO === */
+.hero--evergreen {
+  background: radial-gradient(ellipse at center top, #1a1c2a 0%, #0b0f1a 60%, #080c14 100%);
+}
+.hero-event-meta {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: -8px;
+  margin-bottom: 18px;
+}
+
+/* === PAST EVENTS SECTION === */
+.past-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.past-event-card {
+  background: #0f111a;
+  border: 1px solid rgba(212,168,60,0.15);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.past-event-card:hover {
+  border-color: rgba(212,168,60,0.5);
+  transform: translateY(-2px);
+}
+.past-event-card .pe-name {
+  font-family: Impact, sans-serif;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+.past-event-card .pe-meta {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+.past-event-card .pe-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.7rem;
+  color: #D4A83C;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .past-events-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+  .past-event-card { padding: 1rem 1.25rem; }
+}
+
 /* ===== PRINT ===== */
 @media print {
   .nav, .scroll-top, .hamburger, .prediction-box, .btn, .spotify-embed { display: none !important; }

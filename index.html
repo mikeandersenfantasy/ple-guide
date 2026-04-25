@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home - WWE PLE Guide</title>
+<title>WWE PLE Guide — Family Fan Hub</title>
+<meta name="description" content="A family fan guide for WWE Premium Live Events. Match cards, predictions, wrestler profiles and more.">
+<meta property="og:title" content="WWE PLE Guide — Family Fan Hub">
+<meta property="og:description" content="A family fan guide for WWE Premium Live Events. Match cards, predictions, wrestler profiles and more.">
+<meta property="og:url" content="https://mikeandersenfantasy.github.io/ple-guide/">
+<meta property="og:type" content="website">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -30,11 +35,12 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" style="background:linear-gradient(rgba(11,15,26,0.7),rgba(11,15,26,0.85)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
-  <div class="hero-label">The Showcase of the Immortals</div>
-  <h1>Wrestle<span style="color:#fff">Mania</span> 42</h1>
-  <p class="hero-sub">Your family's complete guide to the biggest event in wrestling</p>
+<!-- HERO: Next event -->
+<section class="hero hero--evergreen">
+  <div class="hero-label">Next Event</div>
+  <h1 id="next-event-name">Next Event</h1>
+  <p class="hero-sub" id="next-event-subtitle"></p>
+  <p class="hero-event-meta" id="next-event-location"></p>
   <div id="hero-tagline"></div>
 
   <div class="countdown" id="countdown">
@@ -44,95 +50,22 @@
     <div class="countdown-item"><span class="num" id="cd-secs">--</span><span class="unit">Secs</span></div>
   </div>
 
-  <a href="matches/" class="btn btn-gold">Explore the Match Card</a>
+  <div id="hero-event-complete" style="display:none;font-size:1.4rem;font-weight:900;color:var(--wm-gold);letter-spacing:0.1em;margin:20px 0">EVENT COMPLETE</div>
+
+  <a href="events/backlash/backlash-2026/" class="btn btn-gold" id="next-event-btn">View Event &rarr;</a>
 </section>
 
-<!-- EVENT BAR -->
-<div class="event-bar">
+<!-- PAST EVENTS -->
+<section class="section past-events-section">
   <div class="inner">
-    <div class="event-bar-grid">
-      <div class="event-detail">
-        <div class="label">Night 1</div>
-        <div class="value">Sat, April 18</div>
-      </div>
-      <div class="event-detail">
-        <div class="label">Night 2</div>
-        <div class="value">Sun, April 19</div>
-      </div>
-      <div class="event-detail">
-        <div class="label">Venue</div>
-        <div class="value">Allegiant Stadium, Las Vegas</div>
-      </div>
-      <div class="event-detail">
-        <div class="label">Bell Time</div>
-        <div class="value">3:00 PM PT (Vegas) / 6:00 PM ET (East Coast)</div>
-      </div>
+    <div class="text-center" style="margin-bottom:10px">
+      <div class="section-label">Archive</div>
+      <h2 class="section-title">Past Events</h2>
+      <p class="section-subtitle mx-auto">Relive the storylines, matches, and predictions from past Premium Live Events.</p>
     </div>
-  </div>
-</div>
-
-<!-- MATCH PREVIEW BANNERS -->
-<section class="section" style="padding-top:20px">
-  <div class="inner">
-    <div class="text-center" style="margin-bottom:30px">
-      <div class="section-label">The Card</div>
-      <h2 class="section-title">WrestleMania 42 Matches</h2>
-      <p class="section-subtitle mx-auto">Click any match to see the full storyline breakdown!</p>
-    </div>
-    <div class="match-preview-grid" id="home-match-grid"></div>
+    <div class="past-events-grid" id="past-events-grid"></div>
   </div>
 </section>
-<script src="js/data.js"></script>
-<script>
-(function() {
-  var grid = document.getElementById('home-match-grid');
-  if (!grid || typeof MATCHES === 'undefined') return;
-
-  // Sort by night
-  var night1 = MATCHES.filter(function(m) { return m.night === 1; });
-  var night2 = MATCHES.filter(function(m) { return m.night === 2; });
-
-  // Night 1 header
-  var h1 = document.createElement('div');
-  h1.className = 'night-label';
-  h1.style.cssText = 'font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
-  h1.textContent = 'NIGHT 1 — Saturday · April 18';
-  grid.appendChild(h1);
-
-  night1.concat(night2).forEach(function(match, idx) {
-    // Insert Night 2 header before first Night 2 match
-    if (idx === night1.length) {
-      var h2 = document.createElement('div');
-      h2.className = 'night-label';
-      h2.style.cssText = 'font-family:Impact,sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:#D4A83C;padding:0.5rem 0;border-left:4px solid #D4A83C;padding-left:12px;margin-top:12px;margin-bottom:4px;background:rgba(212,168,60,0.06);border-radius:0 6px 6px 0';
-      h2.textContent = 'NIGHT 2 — Sunday · April 19';
-      grid.appendChild(h2);
-    }
-    var altText = match.championship;
-    if (match.wrestler1 && match.wrestler2) {
-      altText = WRESTLERS[match.wrestler1].name + ' vs ' + WRESTLERS[match.wrestler2].name;
-    } else if (match.participants) {
-      altText = match.participants.map(function(k) { return WRESTLERS[k].name; }).join(', ');
-    } else if (match.teams) {
-      altText = match.teams.map(function(t) { return t.name; }).join(' vs ');
-    }
-    var a = document.createElement('a');
-    a.href = 'matches/#' + match.id;
-    a.className = 'match-preview-link';
-    var img = document.createElement('img');
-    img.src = match.bannerImg;
-    img.alt = altText;
-    img.loading = 'lazy';
-    img.onerror = function() { a.style.display = 'none'; };
-    a.appendChild(img);
-    var label = document.createElement('div');
-    label.className = 'match-preview-label';
-    label.textContent = match.championship.replace(/ -- .*/, '');
-    a.appendChild(label);
-    grid.appendChild(a);
-  });
-})();
-</script>
 
 <!-- GLOSSARY -->
 <section class="section section--gray" id="glossary">
@@ -170,37 +103,10 @@
   </div>
 </section>
 
-<!-- QUICK LINKS -->
-<section class="section" style="padding-top:0">
-  <div class="inner">
-    <div class="text-center" style="margin-bottom:40px">
-      <div class="section-label">Jump Right In</div>
-      <h2 class="section-title">Explore the Guide</h2>
-    </div>
-    <div class="quick-links">
-      <a href="matches/" class="quick-link">
-        <div class="icon">&#127942;</div>
-        <h3>Match Card</h3>
-        <p>Full storyline breakdowns, predictions, and match types explained</p>
-      </a>
-      <a href="wrestlers/" class="quick-link">
-        <div class="icon">&#128170;</div>
-        <h3>Wrestler Profiles</h3>
-        <p>Meet the competitors: entrance music, finishers, and more</p>
-      </a>
-      <a href="videos/" class="quick-link">
-        <div class="icon">&#127908;</div>
-        <h3>Entrances</h3>
-        <p>Learn the entrance themes so you know who's coming out at the show</p>
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer class="footer">
-  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WrestleMania 42 &bull; April 18-19, 2026 &bull; Las Vegas</p>
-  <p>Data sourced from <a href="https://www.wwe.com/shows/wrestlemania" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets. Last updated April 2026.</p>
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WWE PLE Guide &bull; Last updated April 2026</p>
+  <p>Data sourced from <a href="https://www.wwe.com" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets.</p>
 </footer>
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>

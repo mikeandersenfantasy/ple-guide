@@ -1,7 +1,30 @@
 /* ========================================
-   WrestleMania 42 Family Fan Guide
+   WWE PLE Guide
    Shared JavaScript
    ======================================== */
+
+// ===== EVENT CONFIG =====
+var NEXT_EVENT = {
+  name: 'Backlash 2026',
+  subtitle: 'One Night Only',
+  date: '2026-05-09T19:00:00-04:00',  // 7pm ET May 9
+  location: 'TBA',
+  night: null,
+  eventUrl: 'events/backlash/backlash-2026/',
+  status: 'upcoming'                    // 'upcoming' | 'live' | 'complete'
+};
+
+var PAST_EVENTS = [
+  {
+    name: 'WrestleMania 42',
+    dates: 'April 18–19, 2026',
+    location: 'Las Vegas, NV',
+    nights: 2,
+    matchCount: 13,
+    eventUrl: 'events/wrestlemania/wm42/',
+    status: 'archived'
+  }
+];
 
 // ===== COUNTDOWN TIMER =====
 function initCountdown() {
@@ -13,14 +36,14 @@ function initCountdown() {
   };
   if (!els.days) return;
 
-  // WrestleMania 42 Night 1: April 18, 2026 at 6:00 PM ET (3:00 PM PT / Vegas local)
-  const target = new Date('2026-04-18T18:00:00-04:00').getTime();
+  // Read target from NEXT_EVENT config
+  const target = new Date(NEXT_EVENT.date).getTime();
 
   function update() {
     const diff = target - Date.now();
     if (diff <= 0) {
       const container = document.getElementById('countdown');
-      if (container) container.innerHTML = '<div style="font-size:1.8rem;font-weight:900;color:var(--wm-gold)">IT\'S WRESTLEMANIA TIME!</div>';
+      if (container) container.innerHTML = '<div style="font-size:1.8rem;font-weight:900;color:var(--wm-gold)">IT\'S SHOWTIME!</div>';
       return;
     }
     els.days.textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -30,6 +53,49 @@ function initCountdown() {
   }
   update();
   setInterval(update, 1000);
+}
+
+// ===== HOMEPAGE: NEXT-EVENT HERO + PAST EVENTS RENDERING =====
+function initHomepageEvents() {
+  // Populate next-event hero text from NEXT_EVENT config
+  var nextName = document.getElementById('next-event-name');
+  var nextSub = document.getElementById('next-event-subtitle');
+  var nextLoc = document.getElementById('next-event-location');
+  var heroBtn = document.getElementById('next-event-btn');
+  var countdown = document.getElementById('countdown');
+  var heroComplete = document.getElementById('hero-event-complete');
+
+  if (nextName) nextName.textContent = NEXT_EVENT.name;
+  if (nextSub) nextSub.textContent = NEXT_EVENT.subtitle || '';
+  if (nextLoc) {
+    var dateLabel = '';
+    try {
+      var d = new Date(NEXT_EVENT.date);
+      dateLabel = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    } catch (e) { dateLabel = ''; }
+    nextLoc.textContent = (dateLabel ? dateLabel + ' · ' : '') + (NEXT_EVENT.location || '');
+  }
+  if (heroBtn) heroBtn.href = NEXT_EVENT.eventUrl;
+
+  if (NEXT_EVENT.status === 'complete') {
+    if (countdown) countdown.style.display = 'none';
+    if (heroComplete) heroComplete.style.display = '';
+  }
+
+  // Past events grid
+  var grid = document.getElementById('past-events-grid');
+  if (grid && Array.isArray(PAST_EVENTS) && PAST_EVENTS.length > 0) {
+    var html = '';
+    PAST_EVENTS.forEach(function(pe) {
+      html += '<a href="' + pe.eventUrl + '" class="past-event-card">';
+      html += '<div class="pe-name">' + pe.name + '</div>';
+      html += '<div class="pe-meta">' + pe.dates + '<br>' + pe.location + ' · ' + pe.matchCount + ' Matches</div>';
+      html += '<span class="status-badge status-badge--archived" style="margin-top:10px">Archived</span>';
+      html += '<div class="pe-link">View Results &rarr;</div>';
+      html += '</a>';
+    });
+    grid.innerHTML = html;
+  }
 }
 
 // ===== MOBILE NAV TOGGLE =====
@@ -230,6 +296,7 @@ function initHypeIntro() {
 // ===== INIT ALL =====
 document.addEventListener('DOMContentLoaded', () => {
   initHypeIntro();
+  initHomepageEvents();
   initCountdown();
   initNav();
   setActiveNav();
