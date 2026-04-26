@@ -30,20 +30,225 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" style="padding:40px 30px 30px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
-  <div class="hero-label">WWE PLE Guide</div>
-  <h1>Royal Rumble <span style="color:#fff">2027</span></h1>
-  <p class="hero-sub">January 2027 &middot; TBA</p>
+<!-- EVENT HERO -->
+<section class="event-hero">
+  <div class="event-hero-inner">
+    <div class="event-label">WWE Premium Live Event</div>
+    <h1 class="event-title">ROYAL RUMBLE 2027</h1>
+    <div class="event-meta" id="event-meta-line">
+      <span class="event-date">January 2027</span>
+      <span class="event-sep">·</span>
+      <span class="event-location">Date TBA</span>
+    </div>
+  </div>
 </section>
 
-<section class="section">
-  <div class="inner" style="text-align:center;padding:4rem 1rem">
-    <span class="status-badge status-badge--soon" style="margin-bottom:20px">Coming Soon</span>
-    <h2 style="font-family:Impact,sans-serif;font-size:2rem;color:#D4A83C;margin-top:20px;text-transform:uppercase;letter-spacing:0.05em">In Progress</h2>
-    <p style="color:rgba(255,255,255,0.5);max-width:480px;margin:16px auto 0;line-height:1.7">
-      Match card, wrestler profiles, and storylines will be added closer to the event date.
-    </p>
+<!-- COUNTDOWN OR DATE TBA -->
+<section class="section" style="padding: 1.5rem 0 1rem">
+  <div class="inner">
+    <div class="countdown" id="countdown" style="display:none">
+      <div class="countdown-item"><span class="num" id="cd-days">--</span><span class="unit">Days</span></div>
+      <div class="countdown-item"><span class="num" id="cd-hours">--</span><span class="unit">Hours</span></div>
+      <div class="countdown-item"><span class="num" id="cd-mins">--</span><span class="unit">Mins</span></div>
+      <div class="countdown-item"><span class="num" id="cd-secs">--</span><span class="unit">Secs</span></div>
+    </div>
+    <div id="date-tba-banner" class="event-status-live" style="font-size:1.1rem;color:rgba(212,168,60,0.7)">DATE TO BE ANNOUNCED</div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:1rem">
+  <div class="inner">
+
+    <!-- TABS -->
+    <div class="rr-tabs">
+      <button class="rr-tab active" data-panel="howitworks">How It Works</button>
+      <button class="rr-tab" data-panel="picks">Make Your Picks</button>
+      <button class="rr-tab" data-panel="leaderboard">Leaderboard</button>
+    </div>
+
+    <!-- HOW IT WORKS PANEL -->
+    <div class="rr-panel active" id="panel-howitworks">
+      <div class="howit-grid">
+
+        <div class="howit-card">
+          <h3>Entrant Position Picks</h3>
+          <p>You predict which wrestler enters at each numbered spot (1 through 30) for both the Men's Rumble and Women's Rumble &mdash; 60 total picks.</p>
+          <table class="howit-table">
+            <thead><tr><th>Result</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Correct wrestler, correct entry number</td><td>10 pts</td></tr>
+              <tr><td>Correct wrestler, wrong entry number</td><td>5 pts</td></tr>
+              <tr><td>Guaranteed/announced entrant picked (wrong spot)</td><td>2 pts</td></tr>
+              <tr><td>Wrong wrestler or unannounced surprise miss</td><td>0 pts</td></tr>
+            </tbody>
+          </table>
+          <div class="howit-callout">
+            If you correctly guess a guaranteed entrant's exact spot, you get 10 pts (the higher score applies &mdash; the 2pts bonus does not stack on top).
+          </div>
+        </div>
+
+        <div class="howit-card">
+          <h3>Superlative Questions</h3>
+          <p>Scored separately for Men's and Women's matches.</p>
+          <table class="howit-table">
+            <thead><tr><th>Question</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Winner</td><td>20 pts</td></tr>
+              <tr><td>Runner-Up</td><td>10 pts</td></tr>
+              <tr><td>Final Four (2 picks)</td><td>5 pts each</td></tr>
+              <tr><td>Most Eliminations</td><td>10 pts</td></tr>
+              <tr><td>Longest Time in ring</td><td>10 pts</td></tr>
+              <tr><td>Shortest Time in ring</td><td>10 pts</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="howit-card">
+          <h3>Bonus &mdash; Top 4 Compilation</h3>
+          <p>Your "Top 4" is automatically built from your Winner + Runner-Up + both Final Four picks.</p>
+          <div class="howit-callout">
+            If your <strong>Winner</strong> pick ends up in the actual Final Four (but didn't win): <strong>+5 pts bonus</strong>.<br>
+            If your <strong>Runner-Up</strong> pick ends up in the actual Final Four (but didn't win): <strong>+5 pts bonus</strong>.
+          </div>
+        </div>
+
+        <div class="howit-card">
+          <h3>Max Possible Score</h3>
+          <p>Theoretical maximum: <strong style="color:#D4A83C">~400 points</strong> across both Rumbles combined.</p>
+          <p style="margin:0">A great score is anything over <strong style="color:#D4A83C">150 points</strong>!</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MAKE YOUR PICKS PANEL -->
+    <div class="rr-panel" id="panel-picks">
+
+      <div id="picks-lock-banner" class="picks-lock-banner" hidden></div>
+
+      <div id="picks-form-container">
+
+        <!-- Name entry -->
+        <div class="picker-name-section">
+          <label class="picker-label" for="picker-name">Your Name</label>
+          <input type="text" id="picker-name" class="picker-input" placeholder="Enter your name..." maxlength="30" autocomplete="off">
+          <div class="picker-name-error" id="name-error" hidden>Please enter your name before saving picks.</div>
+          <div class="picker-name-taken" id="name-taken" hidden>That name is already taken! Choose a different name or ask the admin to remove the existing entry.</div>
+        </div>
+
+        <!-- Match toggle -->
+        <div class="match-toggle">
+          <button class="match-toggle-btn active" data-match="mens" type="button">Men's Royal Rumble</button>
+          <button class="match-toggle-btn" data-match="womens" type="button">Women's Royal Rumble</button>
+        </div>
+        <div class="match-progress">
+          <span id="mens-progress">Men's: 0/30 filled</span>
+          <span class="progress-sep">·</span>
+          <span id="womens-progress">Women's: 0/30 filled</span>
+        </div>
+
+        <!-- Datalists for autocomplete -->
+        <datalist id="guaranteed-mens"></datalist>
+        <datalist id="guaranteed-womens"></datalist>
+
+        <!-- MEN'S MATCH GROUP -->
+        <div class="match-group" data-match="mens">
+          <div class="entry-slots-container" id="mens-slots-container"></div>
+
+          <div class="superlatives-section">
+            <h3 class="superlatives-title">Superlatives &mdash; Men's Rumble</h3>
+
+            <div class="superlative-row">
+              <label class="sup-label">&#127942; Winner <span class="sup-pts">+20 pts</span></label>
+              <input type="text" class="sup-input" id="mens-winner" placeholder="Who wins?" list="guaranteed-mens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#129352; Runner-Up <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="mens-runnerup" placeholder="Last eliminated?" list="guaranteed-mens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#128293; Final Four &mdash; Pick 1 <span class="sup-pts">+5 pts</span></label>
+              <input type="text" class="sup-input" id="mens-final4-1" placeholder="Final Four pick..." list="guaranteed-mens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#128293; Final Four &mdash; Pick 2 <span class="sup-pts">+5 pts</span></label>
+              <input type="text" class="sup-input" id="mens-final4-2" placeholder="Final Four pick..." list="guaranteed-mens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#128165; Most Eliminations <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="mens-eliminations" placeholder="Most eliminations?" list="guaranteed-mens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#9201; Longest Time <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="mens-longest" placeholder="In ring the longest?" list="guaranteed-mens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#9889; Shortest Time <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="mens-shortest" placeholder="Fastest elimination?" list="guaranteed-mens" autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <!-- WOMEN'S MATCH GROUP -->
+        <div class="match-group" data-match="womens" hidden>
+          <div class="entry-slots-container" id="womens-slots-container"></div>
+
+          <div class="superlatives-section">
+            <h3 class="superlatives-title">Superlatives &mdash; Women's Rumble</h3>
+
+            <div class="superlative-row">
+              <label class="sup-label">&#127942; Winner <span class="sup-pts">+20 pts</span></label>
+              <input type="text" class="sup-input" id="womens-winner" placeholder="Who wins?" list="guaranteed-womens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#129352; Runner-Up <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="womens-runnerup" placeholder="Last eliminated?" list="guaranteed-womens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#128293; Final Four &mdash; Pick 1 <span class="sup-pts">+5 pts</span></label>
+              <input type="text" class="sup-input" id="womens-final4-1" placeholder="Final Four pick..." list="guaranteed-womens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#128293; Final Four &mdash; Pick 2 <span class="sup-pts">+5 pts</span></label>
+              <input type="text" class="sup-input" id="womens-final4-2" placeholder="Final Four pick..." list="guaranteed-womens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#128165; Most Eliminations <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="womens-eliminations" placeholder="Most eliminations?" list="guaranteed-womens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#9201; Longest Time <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="womens-longest" placeholder="In ring the longest?" list="guaranteed-womens" autocomplete="off">
+            </div>
+            <div class="superlative-row">
+              <label class="sup-label">&#9889; Shortest Time <span class="sup-pts">+10 pts</span></label>
+              <input type="text" class="sup-input" id="womens-shortest" placeholder="Fastest elimination?" list="guaranteed-womens" autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <!-- Save button -->
+        <div class="save-picks-section">
+          <div class="save-summary" id="save-summary"></div>
+          <button class="btn btn-gold save-picks-btn" id="save-picks-btn" type="button">Lock In My Picks &#128274;</button>
+          <div class="save-confirmation" id="save-confirmation" hidden>
+            &#9989; Picks saved! Good luck, <span id="saved-name"></span>!
+          </div>
+          <div class="save-error" id="save-error" hidden></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LEADERBOARD PANEL -->
+    <div class="rr-panel" id="panel-leaderboard">
+      <div id="leaderboard-container"></div>
+      <div class="admin-section">
+        <button class="admin-toggle-btn" id="admin-toggle" type="button">&#9881; Enter Results (Admin)</button>
+        <div class="admin-panel" id="admin-panel" hidden></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -55,5 +260,513 @@
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
 <script src="../../../js/main.js"></script>
+<script>
+(function() {
+
+  // ── CONFIG ─────────────────────────────────────────────────────
+  var RR2027_CONFIG = {
+    name: 'Royal Rumble 2027',
+    date: '2027-01-25T19:00:00-05:00',  // placeholder — update when WWE announces
+    location: 'TBA',
+    venue: 'TBA',
+    picksOpenDate: '2027-01-23T00:00:00-05:00',  // opens 2 days before
+    storagePrefix: 'rr2027',
+    maxEntrants: 30
+  };
+
+  // ── GUARANTEED ENTRANTS ─────────────────────────────────────────
+  // Empty for now — fill in as WWE announces participants
+  // Format: { id: 'cody-rhodes', name: 'Cody Rhodes', gender: 'mens' }
+  var RR2027_GUARANTEED = [];
+
+  // ── EVENT META ──────────────────────────────────────────────────
+  var officialDateAnnounced = false; // flip to true once WWE announces; placeholder date used otherwise
+  var now = new Date();
+  var picksOpen = new Date(RR2027_CONFIG.picksOpenDate);
+  var showTime = new Date(RR2027_CONFIG.date);
+  var picksIsLocked = officialDateAnnounced && now >= showTime;
+  var picksNotOpenYet = officialDateAnnounced && now < picksOpen;
+
+  // ── COUNTDOWN ───────────────────────────────────────────────────
+  function initCountdown() {
+    if (!officialDateAnnounced) return;
+    var banner = document.getElementById('date-tba-banner');
+    var cd = document.getElementById('countdown');
+    if (banner) banner.style.display = 'none';
+    if (cd) cd.style.display = '';
+    var els = {
+      days: document.getElementById('cd-days'),
+      hours: document.getElementById('cd-hours'),
+      mins: document.getElementById('cd-mins'),
+      secs: document.getElementById('cd-secs')
+    };
+    var target = showTime.getTime();
+    function tick() {
+      var diff = target - Date.now();
+      if (diff <= 0) {
+        if (cd) cd.outerHTML = '<div class="event-status-live">THE EVENT HAS CONCLUDED</div>';
+        return;
+      }
+      els.days.textContent = Math.floor(diff / 86400000);
+      els.hours.textContent = Math.floor((diff % 86400000) / 3600000);
+      els.mins.textContent = Math.floor((diff % 3600000) / 60000);
+      els.secs.textContent = Math.floor((diff % 60000) / 1000);
+    }
+    tick();
+    setInterval(tick, 1000);
+  }
+  initCountdown();
+
+  // ── TABS ────────────────────────────────────────────────────────
+  document.querySelectorAll('.rr-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.rr-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.rr-panel').forEach(function(p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      var panel = document.getElementById('panel-' + tab.dataset.panel);
+      if (panel) panel.classList.add('active');
+      if (tab.dataset.panel === 'leaderboard') loadLeaderboard();
+    });
+  });
+
+  // ── DATALISTS FROM RR2027_GUARANTEED ────────────────────────────
+  function populateDatalists() {
+    var mensDL = document.getElementById('guaranteed-mens');
+    var womensDL = document.getElementById('guaranteed-womens');
+    if (!mensDL || !womensDL) return;
+    RR2027_GUARANTEED.forEach(function(g) {
+      var opt = document.createElement('option');
+      opt.value = g.name;
+      if (g.gender === 'mens') mensDL.appendChild(opt);
+      else if (g.gender === 'womens') womensDL.appendChild(opt);
+    });
+  }
+  populateDatalists();
+
+  // ── BUILD ENTRY SLOTS ───────────────────────────────────────────
+  function buildSlots(gender) {
+    var container = document.getElementById(gender + '-slots-container');
+    if (!container) return;
+    var html = '';
+    for (var i = 1; i <= 30; i++) {
+      html += '<div class="entry-slot" data-number="' + i + '" data-match="' + gender + '">';
+      html += '<span class="slot-number">' + i + '</span>';
+      html += '<input type="text" class="slot-input" placeholder="Wrestler name..." list="guaranteed-' + gender + '" autocomplete="off" maxlength="40">';
+      html += '</div>';
+    }
+    container.innerHTML = html;
+  }
+  buildSlots('mens');
+  buildSlots('womens');
+
+  // ── MATCH TOGGLE ────────────────────────────────────────────────
+  document.querySelectorAll('.match-toggle-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = btn.dataset.match;
+      document.querySelectorAll('.match-toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.match-group').forEach(function(g) {
+        g.hidden = g.dataset.match !== target;
+      });
+    });
+  });
+
+  // ── PROGRESS COUNTERS + FILLED CLASS ────────────────────────────
+  function updateProgress() {
+    ['mens', 'womens'].forEach(function(gender) {
+      var slots = document.querySelectorAll('.entry-slot[data-match="' + gender + '"]');
+      var filled = 0;
+      slots.forEach(function(slot) {
+        var input = slot.querySelector('.slot-input');
+        if (input && input.value.trim().length > 0) {
+          filled++;
+          slot.classList.add('filled');
+        } else {
+          slot.classList.remove('filled');
+        }
+      });
+      var label = gender === 'mens' ? "Men's" : "Women's";
+      var el = document.getElementById(gender + '-progress');
+      if (el) el.textContent = label + ': ' + filled + '/30 filled';
+    });
+    updateSaveSummary();
+  }
+
+  function updateSaveSummary() {
+    var mensFilled = countFilled('mens');
+    var womensFilled = countFilled('womens');
+    var supsFilled = countSuperlativesFilled();
+    var summary = document.getElementById('save-summary');
+    if (summary) summary.innerHTML = "Men's: " + mensFilled + '/30 &middot; Women\'s: ' + womensFilled + '/30 &middot; Superlatives: ' + supsFilled + '/14';
+  }
+
+  function countFilled(gender) {
+    var n = 0;
+    document.querySelectorAll('.entry-slot[data-match="' + gender + '"] .slot-input').forEach(function(i) {
+      if (i.value.trim()) n++;
+    });
+    return n;
+  }
+
+  function countSuperlativesFilled() {
+    var ids = [
+      'mens-winner','mens-runnerup','mens-final4-1','mens-final4-2','mens-eliminations','mens-longest','mens-shortest',
+      'womens-winner','womens-runnerup','womens-final4-1','womens-final4-2','womens-eliminations','womens-longest','womens-shortest'
+    ];
+    var n = 0;
+    ids.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.value.trim()) n++;
+    });
+    return n;
+  }
+
+  // Wire input events to update progress
+  document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('slot-input') || e.target.classList.contains('sup-input')) {
+      updateProgress();
+    }
+  });
+  updateProgress();
+
+  // ── PICKS LOCK STATE ────────────────────────────────────────────
+  function renderPicksLockState() {
+    var formContainer = document.getElementById('picks-form-container');
+    var lockBanner = document.getElementById('picks-lock-banner');
+    if (!formContainer || !lockBanner) return;
+    if (picksIsLocked) {
+      lockBanner.innerHTML = '&#128274; Picks are locked &mdash; the Royal Rumble has started!';
+      lockBanner.hidden = false;
+      formContainer.hidden = true;
+    } else if (picksNotOpenYet) {
+      var daysUntil = Math.ceil((picksOpen - now) / (1000 * 60 * 60 * 24));
+      lockBanner.innerHTML = '&#8987; Picks open ' + daysUntil + ' days before the show.';
+      lockBanner.hidden = false;
+      var btn = document.getElementById('save-picks-btn');
+      if (btn) btn.disabled = true;
+    }
+  }
+  renderPicksLockState();
+
+  // ── SAVE PICKS ──────────────────────────────────────────────────
+  function savePicks() {
+    document.getElementById('name-error').hidden = true;
+    document.getElementById('name-taken').hidden = true;
+    document.getElementById('save-error').hidden = true;
+    document.getElementById('save-confirmation').hidden = true;
+
+    var name = document.getElementById('picker-name').value.trim();
+
+    if (!name || name.length < 2) {
+      document.getElementById('name-error').hidden = false;
+      document.getElementById('picker-name').focus();
+      return;
+    }
+
+    var storageKey = RR2027_CONFIG.storagePrefix + '-picks-' + name.toLowerCase();
+    var existing = null;
+    try { existing = localStorage.getItem(storageKey); } catch(e) {}
+    if (existing) {
+      document.getElementById('name-taken').hidden = false;
+      return;
+    }
+
+    var mensEntrants = [];
+    var womensEntrants = [];
+    for (var i = 1; i <= 30; i++) {
+      var ms = document.querySelector('[data-number="' + i + '"][data-match="mens"] .slot-input');
+      var ws = document.querySelector('[data-number="' + i + '"][data-match="womens"] .slot-input');
+      mensEntrants.push(ms ? ms.value.trim() : '');
+      womensEntrants.push(ws ? ws.value.trim() : '');
+    }
+
+    function valOf(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+
+    var picksData = {
+      name: name,
+      savedAt: new Date().toISOString(),
+      mens: {
+        entrants: mensEntrants,
+        winner: valOf('mens-winner'),
+        runnerUp: valOf('mens-runnerup'),
+        final4: [valOf('mens-final4-1'), valOf('mens-final4-2')],
+        mostEliminations: valOf('mens-eliminations'),
+        longestTime: valOf('mens-longest'),
+        shortestTime: valOf('mens-shortest')
+      },
+      womens: {
+        entrants: womensEntrants,
+        winner: valOf('womens-winner'),
+        runnerUp: valOf('womens-runnerup'),
+        final4: [valOf('womens-final4-1'), valOf('womens-final4-2')],
+        mostEliminations: valOf('womens-eliminations'),
+        longestTime: valOf('womens-longest'),
+        shortestTime: valOf('womens-shortest')
+      }
+    };
+
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(picksData));
+      var allNames = [];
+      try { allNames = JSON.parse(localStorage.getItem(RR2027_CONFIG.storagePrefix + '-names') || '[]'); } catch(e) {}
+      if (allNames.indexOf(name.toLowerCase()) === -1) {
+        allNames.push(name.toLowerCase());
+        localStorage.setItem(RR2027_CONFIG.storagePrefix + '-names', JSON.stringify(allNames));
+      }
+      document.getElementById('save-confirmation').hidden = false;
+      document.getElementById('saved-name').textContent = name;
+      var btn = document.getElementById('save-picks-btn');
+      btn.disabled = true;
+      btn.innerHTML = '&#9989; Picks Saved';
+    } catch(err) {
+      var errEl = document.getElementById('save-error');
+      errEl.hidden = false;
+      errEl.textContent = 'Error saving picks. Please try again.';
+    }
+  }
+  document.getElementById('save-picks-btn').addEventListener('click', savePicks);
+
+  // ── SCORING ENGINE ──────────────────────────────────────────────
+  function normalizeName(name) {
+    return (name || '').toLowerCase().trim()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, ' ');
+  }
+
+  function isGuaranteed(name, gender) {
+    var n = normalizeName(name);
+    return RR2027_GUARANTEED.some(function(g) {
+      return g.gender === gender && normalizeName(g.name) === n;
+    });
+  }
+
+  function calculateScore(picks, results) {
+    var mensScore = 0;
+    var womensScore = 0;
+
+    ['mens', 'womens'].forEach(function(gender) {
+      var p = picks[gender];
+      var r = results[gender];
+      if (!p || !r) return;
+      var score = 0;
+
+      // ── ENTRANT POSITION SCORING ──
+      var actualEntrantMap = {};
+      r.entrants.forEach(function(name, idx) {
+        if (name) actualEntrantMap[normalizeName(name)] = idx + 1;
+      });
+
+      p.entrants.forEach(function(pickedName, idx) {
+        if (!pickedName) return;
+        var pickedNorm = normalizeName(pickedName);
+        var pickedNumber = idx + 1;
+        var actualNumber = actualEntrantMap[pickedNorm];
+        var wasInMatch = actualNumber !== undefined;
+        var guaranteed = isGuaranteed(pickedName, gender);
+
+        if (wasInMatch && actualNumber === pickedNumber) {
+          score += 10;
+        } else if (wasInMatch) {
+          score += 5;
+        } else if (guaranteed) {
+          score += 2;
+        }
+      });
+
+      // ── SUPERLATIVE SCORING ──
+      if (p.winner && normalizeName(p.winner) === normalizeName(r.winner)) score += 20;
+      if (p.runnerUp && normalizeName(p.runnerUp) === normalizeName(r.runnerUp)) score += 10;
+
+      var actualFinal4 = (r.final4 || []).map(normalizeName);
+      var allActualFinal4 = actualFinal4.concat([normalizeName(r.winner), normalizeName(r.runnerUp)]).filter(Boolean);
+
+      (p.final4 || []).forEach(function(pick) {
+        if (pick && allActualFinal4.indexOf(normalizeName(pick)) !== -1) score += 5;
+      });
+
+      if (p.mostEliminations && normalizeName(p.mostEliminations) === normalizeName(r.mostEliminations)) score += 10;
+      if (p.longestTime && normalizeName(p.longestTime) === normalizeName(r.longestTime)) score += 10;
+      if (p.shortestTime && normalizeName(p.shortestTime) === normalizeName(r.shortestTime)) score += 10;
+
+      // ── TOP 4 COMPILATION BONUS ──
+      var winnerNorm = normalizeName(p.winner);
+      if (winnerNorm && winnerNorm !== normalizeName(r.winner)) {
+        if (allActualFinal4.indexOf(winnerNorm) !== -1) score += 5;
+      }
+      var ruNorm = normalizeName(p.runnerUp);
+      if (ruNorm && ruNorm !== normalizeName(r.winner) && ruNorm !== normalizeName(r.runnerUp)) {
+        if (allActualFinal4.indexOf(ruNorm) !== -1) score += 5;
+      }
+
+      if (gender === 'mens') mensScore = score;
+      else womensScore = score;
+    });
+
+    return { mens: mensScore, womens: womensScore, total: mensScore + womensScore };
+  }
+
+  // ── LEADERBOARD ─────────────────────────────────────────────────
+  function loadLeaderboard() {
+    var container = document.getElementById('leaderboard-container');
+    if (!container) return;
+    var names = [];
+    try { names = JSON.parse(localStorage.getItem(RR2027_CONFIG.storagePrefix + '-names') || '[]'); } catch(e) {}
+
+    var results = null;
+    try {
+      var r = localStorage.getItem(RR2027_CONFIG.storagePrefix + '-results');
+      if (r) results = JSON.parse(r);
+    } catch(e) {}
+
+    if (names.length === 0) {
+      container.innerHTML = '<p class="leaderboard-empty">No picks submitted yet. Be the first!</p>';
+      return;
+    }
+
+    var scorers = names.map(function(nameLower) {
+      var picksRaw = null;
+      try { picksRaw = JSON.parse(localStorage.getItem(RR2027_CONFIG.storagePrefix + '-picks-' + nameLower)); } catch(e) {}
+      if (!picksRaw) return null;
+      var score = results ? calculateScore(picksRaw, results) : null;
+      return { name: picksRaw.name, picks: picksRaw, score: score };
+    }).filter(Boolean);
+
+    if (results) {
+      scorers.sort(function(a, b) {
+        return (b.score.total - a.score.total) || a.name.localeCompare(b.name);
+      });
+    }
+
+    var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
+    var html = '<div class="leaderboard-table">';
+    html += '<div class="lb-row lb-header">';
+    html += '<span class="lb-rank">Rank</span>';
+    html += '<span class="lb-name">Name</span>';
+    if (results) {
+      html += '<span class="lb-score">Men\'s</span>';
+      html += '<span class="lb-score">Women\'s</span>';
+      html += '<span class="lb-score lb-total">Total</span>';
+    } else {
+      html += '<span class="lb-score">Picks</span>';
+      html += '<span class="lb-score lb-total">Score</span>';
+    }
+    html += '</div>';
+
+    scorers.forEach(function(scorer, i) {
+      var rankDisplay = results ? (medals[i] || '#' + (i + 1)) : '&mdash;';
+      var mensCount = (scorer.picks.mens && scorer.picks.mens.entrants) ? scorer.picks.mens.entrants.filter(function(e) { return e; }).length : 0;
+      var womensCount = (scorer.picks.womens && scorer.picks.womens.entrants) ? scorer.picks.womens.entrants.filter(function(e) { return e; }).length : 0;
+
+      html += '<div class="lb-row' + (i < 3 && results ? ' lb-row--top3' : '') + '">';
+      html += '<span class="lb-rank">' + rankDisplay + '</span>';
+      html += '<span class="lb-name">' + scorer.name + '</span>';
+
+      if (results && scorer.score) {
+        html += '<span class="lb-score">' + scorer.score.mens + '</span>';
+        html += '<span class="lb-score">' + scorer.score.womens + '</span>';
+        html += '<span class="lb-score lb-total">' + scorer.score.total + '</span>';
+      } else {
+        html += '<span class="lb-score">' + mensCount + '/30 &middot; ' + womensCount + '/30</span>';
+        html += '<span class="lb-score lb-total lb-tbd">TBD</span>';
+      }
+      html += '</div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  // ── ADMIN PANEL ─────────────────────────────────────────────────
+  document.getElementById('admin-toggle').addEventListener('click', toggleAdmin);
+
+  function toggleAdmin() {
+    var panel = document.getElementById('admin-panel');
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) renderAdminPanel();
+  }
+
+  function renderAdminPanel() {
+    var panel = document.getElementById('admin-panel');
+    var existing = null;
+    try {
+      var r = localStorage.getItem(RR2027_CONFIG.storagePrefix + '-results');
+      if (r) existing = JSON.parse(r);
+    } catch(e) {}
+
+    var html = '<div class="admin-form">';
+    html += '<h3 class="admin-title">Enter Official Results</h3>';
+    html += '<p class="admin-note">Fill in the actual results after the show to calculate scores.</p>';
+
+    ['mens', 'womens'].forEach(function(gender) {
+      var label = gender === 'mens' ? "Men's" : "Women's";
+      html += '<h4 class="admin-section-title">' + label + ' Royal Rumble &mdash; Entry Order</h4>';
+      html += '<div class="admin-slots">';
+      for (var i = 1; i <= 30; i++) {
+        var val = (existing && existing[gender] && existing[gender].entrants) ? (existing[gender].entrants[i-1] || '') : '';
+        html += '<div class="admin-slot">';
+        html += '<span class="slot-number">' + i + '</span>';
+        html += '<input type="text" class="slot-input admin-input" data-gender="' + gender + '" data-slot="' + i + '" value="' + escapeHtml(val) + '" placeholder="Entrant ' + i + '">';
+        html += '</div>';
+      }
+      html += '</div>';
+
+      var sups = (existing && existing[gender]) ? existing[gender] : {};
+      html += '<h4 class="admin-section-title">' + label + ' Superlatives</h4>';
+      html += '<div class="superlatives-section">';
+      var supDefs = [
+        { id: gender+'-r-winner', label: '&#127942; Winner', val: sups.winner || '' },
+        { id: gender+'-r-runnerup', label: '&#129352; Runner-Up', val: sups.runnerUp || '' },
+        { id: gender+'-r-f4-1', label: '&#128293; Final Four #1', val: (sups.final4 && sups.final4[0]) || '' },
+        { id: gender+'-r-f4-2', label: '&#128293; Final Four #2', val: (sups.final4 && sups.final4[1]) || '' },
+        { id: gender+'-r-elim', label: '&#128165; Most Eliminations', val: sups.mostEliminations || '' },
+        { id: gender+'-r-longest', label: '&#9201; Longest Time', val: sups.longestTime || '' },
+        { id: gender+'-r-shortest', label: '&#9889; Shortest Time', val: sups.shortestTime || '' }
+      ];
+      supDefs.forEach(function(sup) {
+        html += '<div class="superlative-row"><label class="sup-label">' + sup.label + '</label>';
+        html += '<input type="text" class="sup-input admin-input" id="' + sup.id + '" value="' + escapeHtml(sup.val) + '"></div>';
+      });
+      html += '</div>';
+    });
+
+    html += '<button class="btn btn-gold" id="save-results-btn" type="button" style="margin-top:1.5rem;width:100%">Save Results &amp; Calculate Scores</button>';
+    html += '</div>';
+    panel.innerHTML = html;
+
+    document.getElementById('save-results-btn').addEventListener('click', saveResults);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function saveResults() {
+    var results = { mens: { entrants: [], final4: [] }, womens: { entrants: [], final4: [] } };
+
+    ['mens', 'womens'].forEach(function(gender) {
+      for (var i = 1; i <= 30; i++) {
+        var input = document.querySelector('.admin-input[data-gender="' + gender + '"][data-slot="' + i + '"]');
+        results[gender].entrants.push(input ? input.value.trim() : '');
+      }
+      function v(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+      results[gender].winner = v(gender+'-r-winner');
+      results[gender].runnerUp = v(gender+'-r-runnerup');
+      results[gender].final4 = [v(gender+'-r-f4-1'), v(gender+'-r-f4-2')];
+      results[gender].mostEliminations = v(gender+'-r-elim');
+      results[gender].longestTime = v(gender+'-r-longest');
+      results[gender].shortestTime = v(gender+'-r-shortest');
+    });
+
+    try {
+      localStorage.setItem(RR2027_CONFIG.storagePrefix + '-results', JSON.stringify(results));
+      loadLeaderboard();
+      alert('Results saved! Leaderboard updated.');
+    } catch(e) {
+      alert('Error saving results.');
+    }
+  }
+
+})();
+</script>
 </body>
 </html>
