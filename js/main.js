@@ -31,28 +31,31 @@ var PAST_EVENTS = [
 
 // ===== COUNTDOWN TIMER =====
 function initCountdown() {
-  const els = {
+  var els = {
     days: document.getElementById('cd-days'),
     hours: document.getElementById('cd-hours'),
     mins: document.getElementById('cd-mins'),
-    secs: document.getElementById('cd-secs'),
+    secs: document.getElementById('cd-secs')
   };
   if (!els.days) return;
 
-  // Read target from NEXT_EVENT config
-  const target = new Date(NEXT_EVENT.date).getTime();
+  // Read target from NEXT_EVENT config (homepage). For other pages, use page-local script.
+  if (typeof NEXT_EVENT === 'undefined' || !NEXT_EVENT.date) return;
+
+  var target = new Date(NEXT_EVENT.date).getTime();
+  if (isNaN(target)) return;
 
   function update() {
-    const diff = target - Date.now();
+    var diff = target - Date.now();
     if (diff <= 0) {
-      const container = document.getElementById('countdown');
+      var container = document.getElementById('countdown');
       if (container) container.innerHTML = '<div style="font-size:1.8rem;font-weight:900;color:var(--wm-gold)">IT\'S SHOWTIME!</div>';
       return;
     }
-    els.days.textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
-    els.hours.textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    els.mins.textContent = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    els.secs.textContent = Math.floor((diff % (1000 * 60)) / 1000);
+    els.days.textContent = Math.floor(diff / 86400000);
+    els.hours.textContent = Math.floor((diff % 86400000) / 3600000);
+    els.mins.textContent = Math.floor((diff % 3600000) / 60000);
+    els.secs.textContent = Math.floor((diff % 60000) / 1000);
   }
   update();
   setInterval(update, 1000);
@@ -67,6 +70,7 @@ function initHomepageEvents() {
   var heroBtn = document.getElementById('next-event-btn');
   var countdown = document.getElementById('countdown');
   var heroComplete = document.getElementById('hero-event-complete');
+  var statusBadge = document.getElementById('next-event-status-badge');
 
   if (nextName) nextName.textContent = NEXT_EVENT.name;
   if (nextSub) nextSub.textContent = NEXT_EVENT.subtitle || '';
@@ -74,19 +78,38 @@ function initHomepageEvents() {
     var dateLabel = '';
     try {
       var d = new Date(NEXT_EVENT.date);
-      dateLabel = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      if (!isNaN(d.getTime())) {
+        dateLabel = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
     } catch (e) { dateLabel = ''; }
     var parts = [];
     if (dateLabel) parts.push(dateLabel);
     if (NEXT_EVENT.location) parts.push(NEXT_EVENT.location);
     if (NEXT_EVENT.venue) parts.push(NEXT_EVENT.venue);
-    nextLoc.textContent = parts.join(' · ');
+    if (parts.length > 0) nextLoc.textContent = parts.join(' · ');
   }
   if (heroBtn) heroBtn.href = NEXT_EVENT.eventUrl;
 
-  if (NEXT_EVENT.status === 'complete') {
+  // Determine effective status: explicit 'complete' OR date in past
+  var eventTime = new Date(NEXT_EVENT.date).getTime();
+  var dateInPast = !isNaN(eventTime) && Date.now() >= eventTime;
+  var isComplete = NEXT_EVENT.status === 'complete' || dateInPast;
+
+  if (isComplete) {
     if (countdown) countdown.style.display = 'none';
     if (heroComplete) heroComplete.style.display = '';
+    if (statusBadge) {
+      statusBadge.textContent = 'Event Complete';
+      statusBadge.style.background = 'rgba(255,255,255,0.06)';
+      statusBadge.style.color = 'rgba(255,255,255,0.5)';
+      statusBadge.style.borderColor = 'rgba(255,255,255,0.15)';
+    }
+  } else {
+    if (countdown) countdown.style.display = '';
+    if (heroComplete) heroComplete.style.display = 'none';
+    if (statusBadge) {
+      statusBadge.textContent = NEXT_EVENT.status === 'live' ? 'Live Now' : 'Upcoming';
+    }
   }
 
   // Past events grid

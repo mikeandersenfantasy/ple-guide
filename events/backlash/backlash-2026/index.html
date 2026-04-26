@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backlash 2026 - WWE PLE Guide</title>
-<link rel="stylesheet" href="../../../css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backlash 2026 - WWE PLE Guide</title>
+  <meta name="description" content="Backlash 2026 match card, storylines, and predictions. May 9, 2026 · Tampa, Florida.">
+  <link rel="stylesheet" href="../../../css/styles.css">
 </head>
 <body>
 
@@ -32,14 +33,14 @@
 
 <!-- EVENT HERO -->
 <section class="event-hero">
-  <div class="event-hero-inner">
+  <div class="event-hero-inner inner">
     <div class="event-label">WWE Premium Live Event</div>
     <h1 class="event-title">BACKLASH 2026</h1>
     <div class="event-meta">
       <span class="event-date">Saturday, May 9, 2026</span>
-      <span class="event-sep">·</span>
+      <span class="event-sep">&middot;</span>
       <span class="event-location">Tampa, Florida</span>
-      <span class="event-sep">·</span>
+      <span class="event-sep">&middot;</span>
       <span class="event-venue">Benchmark International Arena</span>
     </div>
     <div class="event-network">Available on ESPN Unlimited (US) &middot; Netflix (International)</div>
@@ -49,12 +50,13 @@
 <!-- COUNTDOWN -->
 <section class="section" style="padding: 1.5rem 0 1rem">
   <div class="inner">
-    <div class="countdown" id="countdown">
+    <div class="countdown" id="backlash-countdown">
       <div class="countdown-item"><span class="num" id="cd-days">--</span><span class="unit">Days</span></div>
       <div class="countdown-item"><span class="num" id="cd-hours">--</span><span class="unit">Hours</span></div>
       <div class="countdown-item"><span class="num" id="cd-mins">--</span><span class="unit">Mins</span></div>
       <div class="countdown-item"><span class="num" id="cd-secs">--</span><span class="unit">Secs</span></div>
     </div>
+    <div id="event-status-msg" class="event-status-live" style="display:none"></div>
   </div>
 </section>
 
@@ -64,7 +66,7 @@
     <div class="text-center" style="margin-bottom: 20px">
       <div class="section-label">The Card</div>
       <h2 class="section-title">Expected Matches</h2>
-      <p class="section-subtitle mx-auto">Matches will be updated as WWE makes official announcements.</p>
+      <p class="section-subtitle mx-auto" id="card-subtitle">Tampa, Florida</p>
     </div>
 
     <div class="tba-notice">
@@ -79,7 +81,7 @@
 </section>
 
 <!-- PICKS CALLOUT -->
-<section class="picks-callout">
+<section class="section">
   <div class="inner">
     <div class="picks-callout-card">
       <div class="picks-callout-icon">&#127919;</div>
@@ -88,8 +90,10 @@
         Think you know who wins at Backlash? Lock in your predictions before the show.
         Compete against the family on the leaderboard.
       </p>
-      <div class="picks-callout-status" id="backlash-picks-status"></div>
-      <a href="../../../picks/" class="btn btn-gold">Go to Picks &rarr;</a>
+      <div id="backlash-picks-status"></div>
+      <a href="../../../picks/" class="btn btn-gold" style="margin-top:1rem;display:inline-block">
+        Go to Picks &rarr;
+      </a>
     </div>
   </div>
 </section>
@@ -114,9 +118,9 @@
       matchType: 'title',
       confirmed: false,
       hype: 5,
-      wrestler1: { key: 'roman-reigns', name: 'Roman Reigns', role: 'Champion', side: 'The Tribal Chief' },
-      wrestler2: { key: 'jacob-fatu', name: 'Jacob Fatu', role: 'Challenger', side: 'The Samoan Werewolf' },
-      story: 'After winning the World Heavyweight title at WrestleMania 42, Roman Reigns was immediately challenged by his cousin Jacob Fatu on the Raw after Mania. Fatu told Reigns he needed the gold for the benefit of his family. This Anoa\'i family showdown is expected to headline Backlash in Tampa.',
+      wrestler1: { key: 'roman-reigns', name: 'Roman Reigns', role: 'Champion' },
+      wrestler2: { key: 'jacob-fatu', name: 'Jacob Fatu', role: 'Challenger' },
+      story: "After winning the World Heavyweight title at WrestleMania 42, Roman Reigns was immediately confronted by his cousin Jacob Fatu on the Raw after Mania. Fatu declared he needed the gold for the Anoa'i family. A blood vs blood showdown is expected to headline Backlash in Tampa.",
       spotifyTrackId: '1CS7Sd1u5tWkstBhpssyjP'
     },
     {
@@ -125,20 +129,9 @@
       matchType: 'title',
       confirmed: false,
       hype: 4,
-      wrestler1: { key: 'liv-morgan', name: 'Liv Morgan', role: 'Champion', side: 'Backlash Rematch' },
-      wrestler2: { key: 'stephanie-vaquer', name: 'Stephanie Vaquer', role: 'Challenger', side: 'Former Champion' },
-      story: 'Their WrestleMania 42 match was widely considered too short. Vaquer immediately made clear on Raw she was not done with Liv Morgan. A rematch at Backlash gives both women the time they deserve to settle this rivalry properly.',
-      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
-    },
-    {
-      id: 'rollins-breakker-backlash',
-      championship: 'Personal Grudge',
-      matchType: 'grudge',
-      confirmed: false,
-      hype: 4,
-      wrestler1: { key: 'seth-rollins', name: 'Seth Rollins', role: 'The Visionary', side: '+ Street Profits' },
-      wrestler2: { key: 'bron-breakker', name: 'Bron Breakker', role: 'The Vision', side: '+ Logan Paul & Theory' },
-      story: 'Breakker returned from injury to cost Rollins his match against Gunther at WrestleMania. On Raw after Mania, Rollins attacked the Vision with a steel chair before the numbers game took over. The Street Profits returned to even the odds. A six-man tag at Backlash is the expected first chapter.',
+      wrestler1: { key: 'liv-morgan', name: 'Liv Morgan', role: 'Champion' },
+      wrestler2: { key: 'stephanie-vaquer', name: 'Stephanie Vaquer', role: 'Challenger' },
+      story: 'Their WrestleMania 42 match felt too short for both women. Vaquer immediately made clear on Raw she was not done with Morgan. A rematch at Backlash gives this rivalry the time it deserves.',
       spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
     },
     {
@@ -147,57 +140,86 @@
       matchType: 'special',
       confirmed: false,
       hype: 5,
-      wrestler1: { key: 'iyo-sky', name: 'IYO SKY', role: 'The Genius of the Sky', side: '' },
-      wrestler2: { key: 'asuka', name: 'Asuka', role: 'The Empress', side: '' },
-      story: 'WWE had this match planned for WrestleMania 42 but held it back. Reports from Wrestling Observer indicate it was specifically saved for Backlash. Once best friends, now bitter rivals — with Kairi Sane caught in the middle. This is a must-see match with years of real history behind it.',
+      wrestler1: { key: 'iyo-sky', name: 'IYO SKY', role: 'The Genius of the Sky' },
+      wrestler2: { key: 'asuka', name: 'Asuka', role: 'The Empress' },
+      story: 'Reports indicate WWE specifically held this match back from WrestleMania 42 to give it the Backlash spotlight. Former best friends now bitter rivals — with Kairi Sane caught in the middle. A technical masterpiece is expected.',
       spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
     },
     {
-      id: 'gunther-knight-backlash',
-      championship: 'Title Contender Match',
-      matchType: 'special',
+      id: 'rollins-breakker-backlash',
+      championship: 'Grudge Match',
+      matchType: 'grudge',
       confirmed: false,
-      hype: 3,
-      wrestler1: { key: 'gunther', name: 'GUNTHER', role: 'The Ring General', side: 'SmackDown' },
-      wrestler2: { key: 'la-knight', name: 'LA Knight', role: 'YEAH!', side: 'SmackDown' },
-      story: 'Both men won at WrestleMania 42. Both met backstage on Raw. A showdown between Gunther and LA Knight serves as a credible Number One Contender match for the World title picture heading into SummerSlam season.',
+      hype: 4,
+      wrestler1: { key: 'seth-rollins', name: 'Seth Rollins', role: 'The Visionary' },
+      wrestler2: { key: 'bron-breakker', name: 'Bron Breakker', role: 'The Vision' },
+      story: 'Breakker returned from injury to cost Rollins his WrestleMania match. On Raw after Mania, Rollins attacked the Vision before the numbers game took over. The Street Profits evened the odds. Their feud is just getting started.',
       spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
     },
     {
-      id: 'us-title-backlash',
+      id: 'zayn-williams-backlash',
       championship: 'WWE United States Championship',
       matchType: 'title',
       confirmed: false,
       hype: 4,
-      wrestler1: { key: 'trick-williams', name: 'Trick Williams', role: 'Champion', side: 'New Champion' },
-      wrestler2: { key: 'sami-zayn', name: 'Sami Zayn', role: 'Former Champion', side: 'Rematch Clause' },
-      story: 'Trick Williams dethroned Sami Zayn at WrestleMania 42. Zayn is reportedly heading toward a heel turn, and a rematch at Backlash — possibly expanded to a fatal four-way with Carmelo Hayes and Ilja Dragunov — continues their unfinished story.',
+      wrestler1: { key: 'trick-williams', name: 'Trick Williams', role: 'Champion' },
+      wrestler2: { key: 'sami-zayn', name: 'Sami Zayn', role: 'Former Champion' },
+      story: 'Trick Williams dethroned Sami Zayn at WrestleMania 42 to win his first main roster title. Zayn invoked his rematch clause immediately. Reports suggest Zayn may be turning heel — making this rematch even more unpredictable.',
+      spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
+    },
+    {
+      id: 'gunther-knight-backlash',
+      championship: 'Number One Contender Match',
+      matchType: 'special',
+      confirmed: false,
+      hype: 3,
+      wrestler1: { key: 'gunther', name: 'GUNTHER', role: 'The Ring General' },
+      wrestler2: { key: 'la-knight', name: 'LA Knight', role: 'YEAH!' },
+      story: "Both men won at WrestleMania 42. Both are positioned as the top contenders for the World title picture heading into SummerSlam season. A credible #1 Contender match between two of SmackDown's biggest names.",
       spotifyTrackId: '3hfqg43UEiEKN3vFBqUFtn'
     }
   ];
 
   // === COUNTDOWN ===
-  var els = {
-    days: document.getElementById('cd-days'),
-    hours: document.getElementById('cd-hours'),
-    mins: document.getElementById('cd-mins'),
-    secs: document.getElementById('cd-secs')
-  };
   var target = new Date('2026-05-09T18:00:00-04:00').getTime();
-  function tick() {
-    var diff = target - Date.now();
+  function updateCountdown() {
+    var now = Date.now();
+    var diff = target - now;
+    var cd = document.getElementById('backlash-countdown');
+    var msg = document.getElementById('event-status-msg');
     if (diff <= 0) {
-      var c = document.getElementById('countdown');
-      if (c) c.outerHTML = '<div class="event-status-live">THE EVENT HAS CONCLUDED</div>';
+      if (cd) cd.style.display = 'none';
+      if (msg) { msg.textContent = 'THE EVENT HAS CONCLUDED'; msg.style.display = ''; }
       return;
     }
-    if (els.days) els.days.textContent = Math.floor(diff / 86400000);
-    if (els.hours) els.hours.textContent = Math.floor((diff % 86400000) / 3600000);
-    if (els.mins) els.mins.textContent = Math.floor((diff % 3600000) / 60000);
-    if (els.secs) els.secs.textContent = Math.floor((diff % 60000) / 1000);
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var dEl = document.getElementById('cd-days');
+    var hEl = document.getElementById('cd-hours');
+    var mEl = document.getElementById('cd-mins');
+    var sEl = document.getElementById('cd-secs');
+    if (dEl) dEl.textContent = d;
+    if (hEl) hEl.textContent = h < 10 ? '0' + h : h;
+    if (mEl) mEl.textContent = m < 10 ? '0' + m : m;
+    if (sEl) sEl.textContent = s < 10 ? '0' + s : s;
   }
-  tick();
-  setInterval(tick, 1000);
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // === DAYS-AWAY SUBTITLE ===
+  (function() {
+    var sub = document.getElementById('card-subtitle');
+    if (!sub) return;
+    var diff = target - Date.now();
+    if (diff > 0) {
+      var days = Math.ceil(diff / 86400000);
+      sub.textContent = days + ' days away · Tampa, Florida';
+    } else {
+      sub.textContent = 'Tampa, Florida';
+    }
+  })();
 
   // === MATCH CARD HELPERS ===
   function getBadgeClass(mt) {
@@ -220,7 +242,7 @@
     return w && w.img ? w.img : '';
   }
 
-  // === BUILD CINEMATIC CARD (matches WM42 structure) ===
+  // === BUILD CINEMATIC CARD (matches WM42 structure exactly) ===
   function buildCinematicCard(match) {
     var mt = match.matchType || 'special';
     var hype = match.hype || 3;
@@ -232,7 +254,6 @@
 
     var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-animated="false">';
 
-    // Faceoff area
     html += '<div class="card-faceoff-area">';
 
     html += '<div class="card-left-panel"' + leftBgStyle + '>';
@@ -252,15 +273,13 @@
     html += '<div class="championship-title">' + match.championship + '</div>';
     html += '</div>';
 
-    // Confirmed/Unconfirmed badge in top-right
     var badgeClass = match.confirmed ? 'confirmed-badge' : 'unconfirmed-badge';
     var badgeText = match.confirmed ? 'Confirmed' : 'Unconfirmed';
     html += '<div class="' + badgeClass + '">' + badgeText + '</div>';
 
     html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
-    html += '</div>'; // end card-faceoff-area
+    html += '</div>';
 
-    // Bottom bar
     html += '<div class="card-bottom-bar">';
     html += '<div class="hype-meter"><span class="hype-label">HYPE</span><div class="hype-pips">';
     for (var i = 0; i < 5; i++) {
@@ -270,7 +289,6 @@
     html += '<div class="expand-hint">Tap for the story &darr;</div>';
     html += '</div>';
 
-    // Story panel
     html += '<div class="card-story-panel">';
     html += '<div class="story-bar"></div>';
     html += '<div class="story-section">';
@@ -279,7 +297,7 @@
     html += '</div>';
     html += '</div>';
 
-    html += '</div>'; // end cinematic-card
+    html += '</div>';
     return html;
   }
 
@@ -331,20 +349,21 @@
   });
 
   // === PICKS STATUS ===
-  var backlashDate = new Date('2026-05-09T18:00:00-04:00');
-  var picksOpenDate = new Date('2026-05-07T00:00:00-04:00'); // opens May 7
+  var showTime = new Date('2026-05-09T18:00:00-04:00');
+  var openTime = new Date('2026-05-07T00:00:00-04:00');
   var now = new Date();
   var statusEl = document.getElementById('backlash-picks-status');
   if (statusEl) {
-    if (now >= backlashDate) {
+    if (now >= showTime) {
       statusEl.innerHTML = '<span class="picks-status picks-status--locked">&#128274; Picks Closed &mdash; Event Complete</span>';
-    } else if (now >= picksOpenDate) {
+    } else if (now >= openTime) {
       statusEl.innerHTML = '<span class="picks-status picks-status--open">&#128994; Picks Are Open!</span>';
     } else {
-      var daysUntilOpen = Math.ceil((picksOpenDate - now) / (1000 * 60 * 60 * 24));
-      statusEl.innerHTML = '<span class="picks-status picks-status--soon">Picks open in ' + daysUntilOpen + ' days</span>';
+      var days = Math.ceil((openTime - now) / 86400000);
+      statusEl.innerHTML = '<span class="picks-status picks-status--soon">&#8987; Picks open in ' + days + ' days</span>';
     }
   }
+
 })();
 </script>
 </body>
