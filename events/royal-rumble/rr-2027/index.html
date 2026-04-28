@@ -151,6 +151,19 @@
         <datalist id="guaranteed-mens"></datalist>
         <datalist id="guaranteed-womens"></datalist>
 
+        <!-- Confirmed entrants reference -->
+        <div class="guaranteed-section" id="guaranteed-section">
+          <div class="guaranteed-header">
+            <span class="guaranteed-title">&#9989; Confirmed Entrants</span>
+            <span class="guaranteed-count" id="guaranteed-count">0 announced</span>
+          </div>
+          <div class="guaranteed-list" id="guaranteed-list"></div>
+          <p class="guaranteed-note">
+            These wrestlers have been officially announced by WWE.
+            Updated as announcements are made.
+          </p>
+        </div>
+
         <!-- MEN'S MATCH GROUP -->
         <div class="match-group" data-match="mens">
           <div class="entry-slots-container" id="mens-slots-container"></div>
@@ -368,8 +381,26 @@
       document.querySelectorAll('.match-group').forEach(function(g) {
         g.hidden = g.dataset.match !== target;
       });
+      renderGuaranteed(target);
     });
   });
+
+  // ── GUARANTEED ENTRANTS DISPLAY ─────────────────────────────────
+  function renderGuaranteed(gender) {
+    var list = document.getElementById('guaranteed-list');
+    var count = document.getElementById('guaranteed-count');
+    if (!list || !count) return;
+    var filtered = RR2027_GUARANTEED.filter(function(g) { return g.gender === gender; });
+    count.textContent = filtered.length + ' announced';
+    if (filtered.length === 0) {
+      list.innerHTML = '<span class="guaranteed-empty">No entrants announced yet for this match. Check back as WWE makes announcements.</span>';
+      return;
+    }
+    list.innerHTML = filtered.map(function(g) {
+      return '<span class="guaranteed-pill">' + g.name + '</span>';
+    }).join('');
+  }
+  renderGuaranteed('mens');
 
   // ── PROGRESS COUNTERS + FILLED CLASS ────────────────────────────
   function updateProgress() {
@@ -679,10 +710,25 @@
   // ── ADMIN PANEL ─────────────────────────────────────────────────
   document.getElementById('admin-toggle').addEventListener('click', toggleAdmin);
 
+  var ADMIN_PIN = '4242';
+  var adminUnlocked = false;
+
   function toggleAdmin() {
-    var panel = document.getElementById('admin-panel');
-    panel.hidden = !panel.hidden;
-    if (!panel.hidden) renderAdminPanel();
+    if (adminUnlocked) {
+      var panel = document.getElementById('admin-panel');
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) renderAdminPanel();
+      return;
+    }
+    var entered = prompt('Enter admin PIN to access results entry:');
+    if (entered === ADMIN_PIN) {
+      adminUnlocked = true;
+      var panel = document.getElementById('admin-panel');
+      panel.hidden = false;
+      renderAdminPanel();
+    } else if (entered !== null) {
+      alert('Incorrect PIN.');
+    }
   }
 
   function renderAdminPanel() {

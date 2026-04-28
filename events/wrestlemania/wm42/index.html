@@ -37,9 +37,31 @@
   <p class="hero-sub" id="hero-sub">13 confirmed matches across two nights. Tap any match to see the story.</p>
 </section>
 
-<section class="section">
-<div class="inner" id="matches-container"></div>
-</section>
+<div class="section" style="padding-top:1.5rem;padding-bottom:0">
+  <div class="inner">
+    <div class="event-tabs">
+      <button class="event-tab active" data-tab="card" type="button">&#128203; Match Card</button>
+      <button class="event-tab" data-tab="picks" type="button">&#127942; Picks &amp; Results</button>
+    </div>
+  </div>
+</div>
+
+<div class="event-tab-panel active" id="panel-card">
+  <section class="section">
+    <div class="inner" id="matches-container"></div>
+  </section>
+</div>
+
+<div class="event-tab-panel" id="panel-picks">
+  <section class="section">
+    <div class="inner">
+      <div class="frozen-notice">
+        &#127942; WrestleMania 42 is complete. These results are final.
+      </div>
+      <div id="wm42-picks-container"></div>
+    </div>
+  </section>
+</div>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -374,6 +396,181 @@
       e.stopPropagation();
     }
   });
+
+  // === EVENT TABS ===
+  document.querySelectorAll('.event-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.event-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.event-tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      var panel = document.getElementById('panel-' + tab.dataset.tab);
+      if (panel) panel.classList.add('active');
+      if (tab.dataset.tab === 'picks') renderWM42Picks();
+    });
+  });
+
+  // Auto-switch to picks tab if URL hash is #picks
+  if (window.location.hash === '#picks') {
+    var picksTab = document.querySelector('.event-tab[data-tab="picks"]');
+    if (picksTab) picksTab.click();
+  }
+
+  // === WM42 PICKS & RESULTS RENDERING ===
+  var WM42_API = 'https://script.google.com/macros/s/AKfycbyuaTPvpsYHObAOmYSWwmr-o-QiqZenJeaF7IoCFDXcpybzM38KCClYiUoXchvQ3ZedCw/exec';
+
+  function loadWM42FromSheets(callback) {
+    var script = document.createElement('script');
+    var cbName = '_wm42res_' + Date.now();
+    script.src = WM42_API + '?action=load&callback=' + cbName + '&t=' + Date.now();
+    window[cbName] = function(data) {
+      callback(data);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    script.onerror = function() {
+      if (script.parentNode) script.parentNode.removeChild(script);
+      var pickers = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('wm42-picks-') === 0) {
+          try { pickers.push(JSON.parse(localStorage.getItem(k))); } catch(e) {}
+        }
+      }
+      var results = {};
+      try { results = JSON.parse(localStorage.getItem('wm42-results') || '{}'); } catch(e) {}
+      callback({ pickers: pickers, results: results });
+    };
+    setTimeout(function() {
+      if (window[cbName]) { window[cbName] = function() {}; script.onerror(); }
+    }, 6000);
+    document.head.appendChild(script);
+  }
+
+  function getWrestlerName(key) {
+    if (typeof WRESTLERS !== 'undefined' && WRESTLERS[key] && WRESTLERS[key].name) return WRESTLERS[key].name;
+    return key;
+  }
+
+  function getMatchLabel(match) {
+    if (match.wrestler1 && match.wrestler2) {
+      return getWrestlerName(match.wrestler1) + ' vs ' + getWrestlerName(match.wrestler2);
+    }
+    if (match.teams) return match.teams.map(function(t) { return t.name; }).join(' vs ');
+    if (match.participants) return match.participants.map(getWrestlerName).join(' / ');
+    return match.championship;
+  }
+
+  function pickIdToLabel(match, pickId) {
+    if (!pickId) return '—';
+    if (typeof WRESTLERS !== 'undefined' && WRESTLERS[pickId] && WRESTLERS[pickId].name) return WRESTLERS[pickId].name;
+    if (match.teams) {
+      var team = match.teams.find(function(t) {
+        return t.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === pickId;
+      });
+      if (team) return team.name;
+    }
+    return pickId;
+  }
+
+  var wm42PicksRendered = false;
+  function renderWM42Picks() {
+    if (wm42PicksRendered) return;
+    var container = document.getElementById('wm42-picks-container');
+    if (!container) return;
+    container.innerHTML = '<div class="picks-empty" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.4)">Loading results...</div>';
+
+    loadWM42FromSheets(function(data) {
+      wm42PicksRendered = true;
+      var pickers = (data && data.pickers) || [];
+      var results = (data && data.results) || {};
+      var hasResults = Object.keys(results).length > 0;
+
+      var html = '<h2 class="wm42-results-heading">WrestleMania 42 &mdash; Final Results</h2>';
+
+      if (pickers.length === 0) {
+        html += '<div class="picks-empty" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.4)">No picks were saved.</div>';
+        container.innerHTML = html;
+        return;
+      }
+
+      var rows = pickers.map(function(p) {
+        var picksCount = p.picks ? Object.keys(p.picks).length : 0;
+        var score = 0;
+        if (hasResults) {
+          Object.keys(results).forEach(function(mid) {
+            if (p.picks && p.picks[mid] === results[mid]) score++;
+          });
+        }
+        return { name: p.name, picks: p.picks || {}, score: score, total: picksCount };
+      });
+      rows.sort(function(a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+
+      var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
+      html += '<div class="leaderboard-table"><div class="lb-row lb-header">';
+      html += '<span class="lb-rank">#</span><span class="lb-name">Name</span>';
+      if (hasResults) {
+        html += '<span class="lb-score">Correct</span><span class="lb-score lb-total">Score</span>';
+      } else {
+        html += '<span class="lb-score">Picks</span><span class="lb-score lb-total">Status</span>';
+      }
+      html += '</div>';
+
+      rows.forEach(function(r, i) {
+        var rank = hasResults && i < 3 ? medals[i] : '#' + (i + 1);
+        html += '<div class="lb-row' + (i < 3 && hasResults ? ' lb-row--top3' : '') + '">';
+        html += '<span class="lb-rank">' + rank + '</span>';
+        html += '<span class="lb-name">' + r.name + '</span>';
+        if (hasResults) {
+          html += '<span class="lb-score">' + r.score + '/' + Object.keys(results).length + '</span>';
+          html += '<span class="lb-score lb-total">' + r.score + '</span>';
+        } else {
+          html += '<span class="lb-score">' + r.total + '</span>';
+          html += '<span class="lb-score lb-total lb-tbd">TBD</span>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+
+      // Expandable everyone's picks
+      html += '<div class="all-picks-section">';
+      html += '<button class="all-picks-toggle" id="all-picks-toggle" type="button">Show All Picks &darr;</button>';
+      html += '<div class="all-picks-list" id="all-picks-list" hidden>';
+      rows.forEach(function(r) {
+        html += '<div class="picker-block">';
+        html += '<h4 class="picker-block-name">' + r.name + '</h4>';
+        html += '<table class="picker-table"><thead><tr><th>Match</th><th>Their Pick</th><th>Actual Winner</th><th>Result</th></tr></thead><tbody>';
+        if (typeof MATCHES !== 'undefined') {
+          MATCHES.forEach(function(match) {
+            var pickId = r.picks[match.id];
+            var resultId = results[match.id];
+            var pickLabel = pickIdToLabel(match, pickId);
+            var resultLabel = hasResults && resultId ? pickIdToLabel(match, resultId) : '—';
+            var isCorrect = hasResults && pickId && resultId && pickId === resultId;
+            var resultIcon = !hasResults ? '—' : (pickId ? (isCorrect ? '&#9989;' : '&#10060;') : '&mdash;');
+            html += '<tr>';
+            html += '<td>' + match.championship + '</td>';
+            html += '<td>' + pickLabel + '</td>';
+            html += '<td>' + resultLabel + '</td>';
+            html += '<td>' + resultIcon + '</td>';
+            html += '</tr>';
+          });
+        }
+        html += '</tbody></table></div>';
+      });
+      html += '</div></div>';
+
+      container.innerHTML = html;
+
+      var toggleBtn = document.getElementById('all-picks-toggle');
+      var list = document.getElementById('all-picks-list');
+      if (toggleBtn && list) {
+        toggleBtn.addEventListener('click', function() {
+          list.hidden = !list.hidden;
+          toggleBtn.innerHTML = list.hidden ? 'Show All Picks &darr;' : 'Hide All Picks &uarr;';
+        });
+      }
+    });
+  }
 })();
 </script>
 </body>

@@ -23,7 +23,7 @@
       </span>
       <a href="../wrestlers/">Wrestlers</a>
       <a href="../videos/">Entrances</a>
-      <a href="../picks/">Picks</a>
+      <a href="./">Picks</a>
       <a href="../legal/">Legal</a>
     </div>
     <button class="hamburger" aria-label="Menu">&#9776;</button>
@@ -31,312 +31,97 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero" style="padding:40px 30px 30px;background:linear-gradient(rgba(11,15,26,0.75),rgba(11,15,26,0.9)),url('https://www.wwe.com/f/styles/shows_header_xl/public/all/2025/03/20250321_WM41_Header--632082b0601412faa032bda3d82bd324.jpg') center/cover no-repeat">
-  <div class="hero-label">WrestleMania 42</div>
-  <h1>Family <span style="color:#fff">Predictions</span></h1>
-  <p class="hero-sub">Pick your winners. See who knows wrestling best.</p>
+<section class="hero hero--evergreen">
+  <div class="hero-label">Predictions</div>
+  <h1>Family <span style="color:#fff">Picks</span></h1>
+  <p class="hero-sub">Lock in your predictions for the next event. Compete on the family leaderboard.</p>
 </section>
 
-<!-- TABS -->
-<div class="picks-tabs">
-  <button class="picks-tab active" data-tab="picks">Make Picks</button>
-  <button class="picks-tab" data-tab="leaderboard">Leaderboard</button>
-</div>
-
-<!-- PICKS TAB -->
-<section class="section picks-panel" id="panel-picks" style="padding-top:20px">
-  <div class="inner">
-    <div class="picks-name-box">
-      <label class="picks-name-label">Your name</label>
-      <input type="text" id="picker-name" class="picks-input" placeholder="Type your name here" maxlength="20">
-    </div>
+<section class="section">
+  <div class="picks-router-active">
+    <div class="router-label">Current Event</div>
+    <h2 class="router-event-name" id="router-event-name">Loading...</h2>
+    <div class="router-status" id="router-status"></div>
+    <a class="btn btn-gold" id="router-cta" href="#">Make Your Picks &rarr;</a>
   </div>
-  <div class="inner" id="picks-container"></div>
-  <div class="inner picks-save-area" id="save-area">
-    <button class="btn btn-gold picks-save-btn" id="save-btn" style="width:100%;max-width:400px">Lock In My Picks</button>
-    <div id="save-msg" class="picks-msg"></div>
-  </div>
-</section>
 
-<!-- LEADERBOARD TAB -->
-<section class="section picks-panel" id="panel-leaderboard" style="display:none;padding-top:20px">
-  <div class="inner">
-    <div id="leaderboard-container"><div class="picks-empty">Loading leaderboard...</div></div>
-    <div style="text-align:center;margin-top:30px">
-      <button class="picks-admin-btn" id="admin-btn">Enter Match Results</button>
-    </div>
-    <div id="admin-panel" style="display:none"></div>
+  <div class="picks-router-past">
+    <h3 class="router-past-title">Past Events</h3>
+    <div class="router-past-grid" id="router-past-grid"></div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WrestleMania 42 &bull; April 18-19, 2026 &bull; Las Vegas</p>
-  <p>Data sourced from <a href="https://www.wwe.com/shows/wrestlemania" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets. Last updated April 2026.</p>
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WWE PLE Guide &bull; Last updated April 2026</p>
+  <p>Data sourced from <a href="https://www.wwe.com" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets.</p>
 </footer>
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
-<script src="../js/data.js"></script>
 <script src="../js/main.js"></script>
 <script>
 (function() {
-  var API = 'https://script.google.com/macros/s/AKfycbyuaTPvpsYHObAOmYSWwmr-o-QiqZenJeaF7IoCFDXcpybzM38KCClYiUoXchvQ3ZedCw/exec';
-  var matches = MATCHES;
-  var wrestlers = WRESTLERS;
-  var currentPicks = {};
-
-  // === GOOGLE SHEETS API HELPERS ===
-  // Use GET for everything to avoid CORS issues entirely
-  // Data is encoded in URL params, Apps Script handles it via doGet
-
-  function saveToSheets(data, callback) {
-    var encoded = encodeURIComponent(JSON.stringify(data));
-    var img = new Image();
-    img.onload = img.onerror = function() { if (callback) callback(); };
-    img.src = API + '?action=save&data=' + encoded + '&t=' + Date.now();
-  }
-
-  function loadFromSheets(callback) {
-    // Use script tag injection to bypass CORS (Apps Script returns JSON)
-    var script = document.createElement('script');
-    var cbName = '_wm42_' + Date.now();
-    script.src = API + '?action=load&callback=' + cbName + '&t=' + Date.now();
-
-    window[cbName] = function(data) {
-      callback(data);
-      delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
-
-    script.onerror = function() {
-      if (script.parentNode) script.parentNode.removeChild(script);
-      // Fallback to localStorage
-      var pickers = [];
-      for (var i = 0; i < localStorage.length; i++) {
-        var key = localStorage.key(i);
-        if (key.startsWith('wm42-picks-')) {
-          try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
-        }
+  var PICKS_CONFIG = {
+    activeEvent: {
+      name: 'Backlash 2026',
+      date: '2026-05-09T18:00:00-04:00',
+      picksOpenDate: '2026-05-07T00:00:00-04:00',
+      picksUrl: '../events/backlash/backlash-2026/picks/',
+      storagePrefix: 'backlash2026',
+      status: 'upcoming'
+    },
+    pastEvents: [
+      {
+        name: 'WrestleMania 42',
+        picksUrl: '../events/wrestlemania/wm42/#picks',
+        status: 'complete',
+        finalDate: 'April 19, 2026'
       }
-      var results = {};
-      try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
-      callback({ pickers: pickers, results: results });
-    };
+    ]
+  };
 
-    // Timeout to localStorage fallback
-    setTimeout(function() {
-      if (window[cbName]) {
-        window[cbName] = function() {};
-        script.onerror();
-      }
-    }, 6000);
+  var active = PICKS_CONFIG.activeEvent;
+  var nameEl = document.getElementById('router-event-name');
+  var statusEl = document.getElementById('router-status');
+  var ctaEl = document.getElementById('router-cta');
 
-    document.head.appendChild(script);
-  }
+  if (nameEl) nameEl.textContent = active.name;
 
-  // === LOCK CHECK ===
-  var lockDate = new Date('2026-04-18T16:00:00-07:00');
-  var isLocked = Date.now() >= lockDate.getTime();
+  var now = new Date();
+  var openTime = new Date(active.picksOpenDate);
+  var showTime = new Date(active.date);
 
-  // === TAB SWITCHING ===
-  document.querySelectorAll('.picks-tab').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      document.querySelectorAll('.picks-tab').forEach(function(t) { t.classList.remove('active'); });
-      document.querySelectorAll('.picks-panel').forEach(function(p) { p.style.display = 'none'; });
-      tab.classList.add('active');
-      document.getElementById('panel-' + tab.dataset.tab).style.display = '';
-      if (tab.dataset.tab === 'leaderboard') loadLeaderboard();
-    });
-  });
+  if (ctaEl) ctaEl.href = active.picksUrl;
 
-  // === HELPERS ===
-  function getSides(match) {
-    if (match.wrestler1 && match.wrestler2) {
-      var w1 = wrestlers[match.wrestler1], w2 = wrestlers[match.wrestler2];
-      return [
-        { id: match.wrestler1, name: w1 ? w1.name : match.wrestler1, role: w1 && w1.isChampion ? 'Champion' : '' },
-        { id: match.wrestler2, name: w2 ? w2.name : match.wrestler2, role: w2 && w2.isChampion ? 'Champion' : '' }
-      ];
+  if (now >= showTime) {
+    if (statusEl) statusEl.innerHTML = '<span class="picks-status picks-status--locked">&#128274; Event complete &mdash; picks are locked</span>';
+    if (ctaEl) {
+      ctaEl.textContent = 'View Results →';
+      ctaEl.href = '../events/backlash/backlash-2026/';
     }
-    if (match.teams) return match.teams.map(function(t) {
-      return { id: t.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), name: t.name, role: t.isChampion ? 'Champions' : '' };
-    });
-    if (match.participants) return match.participants.map(function(key) {
-      var w = wrestlers[key]; return { id: key, name: w ? w.name : key, role: '' };
-    });
-    return [];
-  }
-
-  // === RENDER PICKS ===
-  var container = document.getElementById('picks-container');
-  var night1 = matches.filter(function(m) { return m.night === 1; });
-  var night2 = matches.filter(function(m) { return m.night === 2; });
-
-  function renderPickCards() {
-    var html = '<div class="picks-night-header">Night 1 — Saturday</div>';
-    night1.forEach(function(m) { html += buildPickCard(m); });
-    html += '<div class="picks-night-header" style="margin-top:16px">Night 2 — Sunday</div>';
-    night2.forEach(function(m) { html += buildPickCard(m); });
-    container.innerHTML = html;
-  }
-
-  function buildPickCard(match) {
-    var sides = getSides(match);
-    var mt = match.matchType || 'special';
-    var badge = mt === 'title' ? 'Title' : mt === 'grudge' ? 'Grudge' : mt === 'ladder' ? 'Ladder' : mt === 'tag' ? 'Tag' : 'Special';
-    var html = '<div class="pick-card" data-match="' + match.id + '">';
-    html += '<div class="pick-header"><span class="pick-badge pick-badge--' + mt + '">' + badge + '</span><span class="pick-night">Night ' + match.night + '</span></div>';
-    html += '<div class="pick-title">' + match.championship + '</div>';
-    if (sides.length <= 2) {
-      html += '<div class="pick-sides">';
-      sides.forEach(function(s) {
-        html += '<button class="pick-side' + (currentPicks[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + s.id + '"><div class="pick-name">' + s.name + '</div>' + (s.role ? '<div class="pick-role">' + s.role + '</div>' : '') + '</button>';
-      });
-      html += '</div>';
-    } else {
-      html += '<div class="pick-multi">';
-      sides.forEach(function(s) {
-        html += '<button class="pick-option' + (currentPicks[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + s.id + '">' + s.name + '</button>';
-      });
-      html += '</div>';
+  } else if (now >= openTime) {
+    if (statusEl) statusEl.innerHTML = '<span class="picks-status picks-status--open">&#128994; Picks are open!</span>';
+  } else {
+    var days = Math.ceil((openTime - now) / (1000 * 60 * 60 * 24));
+    if (statusEl) statusEl.innerHTML = '<span class="picks-status picks-status--soon">Picks open in ' + days + ' ' + (days === 1 ? 'day' : 'days') + '</span>';
+    if (ctaEl) {
+      ctaEl.classList.add('btn-disabled');
+      ctaEl.style.opacity = '0.55';
+      ctaEl.style.pointerEvents = 'none';
     }
-    html += '</div>';
-    return html;
   }
 
-  // === PICK SELECTION ===
-  container.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-pick]');
-    if (!btn || isLocked) return;
-    var card = btn.closest('.pick-card');
-    card.querySelectorAll('[data-pick]').forEach(function(b) { b.classList.remove('selected'); });
-    btn.classList.add('selected');
-    currentPicks[btn.dataset.match] = btn.dataset.pick;
-  });
-
-  // === SAVE TO GOOGLE SHEETS ===
-  document.getElementById('save-btn').addEventListener('click', function() {
-    var name = document.getElementById('picker-name').value.trim();
-    if (!name) { document.getElementById('save-msg').textContent = 'Type your name first!'; document.getElementById('picker-name').focus(); return; }
-    var count = Object.keys(currentPicks).length;
-    if (count === 0) { document.getElementById('save-msg').textContent = 'Pick at least one winner!'; return; }
-
-    var btn = document.getElementById('save-btn');
-    btn.textContent = 'Saving...';
-    btn.disabled = true;
-
-    var picksData = { name: name, saved: new Date().toISOString(), picks: currentPicks };
-
-    // Save locally as backup
-    localStorage.setItem('wm42-picks-' + name.toLowerCase(), JSON.stringify(picksData));
-
-    // Save to Google Sheets
-    saveToSheets({ type: 'picks', name: name, saved: picksData.saved, picks: currentPicks }, function() {
-      document.getElementById('save-msg').innerHTML = 'Saved! Good luck, <strong>' + name + '</strong>! (' + count + '/' + matches.length + ')';
-      document.getElementById('save-msg').className = 'picks-msg picks-msg--success';
-      btn.textContent = 'Lock In My Picks';
-      btn.disabled = false;
+  var pastGrid = document.getElementById('router-past-grid');
+  if (pastGrid && PICKS_CONFIG.pastEvents.length > 0) {
+    var html = '';
+    PICKS_CONFIG.pastEvents.forEach(function(pe) {
+      html += '<a href="' + pe.picksUrl + '" class="router-past-card">';
+      html += '<span class="router-past-name">' + pe.name + ' &middot; ' + pe.finalDate + '</span>';
+      html += '<span class="router-past-link">View Results &rarr;</span>';
+      html += '</a>';
     });
-  });
-
-  // === LOAD LEADERBOARD FROM GOOGLE SHEETS ===
-  function loadLeaderboard() {
-    var lb = document.getElementById('leaderboard-container');
-    lb.innerHTML = '<div class="picks-empty">Loading...</div>';
-
-    loadFromSheets(function(data) {
-      renderLeaderboard(data.pickers || [], data.results || {});
-    });
+    pastGrid.innerHTML = html;
   }
-
-  function renderLeaderboard(pickers, results) {
-    var lb = document.getElementById('leaderboard-container');
-    var hasResults = Object.keys(results).length > 0;
-
-    if (pickers.length === 0) {
-      lb.innerHTML = '<div class="picks-empty">No picks saved yet. Be the first!</div>';
-      return;
-    }
-
-    var rows = pickers.map(function(p) {
-      var count = p.picks ? Object.keys(p.picks).length : 0;
-      var score = 0;
-      if (hasResults) Object.keys(results).forEach(function(mid) {
-        if (p.picks && p.picks[mid] === results[mid]) score++;
-      });
-      return { name: p.name, picks: count, score: score };
-    });
-    rows.sort(function(a, b) { return b.score - a.score || b.picks - a.picks || a.name.localeCompare(b.name); });
-
-    var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
-    var html = '<table class="lb-table"><tr><th>#</th><th>Name</th><th>Picks</th><th>Score</th></tr>';
-    rows.forEach(function(r, i) {
-      var m = hasResults && i < 3 ? medals[i] : '';
-      html += '<tr><td>' + m + (i + 1) + '</td><td>' + r.name + '</td><td>' + r.picks + '/' + matches.length + '</td><td class="lb-score">' + (hasResults ? r.score + '/' + matches.length : '—') + '</td></tr>';
-    });
-    html += '</table>';
-    html += '<div style="text-align:center;margin-top:16px"><button class="picks-admin-btn" id="refresh-lb">Refresh Leaderboard</button></div>';
-    lb.innerHTML = html;
-    var refreshBtn = document.getElementById('refresh-lb');
-    if (refreshBtn) refreshBtn.addEventListener('click', loadLeaderboard);
-  }
-
-  // === ADMIN: ENTER RESULTS ===
-  document.getElementById('admin-btn').addEventListener('click', function() {
-    var panel = document.getElementById('admin-panel');
-    if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
-    panel.style.display = 'block';
-
-    // Load current results
-    loadFromSheets(function(data) {
-      buildAdminPanel(data.results || {});
-    });
-  });
-
-  function buildAdminPanel(results) {
-    var panel = document.getElementById('admin-panel');
-    var html = '<div class="admin-header">Tap the actual winner of each match:</div>';
-    matches.forEach(function(match) {
-      var sides = getSides(match);
-      html += '<div class="admin-match" data-match="' + match.id + '"><div class="admin-title">' + match.championship + '</div>';
-      html += '<div class="admin-sides' + (sides.length > 2 ? ' admin-multi' : '') + '">';
-      sides.forEach(function(s) {
-        html += '<button class="admin-side' + (results[match.id] === s.id ? ' selected' : '') + '" data-match="' + match.id + '" data-result="' + s.id + '">' + s.name + '</button>';
-      });
-      html += '</div></div>';
-    });
-    html += '<button class="btn btn-gold" id="save-results" style="margin-top:16px;width:100%">Save Results</button>';
-    panel.innerHTML = html;
-
-    panel.addEventListener('click', function(e) {
-      var btn = e.target.closest('[data-result]');
-      if (!btn) return;
-      btn.closest('.admin-match').querySelectorAll('[data-result]').forEach(function(b) { b.classList.remove('selected'); });
-      btn.classList.add('selected');
-    });
-
-    panel.querySelector('#save-results').addEventListener('click', function() {
-      var res = {};
-      panel.querySelectorAll('.admin-match').forEach(function(card) {
-        var sel = card.querySelector('[data-result].selected');
-        if (sel) res[card.dataset.match] = sel.dataset.result;
-      });
-
-      // Save to Google Sheets
-      localStorage.setItem('wm42-results', JSON.stringify(res));
-      saveToSheets({ type: 'results', results: res }, function() {
-        loadLeaderboard();
-        panel.style.display = 'none';
-      });
-    });
-  }
-
-  // === INIT ===
-  if (isLocked) {
-    document.querySelector('.picks-name-box').innerHTML = '<div class="picks-locked-msg">Picks are LOCKED! WrestleMania has begun.</div>';
-    document.getElementById('save-area').style.display = 'none';
-  }
-  renderPickCards();
 })();
 </script>
 </body>

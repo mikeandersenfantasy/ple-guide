@@ -10,6 +10,17 @@
 <meta property="og:url" content="https://mikeandersenfantasy.github.io/ple-guide/">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="css/styles.css">
+<link rel="canonical" href="https://mikeandersenfantasy.github.io/ple-guide/">
+<script>
+  // Redirect any stale visit to the old repo path to the new site
+  (function() {
+    var p = window.location.pathname;
+    if (p.indexOf('/wrestlemania-42-guide/') !== -1) {
+      var rest = p.split('/wrestlemania-42-guide/')[1] || '';
+      window.location.replace('https://mikeandersenfantasy.github.io/ple-guide/' + rest + window.location.search + window.location.hash);
+    }
+  })();
+</script>
 </head>
 <body>
 
@@ -36,7 +47,7 @@
 </nav>
 
 <!-- HERO: Next event -->
-<section class="hero hero--evergreen">
+<section class="hero hero--evergreen hero--tampa">
   <div class="hero-label">Next Event</div>
   <h1 id="next-event-name">Backlash 2026</h1>
   <p class="hero-sub" id="next-event-subtitle">One Night Only</p>

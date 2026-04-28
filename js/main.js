@@ -280,9 +280,9 @@ function initHypeIntro() {
   if (page === 'index.html' || page === 'index') page = segments.length >= 2 ? segments[segments.length - 2] : 'home';
 
   var intros = {
-    home:      { title: 'WrestleMania 42', sub: 'Your Family\'s Guide to the Biggest Event in Wrestling' },
-    matches:   { title: 'The Match Card', sub: '13 Matches · Two Nights · Las Vegas' },
-    wrestlers: { title: 'Meet the Superstars', sub: '42 Wrestlers · Finishers · Entrance Themes' },
+    home:      { title: 'WWE PLE Guide', sub: 'Every Premium Live Event · Family Fan Hub' },
+    matches:   { title: 'The Match Card', sub: 'Every Match · Every Storyline · Tap to Explore' },
+    wrestlers: { title: 'Meet the Superstars', sub: 'Profiles · Finishers · Entrance Themes' },
     videos:    { title: 'Learn the Music', sub: 'Know Every Entrance Theme Before the Show' },
     picks:     { title: 'Lock It In', sub: 'Pick Your Winners · Family Prediction Game' },
     legal:     { title: 'Fan Project', sub: 'Non-Commercial · Educational · Made with Love' }

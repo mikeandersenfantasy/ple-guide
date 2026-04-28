@@ -1856,12 +1856,46 @@ ul { list-style: none; }
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 9999;
-  background: #080c14;
+  background:
+    radial-gradient(ellipse at 20% 25%, rgba(212,168,60,0.18) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 75%, rgba(204,26,43,0.15) 0%, transparent 50%),
+    linear-gradient(135deg, #0a0c12 0%, #12162a 45%, #0a0c12 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: opacity 0.6s ease;
+  overflow: hidden;
+}
+#hype-intro::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212,168,60,0.10) 0%, transparent 35%);
+  animation: introSweep 4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+#hype-intro::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 60px,
+      rgba(212,168,60,0.04) 60px,
+      rgba(212,168,60,0.04) 61px
+    );
+  pointer-events: none;
+  opacity: 0.7;
+}
+@keyframes introSweep {
+  from { transform: translate(-10%, -10%) scale(1); }
+  to   { transform: translate(10%, 10%) scale(1.15); }
 }
 #hype-intro .intro-title {
   font-size: clamp(2rem, 6vw, 4rem);
@@ -2893,6 +2927,354 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   .admin-slots { grid-template-columns: 1fr; }
 }
+
+/* === BACKLASH HERO (Tampa skyline) === */
+.backlash-hero {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(10, 12, 18, 0.55) 0%,
+      rgba(10, 12, 18, 0.75) 50%,
+      rgba(10, 12, 18, 0.95) 100%
+    ),
+    linear-gradient(rgba(180, 80, 120, 0.08), rgba(180, 80, 120, 0.08)),
+    url('../../../images/tampa-skyline.jpg') center center / cover no-repeat;
+  background-color: #0b0f1a;
+}
+
+/* === HOME HERO (Tampa skyline tint) === */
+.hero--tampa {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(10, 12, 18, 0.6) 0%,
+      rgba(10, 12, 18, 0.78) 55%,
+      rgba(10, 12, 18, 0.95) 100%
+    ),
+    linear-gradient(rgba(180, 80, 120, 0.06), rgba(180, 80, 120, 0.06)),
+    url('images/tampa-skyline.jpg') center center / cover no-repeat;
+  background-color: var(--navy);
+}
+
+/* === EVENT TABS (used on WM42 + future archives) === */
+.event-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid rgba(212,168,60,0.2);
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.event-tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: rgba(255,255,255,0.4);
+  font-family: Impact, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.event-tab:hover { color: rgba(255,255,255,0.7); }
+.event-tab.active {
+  color: #D4A83C;
+  border-bottom-color: #D4A83C;
+}
+.event-tab-panel { display: none; }
+.event-tab-panel.active { display: block; }
+@media (max-width: 768px) {
+  .event-tab { padding: 0.6rem 1rem; font-size: 0.75rem; }
+}
+
+/* === FROZEN NOTICE (archived events) === */
+.frozen-notice {
+  background: rgba(212,168,60,0.08);
+  border: 1px solid rgba(212,168,60,0.25);
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-size: 0.8rem;
+  color: rgba(212,168,60,0.8);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.06em;
+}
+
+/* === WM42 PICKS RESULTS BLOCK === */
+.wm42-results-heading {
+  font-family: Impact, sans-serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #D4A83C;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.all-picks-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+}
+.all-picks-toggle {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+}
+.all-picks-toggle:hover { color: #fff; border-color: rgba(212,168,60,0.4); }
+.all-picks-list { margin-top: 1.5rem; text-align: left; }
+.picker-block {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+.picker-block-name {
+  font-family: Impact, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #D4A83C;
+  margin-bottom: 0.5rem;
+}
+.picker-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.picker-table th, .picker-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-align: left;
+}
+.picker-table th {
+  color: rgba(212,168,60,0.6);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.picker-table td { color: rgba(255,255,255,0.7); }
+.picker-table td:last-child { text-align: center; font-size: 1rem; }
+
+/* === PICKS ROUTER === */
+.picks-router-active {
+  background: #0f111a;
+  border: 1px solid rgba(212,168,60,0.25);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 520px;
+  margin: 2rem auto;
+}
+.router-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: rgba(212,168,60,0.6);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.router-event-name {
+  font-family: Impact, sans-serif;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+.router-status {
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+}
+.picks-router-past {
+  max-width: 520px;
+  margin: 0 auto 2rem;
+}
+.router-past-title {
+  font-family: Impact, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.router-past-grid { display: flex; flex-direction: column; gap: 8px; }
+.router-past-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.router-past-card:hover { border-color: rgba(212,168,60,0.3); }
+.router-past-name { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+.router-past-link { font-size: 0.7rem; color: #D4A83C; letter-spacing: 0.08em; }
+.btn-disabled { cursor: not-allowed; }
+
+/* === PICK CARDS (event picks pages) === */
+.pick-card {
+  background: #0f111a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.15s;
+}
+.pick-card.has-pick { border-color: rgba(212,168,60,0.3); }
+.pick-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+.pick-match-type {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(212,168,60,0.15);
+  color: #D4A83C;
+}
+.pick-unconfirmed {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+}
+.pick-sides {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pick-side {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: inherit;
+}
+.pick-side--right { text-align: right; }
+.pick-side:hover { border-color: rgba(212,168,60,0.3); background: rgba(212,168,60,0.05); }
+.pick-side.selected {
+  border-color: #D4A83C;
+  background: rgba(212,168,60,0.12);
+}
+.pick-name {
+  display: block;
+  font-family: Impact, sans-serif;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+.pick-role {
+  display: block;
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.pick-side.selected .pick-name { color: #D4A83C; }
+.pick-vs {
+  font-family: Impact, sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .pick-sides { flex-direction: column; gap: 6px; }
+  .pick-vs { align-self: center; }
+  .pick-side--right { text-align: left; }
+}
+
+/* === GUARANTEED ENTRANTS === */
+.guaranteed-section {
+  background: rgba(39,174,96,0.05);
+  border: 1px solid rgba(39,174,96,0.2);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.guaranteed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.guaranteed-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(39,174,96,0.9);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.guaranteed-count {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.06em;
+}
+.guaranteed-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.6rem;
+  min-height: 28px;
+}
+.guaranteed-pill {
+  background: rgba(39,174,96,0.12);
+  border: 1px solid rgba(39,174,96,0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.8);
+}
+.guaranteed-empty {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+}
+.guaranteed-note {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.25);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* === ROSTER NOTICE === */
+.roster-notice {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-left: 3px solid rgba(212,168,60,0.4);
+  border-radius: 0 6px 6px 0;
+  padding: 0.6rem 1rem;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.roster-notice strong { color: rgba(212,168,60,0.7); }
 
 /* ===== PRINT ===== */
 @media print {
