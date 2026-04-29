@@ -255,9 +255,10 @@ function initTagline() {
   var el = document.getElementById('hero-tagline');
   if (!el) return;
   var phrases = [
-    'The Showcase of the Immortals',
-    '10 Years in the Making',
-    'Las Vegas. April 18–19.'
+    'Every Premium Live Event',
+    'Match Cards · Picks · Storylines',
+    'Backlash 2026 · Tampa, Florida',
+    'Family Fan Hub'
   ];
   var idx = 0;
   el.textContent = phrases[0];
