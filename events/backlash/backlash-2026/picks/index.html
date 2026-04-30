@@ -102,11 +102,57 @@
 (function() {
 
   var STORAGE_PREFIX = 'backlash2026';
+  var EVENT_KEY = 'backlash2026';
+  var API = 'https://script.google.com/macros/s/AKfycbyuaTPvpsYHObAOmYSWwmr-o-QiqZenJeaF7IoCFDXcpybzM38KCClYiUoXchvQ3ZedCw/exec';
   // Picks lock at 6:00 PM ET on May 9 (showtime). Picks open now.
   var SHOW_DATE = new Date('2026-05-09T18:00:00-04:00');
   var OPEN_DATE = new Date('2026-04-20T00:00:00-04:00');
   var ADMIN_PIN = '8720';
   var adminUnlocked = false;
+
+  // === GOOGLE SHEETS API HELPERS (multi-event Apps Script) ===
+  function saveToSheets(data, callback) {
+    data.event = EVENT_KEY;
+    var encoded = encodeURIComponent(JSON.stringify(data));
+    var img = new Image();
+    img.onload = img.onerror = function() { if (callback) callback(); };
+    img.src = API + '?action=save&event=' + EVENT_KEY + '&data=' + encoded + '&t=' + Date.now();
+  }
+  function loadFromSheets(callback) {
+    var script = document.createElement('script');
+    var cbName = '_bl_' + Date.now();
+    script.src = API + '?action=load&event=' + EVENT_KEY + '&callback=' + cbName + '&t=' + Date.now();
+    var done = false;
+    window[cbName] = function(data) {
+      if (done) return; done = true;
+      callback(data || { pickers: [], results: {} });
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    script.onerror = function() {
+      if (done) return; done = true;
+      if (script.parentNode) script.parentNode.removeChild(script);
+      callback(loadFromLocal());
+    };
+    setTimeout(function() {
+      if (!done) { done = true; window[cbName] = function() {}; callback(loadFromLocal()); }
+    }, 6000);
+    document.head.appendChild(script);
+  }
+  function loadFromLocal() {
+    var pickers = [];
+    var names = [];
+    try { names = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-names') || '[]'); } catch(e) {}
+    names.forEach(function(n) {
+      try {
+        var d = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-picks-' + n));
+        if (d) pickers.push({ name: d.name, saved: d.savedAt, picks: d.picks || {} });
+      } catch(e) {}
+    });
+    var results = {};
+    try { results = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-results') || '{}'); } catch(e) {}
+    return { pickers: pickers, results: results };
+  }
 
   // === BACKLASH 2026 MATCHES (mirror of event page) ===
   var BACKLASH_MATCHES = [
@@ -255,7 +301,8 @@
       return;
     }
 
-    var data = { name: name, savedAt: new Date().toISOString(), picks: currentPicks };
+    var savedAt = new Date().toISOString();
+    var data = { name: name, savedAt: savedAt, picks: currentPicks };
     try {
       localStorage.setItem(key, JSON.stringify(data));
       var allNames = [];
@@ -264,11 +311,14 @@
         allNames.push(name.toLowerCase());
         localStorage.setItem(STORAGE_PREFIX + '-names', JSON.stringify(allNames));
       }
-      document.getElementById('save-confirmation').hidden = false;
-      document.getElementById('saved-name').textContent = name;
       var btn = document.getElementById('save-picks-btn');
       btn.disabled = true;
-      btn.innerHTML = '&#9989; Picks Saved';
+      btn.innerHTML = 'Saving...';
+      saveToSheets({ type: 'picks', name: name, saved: savedAt, picks: currentPicks }, function() {
+        document.getElementById('save-confirmation').hidden = false;
+        document.getElementById('saved-name').textContent = name;
+        btn.innerHTML = '&#9989; Picks Saved';
+      });
     } catch(e) {
       var err2 = document.getElementById('save-error');
       err2.hidden = false;
@@ -276,50 +326,46 @@
     }
   });
 
-  // === LEADERBOARD ===
+  // === LEADERBOARD (loads from Google Sheet, falls back to localStorage) ===
   function loadLeaderboard() {
     var container = document.getElementById('leaderboard-container');
     if (!container) return;
-    var names = [];
-    try { names = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-names') || '[]'); } catch(e) {}
-    var results = null;
-    try { var r = localStorage.getItem(STORAGE_PREFIX + '-results'); if (r) results = JSON.parse(r); } catch(e) {}
-
-    if (names.length === 0) {
+    container.innerHTML = '<p class="leaderboard-empty">Loading leaderboard...</p>';
+    loadFromSheets(function(data) {
+      renderLeaderboard(data.pickers || [], data.results || {});
+    });
+  }
+  function renderLeaderboard(pickers, results) {
+    var container = document.getElementById('leaderboard-container');
+    var hasResults = results && Object.keys(results).length > 0;
+    if (!pickers.length) {
       container.innerHTML = '<p class="leaderboard-empty">No picks saved yet. Be the first!</p>';
       return;
     }
-
-    var scorers = names.map(function(n) {
-      var d = null;
-      try { d = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-picks-' + n)); } catch(e) {}
-      if (!d) return null;
+    var scorers = pickers.map(function(p) {
+      var picks = p.picks || {};
       var score = 0, total = 0;
-      if (results) {
+      if (hasResults) {
         Object.keys(results).forEach(function(mid) {
-          if (results[mid]) {
-            total++;
-            if (d.picks && d.picks[mid] === results[mid]) score++;
-          }
+          if (results[mid]) { total++; if (picks[mid] === results[mid]) score++; }
         });
       }
-      return { name: d.name, picks: d.picks || {}, score: score, total: total, picksCount: Object.keys(d.picks || {}).length };
-    }).filter(Boolean);
-
-    if (results) scorers.sort(function(a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
+      return { name: p.name, score: score, total: total, picksCount: Object.keys(picks).length };
+    });
+    if (hasResults) scorers.sort(function(a, b) { return b.score - a.score || a.name.localeCompare(b.name); });
 
     var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
     var html = '<div class="leaderboard-table">';
     html += '<div class="lb-row lb-header"><span class="lb-rank">#</span><span class="lb-name">Name</span>';
-    html += results
+    html += hasResults
       ? '<span class="lb-score">Correct</span><span class="lb-score lb-total">Score</span>'
       : '<span class="lb-score">Picks</span><span class="lb-score lb-total">Status</span>';
     html += '</div>';
     scorers.forEach(function(s, i) {
-      var rank = results && i < 3 ? medals[i] : '#' + (i + 1);
-      html += '<div class="lb-row' + (i < 3 && results ? ' lb-row--top3' : '') + '">';
+      var rank = hasResults && i < 3 ? medals[i] : '#' + (i + 1);
+      html += '<div class="lb-row' + (i < 3 && hasResults ? ' lb-row--top3' : '') + '">';
       html += '<span class="lb-rank">' + rank + '</span><span class="lb-name">' + s.name + '</span>';
-      if (results) {
+      if (hasResults) {
         html += '<span class="lb-score">' + s.score + '/' + s.total + '</span><span class="lb-score lb-total">' + s.score + '</span>';
       } else {
         html += '<span class="lb-score">' + s.picksCount + '/' + BACKLASH_MATCHES.length + '</span><span class="lb-score lb-total lb-tbd">TBD</span>';
@@ -327,7 +373,10 @@
       html += '</div>';
     });
     html += '</div>';
+    html += '<div style="text-align:center;margin-top:14px"><button class="admin-toggle-btn" id="lb-refresh" type="button">Refresh Leaderboard</button></div>';
     container.innerHTML = html;
+    var refresh = document.getElementById('lb-refresh');
+    if (refresh) refresh.addEventListener('click', loadLeaderboard);
   }
 
   // === ADMIN (PIN protected) ===
@@ -384,11 +433,16 @@
         var sel = card.querySelector('[data-result].selected');
         if (sel) res[card.dataset.match] = sel.dataset.result;
       });
-      try {
-        localStorage.setItem(STORAGE_PREFIX + '-results', JSON.stringify(res));
+      try { localStorage.setItem(STORAGE_PREFIX + '-results', JSON.stringify(res)); } catch(e) {}
+      var btn = document.getElementById('save-results-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+      saveToSheets({ type: 'results', results: res }, function() {
+        btn.textContent = 'Save Results';
+        btn.disabled = false;
         loadLeaderboard();
         alert('Results saved! Leaderboard updated.');
-      } catch(e) { alert('Error saving results.'); }
+      });
     });
   }
 
