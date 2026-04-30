@@ -7,16 +7,25 @@
  *   "<event>"          → picks tab (e.g. "wm42", "backlash2026", "rr2027")
  *   "<event>-results"  → results tab (e.g. "wm42-results", "backlash2026-results")
  *
- * The script auto-creates a missing tab on first save, so adding a new event
- * just means pointing the picks page at ?event=<new-event> — no Apps Script
- * edit required. Tab can be pre-created/renamed manually too.
+ * Two storage modes per tab:
+ *   • Flat column-per-match (legacy WM42 mode) — used when payload has no
+ *     "format" field. Picks tab columns: Name | Saved | <matchId1> | <matchId2> | ...
+ *     Results tab columns: MatchID | Winner.
+ *   • JSON blob mode — used when payload.format === "json" (any new event).
+ *     Picks tab columns: Name | Saved | PicksJSON. Results tab: A1 = "ResultsJSON",
+ *     A2 = JSON string. Works for any payload shape.
  *
- * Backwards compatible: requests without an "event" param default to "wm42".
- * That way the existing WrestleMania 42 picks page keeps working after you
- * rename "Sheet1" → "wm42" and "Results" → "wm42-results".
+ * The mode is determined per-tab by what's in the header row, so the WM42
+ * tab keeps working in flat mode while every new event uses JSON mode.
+ *
+ * Adding a new event: point the page at ?event=<new-event>&format=json. No
+ * Apps Script edits required — tabs are auto-created on first save.
+ *
+ * Backwards compatible: requests without "event" default to "wm42".
  */
 
 var DEFAULT_EVENT = 'wm42';
+var JSON_PICKS_HEADERS = ['Name', 'Saved', 'PicksJSON'];
 
 function doGet(e) {
   var action = e.parameter.action || 'load';
@@ -31,7 +40,6 @@ function doGet(e) {
     return jsonpResponse({ status: 'ok' }, callback);
   }
 
-  // action === 'load'
   return jsonpResponse(loadEvent(event), callback);
 }
 
@@ -55,39 +63,54 @@ function sanitizeEvent(raw) {
   return v || DEFAULT_EVENT;
 }
 
-function getOrCreateSheet(name) {
+function getOrCreateSheet(name, headers) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(name);
   if (!sheet) {
     sheet = ss.insertSheet(name);
-    sheet.getRange(1, 1, 1, 2).setValues([['Name', 'Saved']]);
+    if (headers && headers.length) {
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    }
   }
   return sheet;
 }
 
 function loadEvent(event) {
-  var picksSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(event);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var picksSheet = ss.getSheetByName(event);
   var pickers = [];
   if (picksSheet) {
     var data = picksSheet.getDataRange().getValues();
     var headers = data[0] || [];
+    var jsonMode = headers[2] === 'PicksJSON';
     for (var i = 1; i < data.length; i++) {
-      if (data[i][0]) {
+      if (!data[i][0]) continue;
+      if (jsonMode) {
         var picks = {};
-        for (var c = 2; c < headers.length; c++) {
-          if (headers[c] && data[i][c]) picks[headers[c]] = data[i][c];
-        }
+        try { picks = JSON.parse(data[i][2] || '{}'); } catch (err) { picks = {}; }
         pickers.push({ name: data[i][0], saved: data[i][1], picks: picks });
+      } else {
+        var flat = {};
+        for (var c = 2; c < headers.length; c++) {
+          if (headers[c] && data[i][c]) flat[headers[c]] = data[i][c];
+        }
+        pickers.push({ name: data[i][0], saved: data[i][1], picks: flat });
       }
     }
   }
 
+  var resultsSheet = ss.getSheetByName(event + '-results');
   var results = {};
-  var resultsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(event + '-results');
   if (resultsSheet) {
     var rData = resultsSheet.getDataRange().getValues();
-    for (var j = 1; j < rData.length; j++) {
-      if (rData[j][0] && rData[j][1]) results[rData[j][0]] = rData[j][1];
+    var rHeaders = rData[0] || [];
+    if (rHeaders[0] === 'ResultsJSON') {
+      var raw = rData[1] && rData[1][0];
+      try { results = raw ? JSON.parse(raw) : {}; } catch (err) { results = {}; }
+    } else {
+      for (var j = 1; j < rData.length; j++) {
+        if (rData[j][0] && rData[j][1]) results[rData[j][0]] = rData[j][1];
+      }
     }
   }
 
@@ -96,14 +119,36 @@ function loadEvent(event) {
 
 function handleSave(payload) {
   var event = sanitizeEvent(payload.event);
+  var jsonMode = payload.format === 'json';
 
   if (payload.type === 'picks') {
-    var sheet = getOrCreateSheet(event);
-    var picks = payload.picks || {};
-    var matchIds = Object.keys(picks);
-
+    var sheet = getOrCreateSheet(event, jsonMode ? JSON_PICKS_HEADERS : ['Name', 'Saved']);
     var data = sheet.getDataRange().getValues();
     var headers = data[0] || [];
+
+    if (jsonMode) {
+      if (headers[0] !== 'Name' || headers[1] !== 'Saved' || headers[2] !== 'PicksJSON') {
+        sheet.clear();
+        sheet.getRange(1, 1, 1, JSON_PICKS_HEADERS.length).setValues([JSON_PICKS_HEADERS]);
+        data = sheet.getDataRange().getValues();
+      }
+      var json = JSON.stringify(payload.picks || {});
+      var jsonRow = [payload.name, payload.saved, json];
+      var foundJ = false;
+      for (var i = 1; i < data.length; i++) {
+        if (data[i][0] && data[i][0].toString().toLowerCase() === payload.name.toLowerCase()) {
+          sheet.getRange(i + 1, 1, 1, jsonRow.length).setValues([jsonRow]);
+          foundJ = true;
+          break;
+        }
+      }
+      if (!foundJ) sheet.appendRow(jsonRow);
+      return;
+    }
+
+    // ── Flat column-per-match mode (legacy WM42) ───────────────────
+    var picks = payload.picks || {};
+    var matchIds = Object.keys(picks);
 
     if (headers.length < 2) {
       headers = ['Name', 'Saved'];
@@ -128,20 +173,21 @@ function handleSave(payload) {
     }
 
     var row = [payload.name, payload.saved];
-    for (var c = 2; c < headers.length; c++) {
-      var matchId = headers[c];
-      row.push(picks[matchId] || '');
+    for (var c2 = 2; c2 < headers.length; c2++) {
+      var matchId2 = headers[c2];
+      row.push(picks[matchId2] || '');
     }
 
     var found = false;
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0] && data[i][0].toString().toLowerCase() === payload.name.toLowerCase()) {
-        sheet.getRange(i + 1, 1, 1, row.length).setValues([row]);
+    for (var k = 1; k < data.length; k++) {
+      if (data[k][0] && data[k][0].toString().toLowerCase() === payload.name.toLowerCase()) {
+        sheet.getRange(k + 1, 1, 1, row.length).setValues([row]);
         found = true;
         break;
       }
     }
     if (!found) sheet.appendRow(row);
+    return;
   }
 
   if (payload.type === 'results') {
@@ -149,14 +195,23 @@ function handleSave(payload) {
     var resultsSheet = ss.getSheetByName(event + '-results');
     if (!resultsSheet) {
       resultsSheet = ss.insertSheet(event + '-results');
-      resultsSheet.getRange(1, 1, 1, 2).setValues([['MatchID', 'Winner']]);
+      if (jsonMode) resultsSheet.getRange(1, 1).setValue('ResultsJSON');
+      else resultsSheet.getRange(1, 1, 1, 2).setValues([['MatchID', 'Winner']]);
     }
+
+    if (jsonMode) {
+      resultsSheet.clear();
+      resultsSheet.getRange(1, 1).setValue('ResultsJSON');
+      resultsSheet.getRange(2, 1).setValue(JSON.stringify(payload.results || {}));
+      return;
+    }
+
     var lastRow = resultsSheet.getLastRow();
     if (lastRow > 1) resultsSheet.getRange(2, 1, lastRow - 1, 2).clearContent();
-    var rows = [];
-    Object.keys(payload.results || {}).forEach(function(k) {
-      rows.push([k, payload.results[k]]);
+    var rrows = [];
+    Object.keys(payload.results || {}).forEach(function(rk) {
+      rrows.push([rk, payload.results[rk]]);
     });
-    if (rows.length > 0) resultsSheet.getRange(2, 1, rows.length, 2).setValues(rows);
+    if (rrows.length > 0) resultsSheet.getRange(2, 1, rrows.length, 2).setValues(rrows);
   }
 }

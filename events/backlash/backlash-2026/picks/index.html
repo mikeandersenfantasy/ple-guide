@@ -97,62 +97,19 @@
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
 <script src="../../../../js/data.js"></script>
+<script src="../../../../js/picks-api.js"></script>
 <script src="../../../../js/main.js"></script>
 <script>
 (function() {
 
   var STORAGE_PREFIX = 'backlash2026';
   var EVENT_KEY = 'backlash2026';
-  var API = 'https://script.google.com/macros/s/AKfycbyuaTPvpsYHObAOmYSWwmr-o-QiqZenJeaF7IoCFDXcpybzM38KCClYiUoXchvQ3ZedCw/exec';
+  var picksApi = createPicksApi(EVENT_KEY);
   // Picks lock at 6:00 PM ET on May 9 (showtime). Picks open now.
   var SHOW_DATE = new Date('2026-05-09T18:00:00-04:00');
   var OPEN_DATE = new Date('2026-04-20T00:00:00-04:00');
   var ADMIN_PIN = '8720';
   var adminUnlocked = false;
-
-  // === GOOGLE SHEETS API HELPERS (multi-event Apps Script) ===
-  function saveToSheets(data, callback) {
-    data.event = EVENT_KEY;
-    var encoded = encodeURIComponent(JSON.stringify(data));
-    var img = new Image();
-    img.onload = img.onerror = function() { if (callback) callback(); };
-    img.src = API + '?action=save&event=' + EVENT_KEY + '&data=' + encoded + '&t=' + Date.now();
-  }
-  function loadFromSheets(callback) {
-    var script = document.createElement('script');
-    var cbName = '_bl_' + Date.now();
-    script.src = API + '?action=load&event=' + EVENT_KEY + '&callback=' + cbName + '&t=' + Date.now();
-    var done = false;
-    window[cbName] = function(data) {
-      if (done) return; done = true;
-      callback(data || { pickers: [], results: {} });
-      delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
-    script.onerror = function() {
-      if (done) return; done = true;
-      if (script.parentNode) script.parentNode.removeChild(script);
-      callback(loadFromLocal());
-    };
-    setTimeout(function() {
-      if (!done) { done = true; window[cbName] = function() {}; callback(loadFromLocal()); }
-    }, 6000);
-    document.head.appendChild(script);
-  }
-  function loadFromLocal() {
-    var pickers = [];
-    var names = [];
-    try { names = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-names') || '[]'); } catch(e) {}
-    names.forEach(function(n) {
-      try {
-        var d = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-picks-' + n));
-        if (d) pickers.push({ name: d.name, saved: d.savedAt, picks: d.picks || {} });
-      } catch(e) {}
-    });
-    var results = {};
-    try { results = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-results') || '{}'); } catch(e) {}
-    return { pickers: pickers, results: results };
-  }
 
   // === BACKLASH 2026 MATCHES (mirror of event page) ===
   var BACKLASH_MATCHES = [
@@ -314,7 +271,7 @@
       var btn = document.getElementById('save-picks-btn');
       btn.disabled = true;
       btn.innerHTML = 'Saving...';
-      saveToSheets({ type: 'picks', name: name, saved: savedAt, picks: currentPicks }, function() {
+      picksApi.savePicks({ name: name, saved: savedAt, picks: currentPicks }, function() {
         document.getElementById('save-confirmation').hidden = false;
         document.getElementById('saved-name').textContent = name;
         btn.innerHTML = '&#9989; Picks Saved';
@@ -326,12 +283,12 @@
     }
   });
 
-  // === LEADERBOARD (loads from Google Sheet, falls back to localStorage) ===
+  // === LEADERBOARD (loads from Google Sheet via shared picks-api) ===
   function loadLeaderboard() {
     var container = document.getElementById('leaderboard-container');
     if (!container) return;
     container.innerHTML = '<p class="leaderboard-empty">Loading leaderboard...</p>';
-    loadFromSheets(function(data) {
+    picksApi.load(function(data) {
       renderLeaderboard(data.pickers || [], data.results || {});
     });
   }
@@ -437,7 +394,7 @@
       var btn = document.getElementById('save-results-btn');
       btn.textContent = 'Saving...';
       btn.disabled = true;
-      saveToSheets({ type: 'results', results: res }, function() {
+      picksApi.saveResults({ results: res }, function() {
         btn.textContent = 'Save Results';
         btn.disabled = false;
         loadLeaderboard();

@@ -272,6 +272,7 @@
 </footer>
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
+<script src="../../../js/picks-api.js"></script>
 <script src="../../../js/main.js"></script>
 <script>
 (function() {
@@ -284,8 +285,10 @@
     venue: 'TBA',
     picksOpenDate: '2027-01-23T00:00:00-05:00',  // opens 2 days before
     storagePrefix: 'rr2027',
+    eventKey: 'rr2027',
     maxEntrants: 30
   };
+  var picksApi = createPicksApi(RR2027_CONFIG.eventKey);
 
   // ── GUARANTEED ENTRANTS ─────────────────────────────────────────
   // Empty for now — fill in as WWE announces participants
@@ -544,11 +547,14 @@
         allNames.push(name.toLowerCase());
         localStorage.setItem(RR2027_CONFIG.storagePrefix + '-names', JSON.stringify(allNames));
       }
-      document.getElementById('save-confirmation').hidden = false;
-      document.getElementById('saved-name').textContent = name;
       var btn = document.getElementById('save-picks-btn');
       btn.disabled = true;
-      btn.innerHTML = '&#9989; Picks Saved';
+      btn.innerHTML = 'Saving...';
+      picksApi.savePicks({ name: name, saved: picksData.savedAt, picks: { mens: picksData.mens, womens: picksData.womens } }, function() {
+        document.getElementById('save-confirmation').hidden = false;
+        document.getElementById('saved-name').textContent = name;
+        btn.innerHTML = '&#9989; Picks Saved';
+      });
     } catch(err) {
       var errEl = document.getElementById('save-error');
       errEl.hidden = false;
@@ -640,29 +646,28 @@
   function loadLeaderboard() {
     var container = document.getElementById('leaderboard-container');
     if (!container) return;
-    var names = [];
-    try { names = JSON.parse(localStorage.getItem(RR2027_CONFIG.storagePrefix + '-names') || '[]'); } catch(e) {}
+    container.innerHTML = '<p class="leaderboard-empty">Loading leaderboard...</p>';
+    picksApi.load(function(data) { renderLeaderboard(data.pickers || [], data.results || null); });
+  }
 
-    var results = null;
-    try {
-      var r = localStorage.getItem(RR2027_CONFIG.storagePrefix + '-results');
-      if (r) results = JSON.parse(r);
-    } catch(e) {}
+  function renderLeaderboard(pickers, results) {
+    var container = document.getElementById('leaderboard-container');
+    var hasResults = results && (results.mens || results.womens);
 
-    if (names.length === 0) {
+    if (!pickers.length) {
       container.innerHTML = '<p class="leaderboard-empty">No picks submitted yet. Be the first!</p>';
       return;
     }
 
-    var scorers = names.map(function(nameLower) {
-      var picksRaw = null;
-      try { picksRaw = JSON.parse(localStorage.getItem(RR2027_CONFIG.storagePrefix + '-picks-' + nameLower)); } catch(e) {}
-      if (!picksRaw) return null;
-      var score = results ? calculateScore(picksRaw, results) : null;
-      return { name: picksRaw.name, picks: picksRaw, score: score };
-    }).filter(Boolean);
+    var scorers = pickers.map(function(p) {
+      var picks = p.picks || {};
+      // Sheet stores { mens, womens } directly; localStorage shape was the same
+      var unified = { mens: picks.mens || {}, womens: picks.womens || {} };
+      var score = hasResults ? calculateScore(unified, results) : null;
+      return { name: p.name, picks: unified, score: score };
+    });
 
-    if (results) {
+    if (hasResults) {
       scorers.sort(function(a, b) {
         return (b.score.total - a.score.total) || a.name.localeCompare(b.name);
       });
@@ -673,7 +678,7 @@
     html += '<div class="lb-row lb-header">';
     html += '<span class="lb-rank">Rank</span>';
     html += '<span class="lb-name">Name</span>';
-    if (results) {
+    if (hasResults) {
       html += '<span class="lb-score">Men\'s</span>';
       html += '<span class="lb-score">Women\'s</span>';
       html += '<span class="lb-score lb-total">Total</span>';
@@ -684,15 +689,15 @@
     html += '</div>';
 
     scorers.forEach(function(scorer, i) {
-      var rankDisplay = results ? (medals[i] || '#' + (i + 1)) : '&mdash;';
+      var rankDisplay = hasResults ? (medals[i] || '#' + (i + 1)) : '&mdash;';
       var mensCount = (scorer.picks.mens && scorer.picks.mens.entrants) ? scorer.picks.mens.entrants.filter(function(e) { return e; }).length : 0;
       var womensCount = (scorer.picks.womens && scorer.picks.womens.entrants) ? scorer.picks.womens.entrants.filter(function(e) { return e; }).length : 0;
 
-      html += '<div class="lb-row' + (i < 3 && results ? ' lb-row--top3' : '') + '">';
+      html += '<div class="lb-row' + (i < 3 && hasResults ? ' lb-row--top3' : '') + '">';
       html += '<span class="lb-rank">' + rankDisplay + '</span>';
       html += '<span class="lb-name">' + scorer.name + '</span>';
 
-      if (results && scorer.score) {
+      if (hasResults && scorer.score) {
         html += '<span class="lb-score">' + scorer.score.mens + '</span>';
         html += '<span class="lb-score">' + scorer.score.womens + '</span>';
         html += '<span class="lb-score lb-total">' + scorer.score.total + '</span>';
@@ -704,7 +709,10 @@
     });
 
     html += '</div>';
+    html += '<div style="text-align:center;margin-top:14px"><button class="admin-toggle-btn" id="lb-refresh" type="button">Refresh Leaderboard</button></div>';
     container.innerHTML = html;
+    var refresh = document.getElementById('lb-refresh');
+    if (refresh) refresh.addEventListener('click', loadLeaderboard);
   }
 
   // ── ADMIN PANEL ─────────────────────────────────────────────────
@@ -733,12 +741,11 @@
 
   function renderAdminPanel() {
     var panel = document.getElementById('admin-panel');
-    var existing = null;
-    try {
-      var r = localStorage.getItem(RR2027_CONFIG.storagePrefix + '-results');
-      if (r) existing = JSON.parse(r);
-    } catch(e) {}
-
+    panel.innerHTML = '<p class="leaderboard-empty">Loading current results...</p>';
+    picksApi.load(function(data) { renderAdminPanelWith(data.results || null); });
+  }
+  function renderAdminPanelWith(existing) {
+    var panel = document.getElementById('admin-panel');
     var html = '<div class="admin-form">';
     html += '<h3 class="admin-title">Enter Official Results</h3>';
     html += '<p class="admin-note">Fill in the actual results after the show to calculate scores.</p>';
@@ -803,13 +810,16 @@
       results[gender].shortestTime = v(gender+'-r-shortest');
     });
 
-    try {
-      localStorage.setItem(RR2027_CONFIG.storagePrefix + '-results', JSON.stringify(results));
+    try { localStorage.setItem(RR2027_CONFIG.storagePrefix + '-results', JSON.stringify(results)); } catch(e) {}
+    var btn = document.getElementById('save-results-btn');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+    picksApi.saveResults({ results: results }, function() {
+      btn.textContent = 'Save Results & Calculate Scores';
+      btn.disabled = false;
       loadLeaderboard();
       alert('Results saved! Leaderboard updated.');
-    } catch(e) {
-      alert('Error saving results.');
-    }
+    });
   }
 
 })();
