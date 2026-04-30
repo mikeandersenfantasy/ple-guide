@@ -58,10 +58,14 @@
 
       <div id="picks-form-container">
         <div class="picker-name-section">
-          <label class="picker-label" for="picker-name">Your Name</label>
-          <input type="text" id="picker-name" class="picker-input" placeholder="Enter your name..." maxlength="30" autocomplete="off">
-          <div class="picker-name-error" id="name-error" hidden>Please enter your name before saving picks.</div>
-          <div class="picker-name-taken" id="name-taken" hidden>That name is already taken! Choose a different name.</div>
+          <label class="picker-label" for="picker-select">Who's making picks?</label>
+          <select id="picker-select" class="picker-select">
+            <option value="">— Choose your name or add new —</option>
+            <option value="__new__">+ Add new picker</option>
+          </select>
+          <input type="text" id="picker-name" class="picker-input" placeholder="Type your name..." maxlength="30" autocomplete="off" hidden>
+          <div class="picker-name-error" id="name-error" hidden>Please choose a name or add a new picker before saving.</div>
+          <div class="picker-loaded-banner" id="picker-loaded-banner" hidden></div>
         </div>
 
         <div id="backlash-pick-cards"></div>
@@ -160,12 +164,37 @@
     return 'badge--special';
   }
 
-  // === RENDER PICK CARDS ===
+  // === STATE ===
   var currentPicks = {};
+  var currentName = '';
+  var allPickers = [];          // [{ name, saved, picks }]
+  var latestResults = {};       // { matchId: winnerId }
+  var loadedExistingPicker = false;
+  var activeTab = 'picks';
+  var POLL_MS = 30000;
 
   function getWrestlerImg(id) {
     if (typeof WRESTLERS === 'undefined' || !WRESTLERS[id]) return '';
     return WRESTLERS[id].img || '';
+  }
+
+  // === MATCH TYPE BADGE CLASS ===
+  function badgeClass(mt) {
+    if (mt === 'title') return 'badge--title';
+    if (mt === 'grudge') return 'badge--grudge';
+    if (mt === 'tag') return 'badge--tag';
+    if (mt === 'ladder') return 'badge--ladder';
+    return 'badge--special';
+  }
+
+  // === PICK CARD RENDER ===
+  function pickCountFor(matchId, pickId) {
+    var n = 0;
+    for (var i = 0; i < allPickers.length; i++) {
+      var p = allPickers[i];
+      if (p && p.picks && p.picks[matchId] === pickId) n++;
+    }
+    return n;
   }
   function pickSideHtml(match, side, w) {
     var img = getWrestlerImg(w.id);
@@ -173,11 +202,14 @@
     var imgInner = img
       ? '<img class="pick-img" src="' + img + '" alt="' + w.name + '" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;pick-img-fallback&quot;>' + initial + '</span>\'">'
       : '<span class="pick-img-fallback">' + initial + '</span>';
-    var html = '<button class="pick-side pick-side--' + side + '" data-match="' + match.id + '" data-pick="' + w.id + '" type="button">';
+    var selected = currentPicks[match.id] === w.id;
+    var count = pickCountFor(match.id, w.id);
+    var html = '<button class="pick-side pick-side--' + side + (selected ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + w.id + '" type="button">';
     html += '<span class="pick-check">&#10003;</span>';
     html += '<span class="pick-img-wrap">' + imgInner + '</span>';
     html += '<span class="pick-name">' + w.name + '</span>';
     html += '<span class="pick-role">' + (w.role || '') + '</span>';
+    html += '<span class="pick-count">' + count + ' pick' + (count === 1 ? '' : 's') + '</span>';
     html += '</button>';
     return html;
   }
@@ -185,7 +217,8 @@
     var container = document.getElementById('backlash-pick-cards');
     var html = '';
     BACKLASH_MATCHES.forEach(function(match) {
-      html += '<div class="pick-card" data-match-id="' + match.id + '">';
+      var hasPick = !!currentPicks[match.id];
+      html += '<div class="pick-card' + (hasPick ? ' has-pick' : '') + '" data-match-id="' + match.id + '">';
       html += '<div class="pick-card-top">';
       html += '<span class="pick-match-type ' + badgeClass(match.matchType) + '">' + match.championship + '</span>';
       html += '<span class="pick-unconfirmed">Expected</span>';
@@ -218,8 +251,91 @@
     var n = Object.keys(currentPicks).length;
     var sum = document.getElementById('save-summary');
     if (sum) sum.textContent = n + '/' + BACKLASH_MATCHES.length + ' picks made';
+    var btn = document.getElementById('save-picks-btn');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = loadedExistingPicker
+        ? 'Update My Picks &#128274;'
+        : 'Lock In My Picks &#128274;';
+    }
   }
-  updateSummary();
+
+  // === NAME DROPDOWN ===
+  var picksSelect = document.getElementById('picker-select');
+  var picksNameInput = document.getElementById('picker-name');
+  var loadedBanner = document.getElementById('picker-loaded-banner');
+
+  function rebuildNameDropdown() {
+    if (!picksSelect) return;
+    var prev = picksSelect.value;
+    var html = '<option value="">— Choose your name or add new —</option>';
+    var names = allPickers.map(function(p) { return p.name; }).filter(Boolean).sort(function(a, b) { return a.localeCompare(b); });
+    names.forEach(function(n) {
+      var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
+      html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
+    });
+    html += '<option value="__new__">+ Add new picker</option>';
+    picksSelect.innerHTML = html;
+  }
+
+  function loadPickerByName(name) {
+    var match = null;
+    for (var i = 0; i < allPickers.length; i++) {
+      if (allPickers[i].name && allPickers[i].name.toLowerCase() === name.toLowerCase()) { match = allPickers[i]; break; }
+    }
+    currentName = name;
+    currentPicks = {};
+    loadedExistingPicker = !!match;
+    if (match && match.picks) {
+      Object.keys(match.picks).forEach(function(mid) { currentPicks[mid] = match.picks[mid]; });
+    }
+    if (loadedBanner) {
+      if (loadedExistingPicker) {
+        var pickedCount = Object.keys(currentPicks).length;
+        loadedBanner.innerHTML = '&#9989; Loaded ' + pickedCount + ' saved pick' + (pickedCount === 1 ? '' : 's') + ' for <strong>' + name + '</strong>. Tap any side to change a pick, then hit <strong>Update</strong>.';
+        loadedBanner.hidden = false;
+      } else {
+        loadedBanner.hidden = true;
+      }
+    }
+    document.getElementById('save-confirmation').hidden = true;
+    renderPickCards();
+    updateSummary();
+  }
+
+  if (picksSelect) {
+    picksSelect.addEventListener('change', function() {
+      var v = picksSelect.value;
+      document.getElementById('name-error').hidden = true;
+      if (v === '__new__') {
+        picksNameInput.hidden = false;
+        picksNameInput.value = '';
+        picksNameInput.focus();
+        currentName = '';
+        currentPicks = {};
+        loadedExistingPicker = false;
+        if (loadedBanner) loadedBanner.hidden = true;
+        renderPickCards();
+        updateSummary();
+      } else if (v) {
+        picksNameInput.hidden = true;
+        picksNameInput.value = '';
+        loadPickerByName(v);
+      } else {
+        picksNameInput.hidden = true;
+        currentName = '';
+        currentPicks = {};
+        loadedExistingPicker = false;
+        if (loadedBanner) loadedBanner.hidden = true;
+        renderPickCards();
+        updateSummary();
+      }
+    });
+  }
+  picksNameInput.addEventListener('input', function() {
+    currentName = picksNameInput.value.trim();
+    document.getElementById('name-error').hidden = true;
+  });
 
   // === TABS ===
   document.querySelectorAll('.rr-tab').forEach(function(tab) {
@@ -229,26 +345,27 @@
       tab.classList.add('active');
       var panel = document.getElementById('panel-' + tab.dataset.panel);
       if (panel) panel.classList.add('active');
-      if (tab.dataset.panel === 'leaderboard') loadLeaderboard();
+      activeTab = tab.dataset.panel;
+      if (activeTab === 'leaderboard') renderLeaderboard();
     });
   });
 
-  // === SAVE PICKS ===
+  // === SAVE / UPDATE PICKS ===
   document.getElementById('save-picks-btn').addEventListener('click', function() {
     document.getElementById('name-error').hidden = true;
-    document.getElementById('name-taken').hidden = true;
     document.getElementById('save-error').hidden = true;
     document.getElementById('save-confirmation').hidden = true;
 
-    var name = document.getElementById('picker-name').value.trim();
+    var name = '';
+    if (picksSelect && picksSelect.value && picksSelect.value !== '__new__' && picksSelect.value !== '') {
+      name = picksSelect.value;
+    } else {
+      name = picksNameInput.value.trim();
+    }
+
     if (!name || name.length < 2) {
       document.getElementById('name-error').hidden = false;
-      document.getElementById('picker-name').focus();
-      return;
-    }
-    var key = STORAGE_PREFIX + '-picks-' + name.toLowerCase();
-    if (localStorage.getItem(key)) {
-      document.getElementById('name-taken').hidden = false;
+      if (!picksNameInput.hidden) picksNameInput.focus();
       return;
     }
     if (Object.keys(currentPicks).length === 0) {
@@ -259,41 +376,52 @@
     }
 
     var savedAt = new Date().toISOString();
-    var data = { name: name, savedAt: savedAt, picks: currentPicks };
     try {
-      localStorage.setItem(key, JSON.stringify(data));
+      localStorage.setItem(STORAGE_PREFIX + '-picks-' + name.toLowerCase(), JSON.stringify({ name: name, savedAt: savedAt, picks: currentPicks }));
       var allNames = [];
       try { allNames = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-names') || '[]'); } catch(e) {}
       if (allNames.indexOf(name.toLowerCase()) === -1) {
         allNames.push(name.toLowerCase());
         localStorage.setItem(STORAGE_PREFIX + '-names', JSON.stringify(allNames));
       }
-      var btn = document.getElementById('save-picks-btn');
-      btn.disabled = true;
-      btn.innerHTML = 'Saving...';
-      picksApi.savePicks({ name: name, saved: savedAt, picks: currentPicks }, function() {
-        document.getElementById('save-confirmation').hidden = false;
-        document.getElementById('saved-name').textContent = name;
-        btn.innerHTML = '&#9989; Picks Saved';
-      });
-    } catch(e) {
-      var err2 = document.getElementById('save-error');
-      err2.hidden = false;
-      err2.textContent = 'Error saving picks. Please try again.';
-    }
+    } catch(e) {}
+
+    var btn = document.getElementById('save-picks-btn');
+    btn.disabled = true;
+    btn.innerHTML = 'Saving...';
+    picksApi.savePicks({ name: name, saved: savedAt, picks: currentPicks }, function() {
+      document.getElementById('save-confirmation').hidden = false;
+      document.getElementById('saved-name').textContent = name;
+      // update local state so dropdown and confidence counts reflect new pick
+      var existingIdx = -1;
+      for (var i = 0; i < allPickers.length; i++) {
+        if (allPickers[i].name && allPickers[i].name.toLowerCase() === name.toLowerCase()) { existingIdx = i; break; }
+      }
+      if (existingIdx >= 0) {
+        allPickers[existingIdx] = { name: name, saved: savedAt, picks: Object.assign({}, currentPicks) };
+      } else {
+        allPickers.push({ name: name, saved: savedAt, picks: Object.assign({}, currentPicks) });
+      }
+      currentName = name;
+      loadedExistingPicker = true;
+      rebuildNameDropdown();
+      if (picksSelect) picksSelect.value = name;
+      picksNameInput.hidden = true;
+      btn.innerHTML = '&#9989; Saved! Update Picks &#128274;';
+      btn.disabled = false;
+      // refresh confidence counts immediately
+      renderPickCards();
+      // and pull authoritative data from sheet shortly after
+      setTimeout(refreshAll, 1500);
+    });
   });
 
-  // === LEADERBOARD (loads from Google Sheet via shared picks-api) ===
-  function loadLeaderboard() {
+  // === LEADERBOARD RENDER ===
+  function renderLeaderboard() {
     var container = document.getElementById('leaderboard-container');
     if (!container) return;
-    container.innerHTML = '<p class="leaderboard-empty">Loading leaderboard...</p>';
-    picksApi.load(function(data) {
-      renderLeaderboard(data.pickers || [], data.results || {});
-    });
-  }
-  function renderLeaderboard(pickers, results) {
-    var container = document.getElementById('leaderboard-container');
+    var pickers = allPickers;
+    var results = latestResults;
     var hasResults = results && Object.keys(results).length > 0;
     if (!pickers.length) {
       container.innerHTML = '<p class="leaderboard-empty">No picks saved yet. Be the first!</p>';
@@ -330,11 +458,26 @@
       html += '</div>';
     });
     html += '</div>';
-    html += '<div style="text-align:center;margin-top:14px"><button class="admin-toggle-btn" id="lb-refresh" type="button">Refresh Leaderboard</button></div>';
+    html += '<div class="lb-meta">Auto-refreshes every 30s &middot; <button class="lb-refresh-btn" id="lb-refresh" type="button">Refresh now</button></div>';
     container.innerHTML = html;
     var refresh = document.getElementById('lb-refresh');
-    if (refresh) refresh.addEventListener('click', loadLeaderboard);
+    if (refresh) refresh.addEventListener('click', refreshAll);
   }
+  function loadLeaderboard() { renderLeaderboard(); }
+
+  // === DATA REFRESH (picks tab confidence + leaderboard) ===
+  function refreshAll() {
+    picksApi.load(function(data) {
+      allPickers = (data && data.pickers) || [];
+      latestResults = (data && data.results) || {};
+      rebuildNameDropdown();
+      // re-render so pick counts update
+      renderPickCards();
+      if (activeTab === 'leaderboard') renderLeaderboard();
+    });
+  }
+  refreshAll();
+  setInterval(refreshAll, POLL_MS);
 
   // === ADMIN (PIN protected) ===
   document.getElementById('admin-toggle').addEventListener('click', function() {

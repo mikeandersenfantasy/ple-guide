@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Match Card - WWE PLE Guide</title>
+<title>WrestleMania 42 &mdash; Match Card &amp; Picks</title>
 <link rel="stylesheet" href="../../../css/styles.css">
 </head>
 <body>
@@ -398,6 +398,8 @@
   });
 
   // === EVENT TABS ===
+  var picksTabActive = false;
+  var WM42_POLL_MS = 30000;
   document.querySelectorAll('.event-tab').forEach(function(tab) {
     tab.addEventListener('click', function() {
       document.querySelectorAll('.event-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -405,9 +407,12 @@
       tab.classList.add('active');
       var panel = document.getElementById('panel-' + tab.dataset.tab);
       if (panel) panel.classList.add('active');
-      if (tab.dataset.tab === 'picks') renderWM42Picks();
+      picksTabActive = (tab.dataset.tab === 'picks');
+      if (picksTabActive) renderWM42Picks();
     });
   });
+  // Auto-refresh WM42 picks/results panel every 30s while it's the active tab
+  setInterval(function() { if (picksTabActive) renderWM42Picks(true); }, WM42_POLL_MS);
 
   // Auto-switch to picks tab if URL hash is #picks
   if (window.location.hash === '#picks') {
@@ -473,11 +478,13 @@
   }
 
   var wm42PicksRendered = false;
-  function renderWM42Picks() {
-    if (wm42PicksRendered) return;
+  function renderWM42Picks(force) {
+    if (wm42PicksRendered && !force) return;
     var container = document.getElementById('wm42-picks-container');
     if (!container) return;
-    container.innerHTML = '<div class="picks-empty" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.4)">Loading results...</div>';
+    if (!wm42PicksRendered) {
+      container.innerHTML = '<div class="picks-empty" style="text-align:center;padding:2rem;color:rgba(255,255,255,0.4)">Loading results...</div>';
+    }
 
     loadWM42FromSheets(function(data) {
       wm42PicksRendered = true;
