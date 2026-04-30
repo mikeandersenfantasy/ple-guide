@@ -36,8 +36,14 @@ function doGet(e) {
     var dataStr = e.parameter.data || '{}';
     var payload = JSON.parse(decodeURIComponent(dataStr));
     if (!payload.event) payload.event = event;
-    handleSave(payload);
-    return jsonpResponse({ status: 'ok' }, callback);
+    var result = handleSave(payload);
+    return jsonpResponse(result || { status: 'ok' }, callback);
+  }
+
+  if (action === 'verify') {
+    var name = (e.parameter.name || '').toString();
+    var pin = (e.parameter.pin || '').toString();
+    return jsonpResponse({ ok: verifyPin(event, name, pin) }, callback);
   }
 
   return jsonpResponse(loadEvent(event), callback);
@@ -63,6 +69,41 @@ function sanitizeEvent(raw) {
   return v || DEFAULT_EVENT;
 }
 
+function hashPin(event, name, pin) {
+  if (!pin) return '';
+  var raw = event + ':' + name.toLowerCase() + ':' + pin;
+  var bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, raw);
+  return Utilities.base64Encode(bytes);
+}
+
+function verifyPin(event, name, pin) {
+  if (!name || !pin) return false;
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(event);
+  if (!sheet) return false;
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0] || [];
+  if (headers[2] !== 'PicksJSON') return false;
+  for (var i = 1; i < data.length; i++) {
+    if (!data[i][0]) continue;
+    if (data[i][0].toString().toLowerCase() === name.toLowerCase()) {
+      var blob = {};
+      try { blob = JSON.parse(data[i][2] || '{}'); } catch (err) { return false; }
+      if (!blob.__pinHash) return true; // legacy / unset → first claim wins
+      return blob.__pinHash === hashPin(event, name, pin);
+    }
+  }
+  return false;
+}
+
+function stripInternalKeys(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  var out = {};
+  Object.keys(obj).forEach(function(k) {
+    if (k.indexOf('__') !== 0) out[k] = obj[k];
+  });
+  return out;
+}
+
 function getOrCreateSheet(name, headers) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(name);
@@ -79,6 +120,7 @@ function loadEvent(event) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var picksSheet = ss.getSheetByName(event);
   var pickers = [];
+  var hasPin = {};
   if (picksSheet) {
     var data = picksSheet.getDataRange().getValues();
     var headers = data[0] || [];
@@ -86,9 +128,10 @@ function loadEvent(event) {
     for (var i = 1; i < data.length; i++) {
       if (!data[i][0]) continue;
       if (jsonMode) {
-        var picks = {};
-        try { picks = JSON.parse(data[i][2] || '{}'); } catch (err) { picks = {}; }
-        pickers.push({ name: data[i][0], saved: data[i][1], picks: picks });
+        var raw = {};
+        try { raw = JSON.parse(data[i][2] || '{}'); } catch (err) { raw = {}; }
+        if (raw.__pinHash) hasPin[String(data[i][0]).toLowerCase()] = true;
+        pickers.push({ name: data[i][0], saved: data[i][1], picks: stripInternalKeys(raw) });
       } else {
         var flat = {};
         for (var c = 2; c < headers.length; c++) {
@@ -114,7 +157,7 @@ function loadEvent(event) {
     }
   }
 
-  return { pickers: pickers, results: results, event: event };
+  return { pickers: pickers, results: results, event: event, hasPin: hasPin };
 }
 
 function handleSave(payload) {
@@ -132,18 +175,36 @@ function handleSave(payload) {
         sheet.getRange(1, 1, 1, JSON_PICKS_HEADERS.length).setValues([JSON_PICKS_HEADERS]);
         data = sheet.getDataRange().getValues();
       }
-      var json = JSON.stringify(payload.picks || {});
-      var jsonRow = [payload.name, payload.saved, json];
-      var foundJ = false;
+      // PIN claim enforcement: if a row already exists for this name with a pinHash,
+      // the incoming save MUST present a matching pin. Otherwise reject.
+      var existingRowIdx = -1;
+      var existingBlob = null;
       for (var i = 1; i < data.length; i++) {
         if (data[i][0] && data[i][0].toString().toLowerCase() === payload.name.toLowerCase()) {
-          sheet.getRange(i + 1, 1, 1, jsonRow.length).setValues([jsonRow]);
-          foundJ = true;
+          existingRowIdx = i;
+          try { existingBlob = JSON.parse(data[i][2] || '{}'); } catch (err) { existingBlob = {}; }
           break;
         }
       }
-      if (!foundJ) sheet.appendRow(jsonRow);
-      return;
+      var incomingPin = (payload.pin || '').toString();
+      var newHash = incomingPin ? hashPin(event, payload.name, incomingPin) : '';
+      if (existingBlob && existingBlob.__pinHash) {
+        if (newHash !== existingBlob.__pinHash) {
+          return { status: 'pin-mismatch' };
+        }
+      }
+      // Build picks blob: copy any non-internal keys from payload.picks, then attach pinHash
+      var picksObj = stripInternalKeys(payload.picks || {});
+      if (newHash) picksObj.__pinHash = newHash;
+      else if (existingBlob && existingBlob.__pinHash) picksObj.__pinHash = existingBlob.__pinHash;
+      var json = JSON.stringify(picksObj);
+      var jsonRow = [payload.name, payload.saved, json];
+      if (existingRowIdx >= 0) {
+        sheet.getRange(existingRowIdx + 1, 1, 1, jsonRow.length).setValues([jsonRow]);
+      } else {
+        sheet.appendRow(jsonRow);
+      }
+      return { status: 'ok' };
     }
 
     // ── Flat column-per-match mode (legacy WM42) ───────────────────

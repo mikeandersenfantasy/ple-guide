@@ -168,10 +168,14 @@
   var currentPicks = {};
   var currentName = '';
   var allPickers = [];          // [{ name, saved, picks }]
+  var hasPinMap = {};           // { '<lowercased name>': true }
   var latestResults = {};       // { matchId: winnerId }
   var loadedExistingPicker = false;
   var activeTab = 'picks';
   var POLL_MS = 30000;
+  var CLAIM_KEY = STORAGE_PREFIX + '-claim';
+  var sessionPin = '';          // pin in memory for the current picker
+  var sessionPinName = '';      // name the sessionPin belongs to
 
   function getWrestlerImg(id) {
     if (typeof WRESTLERS === 'undefined' || !WRESTLERS[id]) return '';
@@ -278,29 +282,116 @@
     picksSelect.innerHTML = html;
   }
 
+  function readClaim() {
+    try { return JSON.parse(localStorage.getItem(CLAIM_KEY) || 'null'); } catch (e) { return null; }
+  }
+  function writeClaim(name, pin) {
+    try { localStorage.setItem(CLAIM_KEY, JSON.stringify({ name: name, pin: pin })); } catch (e) {}
+  }
+  function clearClaim() { try { localStorage.removeItem(CLAIM_KEY); } catch (e) {} }
+
+  function applyLoadedPicks(name, picks) {
+    currentName = name;
+    currentPicks = {};
+    if (picks) Object.keys(picks).forEach(function(mid) { currentPicks[mid] = picks[mid]; });
+    loadedExistingPicker = true;
+    if (loadedBanner) {
+      var pickedCount = Object.keys(currentPicks).length;
+      loadedBanner.innerHTML = '&#9989; Loaded ' + pickedCount + ' saved pick' + (pickedCount === 1 ? '' : 's') + ' for <strong>' + name + '</strong>. Tap any side to change a pick, then hit <strong>Update</strong>. <button type="button" class="picker-switch-link" id="picker-switch">Not me?</button>';
+      loadedBanner.hidden = false;
+      var sw = document.getElementById('picker-switch');
+      if (sw) sw.addEventListener('click', function() {
+        clearClaim();
+        resetPickerSelection();
+      });
+    }
+    document.getElementById('save-confirmation').hidden = true;
+    renderPickCards();
+    updateSummary();
+  }
+
+  function resetPickerSelection() {
+    currentName = '';
+    currentPicks = {};
+    loadedExistingPicker = false;
+    sessionPin = '';
+    sessionPinName = '';
+    if (loadedBanner) loadedBanner.hidden = true;
+    if (picksSelect) picksSelect.value = '';
+    picksNameInput.hidden = true;
+    document.getElementById('save-confirmation').hidden = true;
+    renderPickCards();
+    updateSummary();
+  }
+
   function loadPickerByName(name) {
     var match = null;
     for (var i = 0; i < allPickers.length; i++) {
       if (allPickers[i].name && allPickers[i].name.toLowerCase() === name.toLowerCase()) { match = allPickers[i]; break; }
     }
-    currentName = name;
-    currentPicks = {};
-    loadedExistingPicker = !!match;
-    if (match && match.picks) {
-      Object.keys(match.picks).forEach(function(mid) { currentPicks[mid] = match.picks[mid]; });
+    if (!match) {
+      // not in the loaded snapshot — treat as new picker
+      currentName = name;
+      currentPicks = {};
+      loadedExistingPicker = false;
+      if (loadedBanner) loadedBanner.hidden = true;
+      renderPickCards();
+      updateSummary();
+      return;
+    }
+
+    var nameLower = name.toLowerCase();
+    var claim = readClaim();
+    var claimMatches = claim && claim.name && claim.name.toLowerCase() === nameLower && claim.pin;
+    var nameIsClaimed = !!hasPinMap[nameLower];
+
+    if (claimMatches) {
+      // Same device, same person — silent load.
+      sessionPin = claim.pin;
+      sessionPinName = name;
+      applyLoadedPicks(name, match.picks);
+      return;
+    }
+
+    if (!nameIsClaimed) {
+      // Legacy / unclaimed entry. First device to edit gets to claim it.
+      // Load picks, but require a PIN to be set on the next save.
+      sessionPin = '';
+      sessionPinName = '';
+      applyLoadedPicks(name, match.picks);
+      if (loadedBanner) {
+        loadedBanner.innerHTML += '<br><span class="picker-warning">No PIN set yet for this picker — your next save will set one.</span>';
+      }
+      return;
+    }
+
+    // Existing picker, this device has no claim → prompt for PIN.
+    var entered = prompt('Enter ' + name + "'s 4-digit PIN to load and edit their picks:");
+    if (entered === null) {
+      resetPickerSelection();
+      return;
+    }
+    entered = entered.toString().trim();
+    if (!/^\d{4}$/.test(entered)) {
+      alert('PIN must be 4 digits.');
+      resetPickerSelection();
+      return;
     }
     if (loadedBanner) {
-      if (loadedExistingPicker) {
-        var pickedCount = Object.keys(currentPicks).length;
-        loadedBanner.innerHTML = '&#9989; Loaded ' + pickedCount + ' saved pick' + (pickedCount === 1 ? '' : 's') + ' for <strong>' + name + '</strong>. Tap any side to change a pick, then hit <strong>Update</strong>.';
-        loadedBanner.hidden = false;
-      } else {
-        loadedBanner.hidden = true;
-      }
+      loadedBanner.innerHTML = 'Verifying PIN...';
+      loadedBanner.hidden = false;
     }
-    document.getElementById('save-confirmation').hidden = true;
-    renderPickCards();
-    updateSummary();
+    picksApi.verifyPin(name, entered, function(res) {
+      if (res && res.ok) {
+        sessionPin = entered;
+        sessionPinName = name;
+        writeClaim(name, entered);
+        applyLoadedPicks(name, match.picks);
+      } else {
+        alert('Wrong PIN. ' + name + "'s picks were not loaded.");
+        resetPickerSelection();
+      }
+    });
   }
 
   if (picksSelect) {
@@ -375,13 +466,41 @@
       return;
     }
 
+    var nameLower = name.toLowerCase();
+    var claim = readClaim();
+    var claimMatches = claim && claim.name && claim.name.toLowerCase() === nameLower && claim.pin;
+    var pinToUse = '';
+
+    if (sessionPinName.toLowerCase() === nameLower && sessionPin) {
+      pinToUse = sessionPin;
+    } else if (claimMatches) {
+      pinToUse = claim.pin;
+    } else if (hasPinMap[nameLower]) {
+      // Existing claimed picker on a fresh device that didn't go through the dropdown verify path.
+      var verifyPin = prompt('Enter ' + name + "'s 4-digit PIN to save changes:");
+      if (verifyPin === null) return;
+      verifyPin = verifyPin.toString().trim();
+      if (!/^\d{4}$/.test(verifyPin)) { alert('PIN must be 4 digits.'); return; }
+      pinToUse = verifyPin;
+    } else {
+      // Brand-new picker (or legacy unclaimed) — set a PIN now.
+      var newPin = prompt('Set a 4-digit PIN to lock these picks to ' + name + '. Anyone editing later will need this PIN.');
+      if (newPin === null) return;
+      newPin = newPin.toString().trim();
+      if (!/^\d{4}$/.test(newPin)) { alert('PIN must be exactly 4 digits.'); return; }
+      var confirmPin = prompt('Re-enter the PIN to confirm.');
+      if (confirmPin === null) return;
+      if (confirmPin.toString().trim() !== newPin) { alert("PINs didn't match. Try saving again."); return; }
+      pinToUse = newPin;
+    }
+
     var savedAt = new Date().toISOString();
     try {
-      localStorage.setItem(STORAGE_PREFIX + '-picks-' + name.toLowerCase(), JSON.stringify({ name: name, savedAt: savedAt, picks: currentPicks }));
+      localStorage.setItem(STORAGE_PREFIX + '-picks-' + nameLower, JSON.stringify({ name: name, savedAt: savedAt, picks: currentPicks }));
       var allNames = [];
       try { allNames = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '-names') || '[]'); } catch(e) {}
-      if (allNames.indexOf(name.toLowerCase()) === -1) {
-        allNames.push(name.toLowerCase());
+      if (allNames.indexOf(nameLower) === -1) {
+        allNames.push(nameLower);
         localStorage.setItem(STORAGE_PREFIX + '-names', JSON.stringify(allNames));
       }
     } catch(e) {}
@@ -389,13 +508,34 @@
     var btn = document.getElementById('save-picks-btn');
     btn.disabled = true;
     btn.innerHTML = 'Saving...';
-    picksApi.savePicks({ name: name, saved: savedAt, picks: currentPicks }, function() {
+    picksApi.savePicks({ name: name, saved: savedAt, picks: currentPicks, pin: pinToUse }, function(res) {
+      if (res && res.status === 'pin-mismatch') {
+        var errEl = document.getElementById('save-error');
+        errEl.hidden = false;
+        errEl.textContent = "Wrong PIN — " + name + "'s picks were not saved. Try a different name or contact admin.";
+        btn.innerHTML = 'Lock In My Picks &#128274;';
+        btn.disabled = false;
+        return;
+      }
+      if (res && res.error) {
+        var errNet = document.getElementById('save-error');
+        errNet.hidden = false;
+        errNet.textContent = 'Network issue saving picks. Try again in a moment.';
+        btn.innerHTML = 'Lock In My Picks &#128274;';
+        btn.disabled = false;
+        return;
+      }
+      // Success — write/refresh the local claim with the PIN we used
+      writeClaim(name, pinToUse);
+      sessionPin = pinToUse;
+      sessionPinName = name;
+      hasPinMap[nameLower] = true;
+
       document.getElementById('save-confirmation').hidden = false;
       document.getElementById('saved-name').textContent = name;
-      // update local state so dropdown and confidence counts reflect new pick
       var existingIdx = -1;
       for (var i = 0; i < allPickers.length; i++) {
-        if (allPickers[i].name && allPickers[i].name.toLowerCase() === name.toLowerCase()) { existingIdx = i; break; }
+        if (allPickers[i].name && allPickers[i].name.toLowerCase() === nameLower) { existingIdx = i; break; }
       }
       if (existingIdx >= 0) {
         allPickers[existingIdx] = { name: name, saved: savedAt, picks: Object.assign({}, currentPicks) };
@@ -409,9 +549,7 @@
       picksNameInput.hidden = true;
       btn.innerHTML = '&#9989; Saved! Update Picks &#128274;';
       btn.disabled = false;
-      // refresh confidence counts immediately
       renderPickCards();
-      // and pull authoritative data from sheet shortly after
       setTimeout(refreshAll, 1500);
     });
   });
@@ -466,14 +604,35 @@
   function loadLeaderboard() { renderLeaderboard(); }
 
   // === DATA REFRESH (picks tab confidence + leaderboard) ===
+  var didInitialAutoSelect = false;
   function refreshAll() {
     picksApi.load(function(data) {
       allPickers = (data && data.pickers) || [];
       latestResults = (data && data.results) || {};
+      hasPinMap = (data && data.hasPin) || {};
       rebuildNameDropdown();
-      // re-render so pick counts update
       renderPickCards();
       if (activeTab === 'leaderboard') renderLeaderboard();
+
+      // First time we have data, auto-select this device's claimed picker
+      if (!didInitialAutoSelect) {
+        didInitialAutoSelect = true;
+        var claim = readClaim();
+        if (claim && claim.name && claim.pin && picksSelect) {
+          var found = false;
+          for (var i = 0; i < allPickers.length; i++) {
+            if (allPickers[i].name && allPickers[i].name.toLowerCase() === claim.name.toLowerCase()) {
+              found = true;
+              picksSelect.value = allPickers[i].name;
+              sessionPin = claim.pin;
+              sessionPinName = allPickers[i].name;
+              applyLoadedPicks(allPickers[i].name, allPickers[i].picks);
+              break;
+            }
+          }
+          if (!found) clearClaim();
+        }
+      }
     });
   }
   refreshAll();
