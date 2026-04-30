@@ -1033,6 +1033,57 @@ const WRESTLERS = {
       "Former NXT Women's Champion",
       "Gravity-defying aerial specialist"
     ]
+  },
+  "bron-breakker": {
+    name: "Bron Breakker",
+    nickname: "The Vision",
+    aliases: "Bronson Rechsteiner",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Powerhouse enforcer aligned with Seth Rollins",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/01/Bron_Breakker_Profile.png",
+    about: "Bron Breakker is a second-generation powerhouse — son of Rick Steiner and nephew of Scott Steiner. A 2x NXT Champion and 2x Intercontinental Champion, he made the jump to Raw and immediately became one of the most physically dominant Superstars on the roster. Now a key member of Seth Rollins' faction.",
+    finisher: "Spear",
+    finisherDesc: "An explosive, full-speed running tackle that can fold opponents in half. Also uses a military press slam and a Frankensteiner.",
+    entranceTheme: "Steiner Bomb",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "2x WWE Intercontinental Champion",
+      "2x NXT Champion",
+      "Key member of Seth Rollins' faction",
+      "Second-generation Superstar (Steiner family)",
+      "One of the most physically dominant wrestlers in WWE"
+    ]
+  },
+  "asuka": {
+    name: "Asuka",
+    nickname: "The Empress of Tomorrow",
+    aliases: "Kana",
+    brand: "SmackDown",
+    alignment: "Heel",
+    alignmentDesc: "Calculating veteran with a devastating mist",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/02/Asuka_PROFILE.png",
+    about: "Asuka is one of the most decorated women's wrestlers in WWE history. The longest-reigning NXT Women's Champion ever (510 days), former Raw Women's Champion, SmackDown Women's Champion, and the inaugural Women's Royal Rumble winner. Known for her unmatched striking, submission game, and the colored mist she sprays in opponents' faces.",
+    finisher: "Asuka Lock",
+    finisherDesc: "A modified inverted facelock crossface that has tapped out some of the toughest competitors in WWE. Also known for the green/red/blue mist she sprays at opponents.",
+    entranceTheme: "The Future",
+    entranceArtist: "Yonosuke Kitamura",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Former Raw Women's Champion",
+      "Former SmackDown Women's Champion",
+      "2018 Women's Royal Rumble winner",
+      "Longest-reigning NXT Women's Champion in history (510 days)",
+      "Money in the Bank winner",
+      "Half of the Kabuki Warriors / former Damage CTRL"
+    ]
   }
 };
 
