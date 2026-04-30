@@ -120,7 +120,6 @@ function initHomepageEvents() {
       html += '<a href="' + pe.eventUrl + '" class="past-event-card">';
       html += '<div class="pe-name">' + pe.name + '</div>';
       html += '<div class="pe-meta">' + pe.dates + '<br>' + pe.location + ' · ' + pe.matchCount + ' Matches</div>';
-      html += '<span class="status-badge status-badge--archived" style="margin-top:10px">Archived</span>';
       html += '<div class="pe-link">View Results &rarr;</div>';
       html += '</a>';
     });

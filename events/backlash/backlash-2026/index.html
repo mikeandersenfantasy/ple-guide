@@ -47,15 +47,9 @@
   </div>
 </section>
 
-<!-- COUNTDOWN -->
-<section class="section" style="padding: 1.5rem 0 1rem">
+<!-- EVENT STATUS (countdown lives on homepage only) -->
+<section class="section" style="padding: 0.5rem 0 0">
   <div class="inner">
-    <div class="countdown" id="backlash-countdown">
-      <div class="countdown-item"><span class="num" id="cd-days">--</span><span class="unit">Days</span></div>
-      <div class="countdown-item"><span class="num" id="cd-hours">--</span><span class="unit">Hours</span></div>
-      <div class="countdown-item"><span class="num" id="cd-mins">--</span><span class="unit">Mins</span></div>
-      <div class="countdown-item"><span class="num" id="cd-secs">--</span><span class="unit">Secs</span></div>
-    </div>
     <div id="event-status-msg" class="event-status-live" style="display:none"></div>
   </div>
 </section>
@@ -180,33 +174,16 @@
     }
   ];
 
-  // === COUNTDOWN ===
+  // === EVENT STATUS (countdown is shown on homepage only) ===
   var target = new Date('2026-05-09T18:00:00-04:00').getTime();
-  function updateCountdown() {
-    var now = Date.now();
-    var diff = target - now;
-    var cd = document.getElementById('backlash-countdown');
+  (function() {
     var msg = document.getElementById('event-status-msg');
-    if (diff <= 0) {
-      if (cd) cd.style.display = 'none';
-      if (msg) { msg.textContent = 'THE EVENT HAS CONCLUDED'; msg.style.display = ''; }
-      return;
+    if (!msg) return;
+    if (Date.now() >= target) {
+      msg.textContent = 'THE EVENT HAS CONCLUDED';
+      msg.style.display = '';
     }
-    var d = Math.floor(diff / 86400000);
-    var h = Math.floor((diff % 86400000) / 3600000);
-    var m = Math.floor((diff % 3600000) / 60000);
-    var s = Math.floor((diff % 60000) / 1000);
-    var dEl = document.getElementById('cd-days');
-    var hEl = document.getElementById('cd-hours');
-    var mEl = document.getElementById('cd-mins');
-    var sEl = document.getElementById('cd-secs');
-    if (dEl) dEl.textContent = d;
-    if (hEl) hEl.textContent = h < 10 ? '0' + h : h;
-    if (mEl) mEl.textContent = m < 10 ? '0' + m : m;
-    if (sEl) sEl.textContent = s < 10 ? '0' + s : s;
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  })();
 
   // === DAYS-AWAY SUBTITLE ===
   (function() {
