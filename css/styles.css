@@ -2979,6 +2979,17 @@ ul { list-style: none; }
     url('../images/royal-rumble-logo.jpg') center center / cover no-repeat;
   background-color: #0b0f1a;
 }
+.wrestlemania-franchise-hero {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(10, 12, 18, 0.7) 0%,
+      rgba(10, 12, 18, 0.82) 55%,
+      rgba(10, 12, 18, 0.95) 100%
+    ),
+    url('../images/wrestlemania.jpg') center center / cover no-repeat;
+  background-color: #0b0f1a;
+}
 
 /* === EVENT TABS (used on WM42 + future archives) === */
 .event-tabs {
@@ -3189,48 +3200,115 @@ ul { list-style: none; }
 }
 .pick-side {
   flex: 1;
-  padding: 0.6rem 0.75rem;
-  background: rgba(255,255,255,0.03);
+  padding: 0.75rem 0.6rem 0.6rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s;
-  text-align: left;
+  transition: all 0.18s ease;
+  text-align: center;
   font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
 }
-.pick-side--right { text-align: right; }
-.pick-side:hover { border-color: rgba(212,168,60,0.3); background: rgba(212,168,60,0.05); }
+.pick-side--right { text-align: center; }
+.pick-side:hover {
+  border-color: rgba(212,168,60,0.4);
+  background: linear-gradient(180deg, rgba(212,168,60,0.08) 0%, rgba(212,168,60,0.02) 100%);
+  transform: translateY(-1px);
+}
 .pick-side.selected {
   border-color: #D4A83C;
-  background: rgba(212,168,60,0.12);
+  background: linear-gradient(180deg, rgba(212,168,60,0.18) 0%, rgba(212,168,60,0.05) 100%);
+  box-shadow: 0 0 0 1px rgba(212,168,60,0.5), 0 4px 18px rgba(212,168,60,0.18);
+}
+.pick-img-wrap {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, rgba(212,168,60,0.18) 0%, rgba(11,15,26,0.9) 70%);
+  border: 2px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.18s, transform 0.18s;
+}
+.pick-side:hover .pick-img-wrap { border-color: rgba(212,168,60,0.45); }
+.pick-side.selected .pick-img-wrap {
+  border-color: #D4A83C;
+  transform: scale(1.04);
+}
+.pick-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(0.25) brightness(0.95);
+  transition: filter 0.18s;
+}
+.pick-side:hover .pick-img,
+.pick-side.selected .pick-img { filter: grayscale(0) brightness(1.05); }
+.pick-img-fallback {
+  font-family: Impact, sans-serif;
+  font-size: 1.6rem;
+  color: rgba(212,168,60,0.6);
+  letter-spacing: 0.05em;
 }
 .pick-name {
   display: block;
   font-family: Impact, sans-serif;
-  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  font-size: clamp(0.85rem, 2.5vw, 1.05rem);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #ffffff;
+  line-height: 1.1;
 }
 .pick-role {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   color: rgba(255,255,255,0.4);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-top: 2px;
 }
 .pick-side.selected .pick-name { color: #D4A83C; }
+.pick-side.selected .pick-role { color: rgba(212,168,60,0.75); }
+.pick-side .pick-check {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #D4A83C;
+  color: #0b0f1a;
+  font-size: 0.65rem;
+  font-weight: 900;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.pick-side.selected .pick-check { display: flex; }
 .pick-vs {
   font-family: Impact, sans-serif;
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.25);
+  font-size: 1rem;
+  color: rgba(212,168,60,0.5);
   flex-shrink: 0;
+  letter-spacing: 0.1em;
 }
-@media (max-width: 768px) {
-  .pick-sides { flex-direction: column; gap: 6px; }
-  .pick-vs { align-self: center; }
-  .pick-side--right { text-align: left; }
+@media (max-width: 600px) {
+  .pick-img-wrap { width: 70px; height: 70px; }
+  .pick-vs { font-size: 0.85rem; }
+}
+@media (max-width: 480px) {
+  .pick-sides { flex-direction: column; gap: 8px; }
+  .pick-vs { align-self: center; padding: 2px 0; }
+  .pick-side--right { text-align: center; }
 }
 
 /* === GUARANTEED ENTRANTS === */

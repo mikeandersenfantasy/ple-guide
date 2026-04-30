@@ -105,7 +105,7 @@
   // Picks lock at 6:00 PM ET on May 9 (showtime). Picks open now.
   var SHOW_DATE = new Date('2026-05-09T18:00:00-04:00');
   var OPEN_DATE = new Date('2026-04-20T00:00:00-04:00');
-  var ADMIN_PIN = '4242';
+  var ADMIN_PIN = '8720';
   var adminUnlocked = false;
 
   // === BACKLASH 2026 MATCHES (mirror of event page) ===
@@ -160,6 +160,24 @@
   // === RENDER PICK CARDS ===
   var currentPicks = {};
 
+  function getWrestlerImg(id) {
+    if (typeof WRESTLERS === 'undefined' || !WRESTLERS[id]) return '';
+    return WRESTLERS[id].img || '';
+  }
+  function pickSideHtml(match, side, w) {
+    var img = getWrestlerImg(w.id);
+    var initial = (w.name || '?').charAt(0).toUpperCase();
+    var imgInner = img
+      ? '<img class="pick-img" src="' + img + '" alt="' + w.name + '" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;pick-img-fallback&quot;>' + initial + '</span>\'">'
+      : '<span class="pick-img-fallback">' + initial + '</span>';
+    var html = '<button class="pick-side pick-side--' + side + '" data-match="' + match.id + '" data-pick="' + w.id + '" type="button">';
+    html += '<span class="pick-check">&#10003;</span>';
+    html += '<span class="pick-img-wrap">' + imgInner + '</span>';
+    html += '<span class="pick-name">' + w.name + '</span>';
+    html += '<span class="pick-role">' + (w.role || '') + '</span>';
+    html += '</button>';
+    return html;
+  }
   function renderPickCards() {
     var container = document.getElementById('backlash-pick-cards');
     var html = '';
@@ -170,15 +188,9 @@
       html += '<span class="pick-unconfirmed">Expected</span>';
       html += '</div>';
       html += '<div class="pick-sides">';
-      html += '<button class="pick-side pick-side--left" data-match="' + match.id + '" data-pick="' + match.wrestler1.id + '" type="button">';
-      html += '<span class="pick-name">' + match.wrestler1.name + '</span>';
-      html += '<span class="pick-role">' + (match.wrestler1.role || '') + '</span>';
-      html += '</button>';
+      html += pickSideHtml(match, 'left', match.wrestler1);
       html += '<span class="pick-vs">VS</span>';
-      html += '<button class="pick-side pick-side--right" data-match="' + match.id + '" data-pick="' + match.wrestler2.id + '" type="button">';
-      html += '<span class="pick-name">' + match.wrestler2.name + '</span>';
-      html += '<span class="pick-role">' + (match.wrestler2.role || '') + '</span>';
-      html += '</button>';
+      html += pickSideHtml(match, 'right', match.wrestler2);
       html += '</div></div>';
     });
     container.innerHTML = html;
