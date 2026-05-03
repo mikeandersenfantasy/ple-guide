@@ -2850,13 +2850,13 @@ ul { list-style: none; }
 }
 .card-tag-team-role {
   position: absolute;
-  top: 12px;
+  bottom: 10px;
   z-index: 3;
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(212,168,60,0.9);
-  background: rgba(10,12,18,0.78);
+  background: rgba(10,12,18,0.85);
   padding: 4px 10px;
   border: 1px solid rgba(212,168,60,0.35);
   border-radius: 3px;
@@ -2864,6 +2864,9 @@ ul { list-style: none; }
 }
 .card-tag-team-role.left  { left: 12px; }
 .card-tag-team-role.right { right: 12px; }
+/* Push the wrestler names up so they don't sit under the role badge corners */
+.card-left-panel--tag .card-tag-name,
+.card-right-panel--tag .card-tag-name { bottom: 36px; }
 @media (max-width: 768px) {
   .card-tag-name { font-size: 0.85rem; bottom: 8px; }
   .card-tag-team-role { font-size: 0.55rem; padding: 3px 7px; }
