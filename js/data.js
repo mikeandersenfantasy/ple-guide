@@ -1084,6 +1084,104 @@ const WRESTLERS = {
       "Money in the Bank winner",
       "Half of the Kabuki Warriors / former Damage CTRL"
     ]
+  },
+  "the-miz": {
+    name: "The Miz",
+    nickname: "The A-Lister",
+    aliases: "Mike Mizanin",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Hollywood-veteran heel with championship pedigree",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2018/05/The_Miz_pro--f4e98cf4a7d4acc8e418ddf0f949e95e.png",
+    about: "The Miz is a 2x WWE Champion, 8x Intercontinental Champion, and a 20+ year veteran of the company. The Real World alum turned wrestling icon, he's one of the most consistent heels of his era — a smart-mouthed promo machine who can wrestle just as well as he can talk. Now teaming with Kit Wilson, looking to get back into the title picture.",
+    finisher: "Skull-Crushing Finale",
+    finisherDesc: "A modified swinging reverse STO that drives the opponent face-first into the canvas. Also uses the Figure-Four Leglock he learned from Ric Flair.",
+    entranceTheme: "I Came to Play",
+    entranceArtist: "Downstait",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "2x WWE Champion",
+      "Record-tying 8x Intercontinental Champion",
+      "WrestleMania 27 main eventer",
+      "2010 Money in the Bank winner",
+      "20+ year WWE veteran"
+    ]
+  },
+  "kit-wilson": {
+    name: "Kit Wilson",
+    nickname: "Pretty Deadly",
+    aliases: "Kit Wilson (formerly of Pretty Deadly)",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Flashy, smug tag specialist now running with The Miz",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/02/KitWilson_11072025ak_0140_Profile.png",
+    about: "Kit Wilson is a former NXT Tag Team Champion as one half of Pretty Deadly. After a roster shake-up, he was paired with The Miz on the main roster as a flashy, in-your-face heel duo. Wilson brings high-flying offense and over-the-top heel charisma to every match.",
+    finisher: "Spilt Milk",
+    finisherDesc: "A coordinated double-team finisher inherited from the Pretty Deadly playbook — when paired with The Miz they hit a modified version that drives opponents through the mat.",
+    entranceTheme: "Pretty Deadly",
+    entranceArtist: "def rebel",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Former NXT Tag Team Champion (with Elton Prince)",
+      "Former NXT UK Tag Team Champion",
+      "Now teamed with The Miz on Raw",
+      "Trained at WWE Performance Center"
+    ]
+  },
+  "danhausen": {
+    name: "Danhausen",
+    nickname: "Very Nice, Very Evil",
+    aliases: "Donovan Danhausen",
+    brand: "SmackDown",
+    alignment: "Face",
+    alignmentDesc: "Cult-favorite eccentric who curses opponents",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/Danhausen_PROFILE.png",
+    about: "Danhausen is one of the most beloved cult characters in modern wrestling. Painted face, jar of teeth, ability to 'curse' opponents at will — he's an indie legend who finally landed in WWE. Equal parts comedy and chaos, his catchphrase 'Very nice, very evil' has become a worldwide chant. Brings unpredictability to any match he's in.",
+    finisher: "Danhausen Driver",
+    finisherDesc: "A sit-out package piledriver. Often follows up a curse with the move for full effect.",
+    entranceTheme: "Danhausen",
+    entranceArtist: "Mikey Rukus",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "Former indie standout (AEW, ROH, GCW)",
+      "Cult-favorite character work",
+      "Signature 'curse' from a jar of teeth",
+      "Crowd-favorite chant: \"Very nice, very evil!\""
+    ]
+  },
+  "paul-heyman": {
+    name: "Paul Heyman",
+    nickname: "The Wiseman",
+    aliases: "The Hall of Fame Special Counsel",
+    brand: "Raw",
+    alignment: "Heel",
+    alignmentDesc: "Manager / Wiseman — currently aligned with Bron Breakker",
+    isChampion: false,
+    title: null,
+    img: "https://www.wwe.com/f/styles/talent_champion_lg/public/all/2025/06/Paul_Heyman_10162024ca_104_Profile--7f0d1e9190ec0323b94370f4cf3b5156.png",
+    about: "Paul Heyman is the greatest manager in pro wrestling history and a 2024 WWE Hall of Famer. Founder of ECW, mastermind behind the Brock Lesnar dynasty, Wiseman to Roman Reigns during his record reign — and now the special counsel guiding Bron Breakker. Heyman doesn't wrestle; he doesn't have to. His mind is the weapon.",
+    finisher: "The Pep Talk",
+    finisherDesc: "A microphone, a name to mention, and a full arena hanging on every word. Heyman's promos can build or destroy careers.",
+    entranceTheme: "Brock Lesnar / Roman Reigns themes (no solo theme)",
+    entranceArtist: "Various",
+    spotifyId: null,
+    entranceVideo: null,
+    highlights: [
+      "2024 WWE Hall of Famer",
+      "Founder of ECW",
+      "Original Paul Heyman Guy: Brock Lesnar",
+      "Wiseman during Roman Reigns' 1,316-day Universal title reign",
+      "Now guiding Bron Breakker on Raw"
+    ]
   }
 };
 

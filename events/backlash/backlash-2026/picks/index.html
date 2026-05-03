@@ -109,6 +109,10 @@
   var STORAGE_PREFIX = 'backlash2026';
   var EVENT_KEY = 'backlash2026';
   var picksApi = createPicksApi(EVENT_KEY);
+  // Also pull WM42 picker names so returning family members see their name
+  // in the dropdown without having to retype it (legacy/flat sheet, no PIN).
+  var wm42Api = createPicksApi('wm42', { format: '' });
+  var wm42Names = [];
   // Picks lock at 6:00 PM ET on May 9 (showtime). Picks open now.
   var SHOW_DATE = new Date('2026-05-09T18:00:00-04:00');
   var OPEN_DATE = new Date('2026-04-20T00:00:00-04:00');
@@ -116,25 +120,41 @@
   var adminUnlocked = false;
 
   // === BACKLASH 2026 MATCHES (mirror of event page) ===
+  // For singles: wrestler1/2 = { id, name, role }. id = wrestler key & pick id.
+  // For tag teams: wrestler1/2 = { id (team id), name, role, members: [{ id, name, mystery? }] }.
+  // The pick stored is the side's id (so for tag matches, you pick a TEAM, not a person).
   var BACKLASH_MATCHES = [
-    { id: 'reigns-fatu-backlash', championship: 'World Heavyweight Championship', matchType: 'title',
+    { id: 'reigns-fatu-backlash', championship: 'World Heavyweight Championship', matchType: 'title', confirmed: true,
       wrestler1: { id: 'roman-reigns', name: 'Roman Reigns', role: 'Champion' },
       wrestler2: { id: 'jacob-fatu', name: 'Jacob Fatu', role: 'Challenger' } },
-    { id: 'morgan-vaquer-backlash', championship: "Women's World Championship", matchType: 'title',
-      wrestler1: { id: 'liv-morgan', name: 'Liv Morgan', role: 'Champion' },
-      wrestler2: { id: 'stephanie-vaquer', name: 'Stephanie Vaquer', role: 'Challenger' } },
-    { id: 'iyo-asuka-backlash', championship: 'Singles Match', matchType: 'special',
-      wrestler1: { id: 'iyo-sky', name: 'IYO SKY', role: 'The Genius of the Sky' },
-      wrestler2: { id: 'asuka', name: 'Asuka', role: 'The Empress' } },
-    { id: 'rollins-breakker-backlash', championship: 'Grudge Match', matchType: 'grudge',
-      wrestler1: { id: 'seth-rollins', name: 'Seth Rollins', role: 'The Visionary' },
-      wrestler2: { id: 'bron-breakker', name: 'Bron Breakker', role: 'The Vision' } },
-    { id: 'zayn-williams-backlash', championship: 'WWE United States Championship', matchType: 'title',
+    { id: 'zayn-williams-backlash', championship: 'WWE United States Championship', matchType: 'title', confirmed: true,
       wrestler1: { id: 'trick-williams', name: 'Trick Williams', role: 'Champion' },
       wrestler2: { id: 'sami-zayn', name: 'Sami Zayn', role: 'Former Champion' } },
-    { id: 'gunther-knight-backlash', championship: 'Number One Contender Match', matchType: 'special',
-      wrestler1: { id: 'gunther', name: 'GUNTHER', role: 'The Ring General' },
-      wrestler2: { id: 'la-knight', name: 'LA Knight', role: 'YEAH!' } }
+    { id: 'rollins-breakker-backlash', championship: 'Grudge Match', matchType: 'grudge', confirmed: true,
+      wrestler1: { id: 'seth-rollins', name: 'Seth Rollins', role: 'The Visionary' },
+      wrestler2: { id: 'bron-breakker', name: 'Bron Breakker', role: 'w/ Paul Heyman' } },
+    { id: 'iyo-asuka-backlash', championship: 'Singles Match', matchType: 'special', confirmed: true,
+      wrestler1: { id: 'asuka', name: 'Asuka', role: 'The Empress' },
+      wrestler2: { id: 'iyo-sky', name: 'IYO SKY', role: 'The Genius of the Sky' } },
+    { id: 'danhausen-mystery-vs-miz-kit-backlash', championship: 'Tag Team Match', matchType: 'tag', confirmed: true,
+      wrestler1: {
+        id: 'team-danhausen-mystery',
+        name: 'Danhausen & ?',
+        role: 'Very Nice, Very Evil',
+        members: [
+          { id: 'danhausen', name: 'Danhausen' },
+          { id: '__mystery', name: '?', mystery: true }
+        ]
+      },
+      wrestler2: {
+        id: 'team-miz-kit',
+        name: 'The Miz & Kit Wilson',
+        role: 'A-List Tag Team',
+        members: [
+          { id: 'the-miz', name: 'The Miz' },
+          { id: 'kit-wilson', name: 'Kit Wilson' }
+        ]
+      } }
   ];
 
   // === LOCK STATE ===
@@ -200,17 +220,31 @@
     }
     return n;
   }
-  function pickSideHtml(match, side, w) {
-    var img = getWrestlerImg(w.id);
-    var initial = (w.name || '?').charAt(0).toUpperCase();
-    var imgInner = img
-      ? '<img class="pick-img" src="' + img + '" alt="' + w.name + '" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;pick-img-fallback&quot;>' + initial + '</span>\'">'
+  function singleHeadshotHtml(memberId, memberName, isMystery) {
+    var initial = (memberName || '?').charAt(0).toUpperCase();
+    if (isMystery) {
+      return '<span class="pick-img-mystery"><span class="pick-img-mystery-q">?</span></span>';
+    }
+    var img = getWrestlerImg(memberId);
+    return img
+      ? '<img class="pick-img" src="' + img + '" alt="' + memberName + '" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;pick-img-fallback&quot;>' + initial + '</span>\'">'
       : '<span class="pick-img-fallback">' + initial + '</span>';
+  }
+  function pickSideHtml(match, side, w) {
     var selected = currentPicks[match.id] === w.id;
     var count = pickCountFor(match.id, w.id);
+    var imgWrap;
+    if (w.members && w.members.length) {
+      var membersHtml = w.members.map(function(m) {
+        return '<span class="pick-img-member">' + singleHeadshotHtml(m.id, m.name, !!m.mystery) + '</span>';
+      }).join('');
+      imgWrap = '<span class="pick-img-wrap pick-img-wrap--team">' + membersHtml + '</span>';
+    } else {
+      imgWrap = '<span class="pick-img-wrap">' + singleHeadshotHtml(w.id, w.name, false) + '</span>';
+    }
     var html = '<button class="pick-side pick-side--' + side + (selected ? ' selected' : '') + '" data-match="' + match.id + '" data-pick="' + w.id + '" type="button">';
     html += '<span class="pick-check">&#10003;</span>';
-    html += '<span class="pick-img-wrap">' + imgInner + '</span>';
+    html += imgWrap;
     html += '<span class="pick-name">' + w.name + '</span>';
     html += '<span class="pick-role">' + (w.role || '') + '</span>';
     html += '<span class="pick-count">' + count + ' pick' + (count === 1 ? '' : 's') + '</span>';
@@ -222,10 +256,13 @@
     var html = '';
     BACKLASH_MATCHES.forEach(function(match) {
       var hasPick = !!currentPicks[match.id];
+      var statusBadge = match.confirmed
+        ? '<span class="pick-confirmed">Confirmed</span>'
+        : '<span class="pick-unconfirmed">Expected</span>';
       html += '<div class="pick-card' + (hasPick ? ' has-pick' : '') + '" data-match-id="' + match.id + '">';
       html += '<div class="pick-card-top">';
       html += '<span class="pick-match-type ' + badgeClass(match.matchType) + '">' + match.championship + '</span>';
-      html += '<span class="pick-unconfirmed">Expected</span>';
+      html += statusBadge;
       html += '</div>';
       html += '<div class="pick-sides">';
       html += pickSideHtml(match, 'left', match.wrestler1);
@@ -273,11 +310,34 @@
     if (!picksSelect) return;
     var prev = picksSelect.value;
     var html = '<option value="">— Choose your name or add new —</option>';
-    var names = allPickers.map(function(p) { return p.name; }).filter(Boolean).sort(function(a, b) { return a.localeCompare(b); });
-    names.forEach(function(n) {
-      var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
-      html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
-    });
+
+    // Names from this event's saved picks
+    var backlashNames = allPickers.map(function(p) { return p.name; }).filter(Boolean);
+    var backlashLower = {};
+    backlashNames.forEach(function(n) { backlashLower[n.toLowerCase()] = true; });
+
+    // WM42 names that haven't picked Backlash yet — show in a separate group
+    var wm42Only = wm42Names.filter(function(n) { return !backlashLower[n.toLowerCase()]; });
+
+    backlashNames.sort(function(a, b) { return a.localeCompare(b); });
+    wm42Only.sort(function(a, b) { return a.localeCompare(b); });
+
+    if (backlashNames.length) {
+      html += '<optgroup label="Backlash 2026 picks">';
+      backlashNames.forEach(function(n) {
+        var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
+        html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
+      });
+      html += '</optgroup>';
+    }
+    if (wm42Only.length) {
+      html += '<optgroup label="From WrestleMania 42 (no Backlash picks yet)">';
+      wm42Only.forEach(function(n) {
+        var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
+        html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
+      });
+      html += '</optgroup>';
+    }
     html += '<option value="__new__">+ Add new picker</option>';
     picksSelect.innerHTML = html;
   }
@@ -605,12 +665,23 @@
 
   // === DATA REFRESH (picks tab confidence + leaderboard) ===
   var didInitialAutoSelect = false;
+  var didLoadWm42Names = false;
+  function loadWm42NamesOnce() {
+    if (didLoadWm42Names) return;
+    didLoadWm42Names = true;
+    wm42Api.load(function(data) {
+      var names = ((data && data.pickers) || []).map(function(p) { return p.name; }).filter(Boolean);
+      wm42Names = names;
+      rebuildNameDropdown();
+    });
+  }
   function refreshAll() {
     picksApi.load(function(data) {
       allPickers = (data && data.pickers) || [];
       latestResults = (data && data.results) || {};
       hasPinMap = (data && data.hasPin) || {};
       rebuildNameDropdown();
+      loadWm42NamesOnce();
       renderPickCards();
       if (activeTab === 'leaderboard') renderLeaderboard();
 

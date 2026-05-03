@@ -56,7 +56,9 @@
 
   global.createPicksApi = function(eventKey, opts) {
     opts = opts || {};
-    var format = opts.format || 'json';
+    // Pass { format: '' } or { format: null } to opt OUT of JSON storage mode
+    // (e.g. for the legacy WM42 column-per-match sheet). Default is JSON mode.
+    var format = ('format' in opts) ? opts.format : 'json';
     var ev = encodeURIComponent(eventKey);
 
     function save(payload, callback) {
