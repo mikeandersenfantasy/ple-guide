@@ -2767,11 +2767,10 @@ ul { list-style: none; }
 }
 
 /* === CINEMATIC CARD - TAG TEAM PANELS === */
-/* Reset everything inherited from .card-left-panel/.card-right-panel that
-   would interfere with a horizontal flex layout (padding, clip-path,
-   per-side overlays, justify content). The animation hooks (transform,
-   opacity, panelSlide*) are intentionally kept so the tag panels still
-   slide in like the singles panels do. */
+/* Reset every property the singles base panel applies that would interfere
+   with a horizontal flex layout AND skip the slide-in animation entirely
+   so the tag panels are always painted (the animation has bitten us before
+   when one side never reached its end state). */
 .card-left-panel--tag,
 .card-right-panel--tag {
   display: flex !important;
@@ -2782,12 +2781,24 @@ ul { list-style: none; }
   background: #0a0c12 !important;
   background-image: none !important;
   clip-path: none !important;
-  overflow: hidden;
+  overflow: hidden !important;
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+.cinematic-card.panel-in .card-left-panel--tag,
+.cinematic-card.panel-in .card-right-panel--tag {
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
 }
 .card-left-panel--tag::after,
 .card-right-panel--tag::after { display: none !important; }
 .card-tag-member {
-  flex: 1 1 0;
+  flex: 1 1 50% !important;
+  width: 50% !important;
   min-width: 0;
   align-self: stretch;
   background-color: #0a0c12;
