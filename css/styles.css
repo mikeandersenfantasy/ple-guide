@@ -2765,6 +2765,79 @@ ul { list-style: none; }
   .pick-img-wrap--team .pick-img-member { width: 48px; height: 48px; }
   .pick-img-mystery-q { font-size: 1.5rem; }
 }
+
+/* === CINEMATIC CARD - TAG TEAM PANELS === */
+.card-left-panel--tag,
+.card-right-panel--tag {
+  display: flex;
+  flex-direction: row;
+  background: none !important;
+  background-image: none !important;
+  position: relative;
+}
+.card-tag-member {
+  flex: 1;
+  background-color: #0a0c12;
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+}
+.card-tag-member::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,12,18,0.95) 0%, rgba(10,12,18,0.2) 35%, rgba(10,12,18,0) 60%);
+  pointer-events: none;
+}
+.card-left-panel--tag .card-tag-member + .card-tag-member,
+.card-right-panel--tag .card-tag-member + .card-tag-member {
+  border-left: 1px solid rgba(212,168,60,0.18);
+}
+.card-tag-name {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  font-family: Impact, sans-serif;
+  font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+  letter-spacing: 0.05em;
+  color: #fff;
+  padding: 0 8px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+}
+.card-tag-member--mystery {
+  background: linear-gradient(160deg, #0a0c12 0%, #1a1c2a 60%, #0a0c12 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-tag-mystery-q {
+  font-family: Impact, sans-serif;
+  font-size: clamp(3rem, 9vw, 6rem);
+  color: #D4A83C;
+  text-shadow: 0 0 24px rgba(212,168,60,0.55);
+  z-index: 2;
+}
+.card-tag-team-role {
+  position: absolute;
+  top: 14px;
+  z-index: 3;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(212,168,60,0.85);
+  background: rgba(10,12,18,0.7);
+  padding: 4px 10px;
+  border: 1px solid rgba(212,168,60,0.35);
+  border-radius: 3px;
+}
+.card-tag-team-role.left  { left: 14px; }
+.card-tag-team-role.right { right: 14px; }
 .lb-meta {
   text-align: center;
   margin-top: 14px;

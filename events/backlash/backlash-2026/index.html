@@ -224,43 +224,50 @@
   }
 
   // === BUILD CINEMATIC CARD (matches WM42 structure exactly) ===
-  function getSideBgImg(side) {
+  function buildSidePanel(side, sideClass) {
     if (side.members && side.members.length) {
-      // Use the first non-mystery member's image as the panel background
-      for (var i = 0; i < side.members.length; i++) {
-        if (!side.members[i].mystery) {
-          var img = getWrestlerImg(side.members[i].key);
-          if (img) return img;
+      // Tag side: stack each member as their own sub-panel
+      var membersHtml = side.members.map(function(m) {
+        if (m.mystery) {
+          return '<div class="card-tag-member card-tag-member--mystery">' +
+                 '<div class="card-tag-mystery-q">?</div>' +
+                 '<div class="card-tag-name">' + m.name + '</div>' +
+                 '</div>';
         }
-      }
-      return '';
+        var mImg = getWrestlerImg(m.key);
+        var bgStyle = mImg ? ' style="background-image:url(\'' + mImg + '\')"' : '';
+        return '<div class="card-tag-member"' + bgStyle + '>' +
+               '<div class="card-tag-name">' + m.name + '</div>' +
+               '</div>';
+      }).join('');
+      var html = '<div class="card-' + sideClass + '-panel card-' + sideClass + '-panel--tag">';
+      html += membersHtml;
+      if (side.role) html += '<div class="card-tag-team-role ' + sideClass + '">' + side.role + '</div>';
+      html += '</div>';
+      return html;
     }
-    return getWrestlerImg(side.key);
+    // Singles: existing background-image panel
+    var img = getWrestlerImg(side.key);
+    var bg = img ? ' style="background-image:url(\'' + img + '\')"' : '';
+    var out = '<div class="card-' + sideClass + '-panel"' + bg + '>';
+    out += '<div class="wrestler-label ' + sideClass + '">' + side.name + '</div>';
+    if (side.role) out += '<div class="wrestler-role ' + sideClass + '">' + side.role + '</div>';
+    out += '</div>';
+    return out;
   }
   function buildCinematicCard(match) {
     var mt = match.matchType || 'special';
     var hype = match.hype || 3;
 
-    var leftImg = getSideBgImg(match.wrestler1);
-    var rightImg = getSideBgImg(match.wrestler2);
-    var leftBgStyle = leftImg ? ' style="background-image:url(\'' + leftImg + '\')"' : '';
-    var rightBgStyle = rightImg ? ' style="background-image:url(\'' + rightImg + '\')"' : '';
-
     var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-animated="false">';
 
     html += '<div class="card-faceoff-area">';
 
-    html += '<div class="card-left-panel"' + leftBgStyle + '>';
-    html += '<div class="wrestler-label left">' + match.wrestler1.name + '</div>';
-    if (match.wrestler1.role) html += '<div class="wrestler-role left">' + match.wrestler1.role + '</div>';
-    html += '</div>';
+    html += buildSidePanel(match.wrestler1, 'left');
 
     html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
 
-    html += '<div class="card-right-panel"' + rightBgStyle + '>';
-    html += '<div class="wrestler-label right">' + match.wrestler2.name + '</div>';
-    if (match.wrestler2.role) html += '<div class="wrestler-role right">' + match.wrestler2.role + '</div>';
-    html += '</div>';
+    html += buildSidePanel(match.wrestler2, 'right');
 
     html += '<div class="card-center-stamp">';
     html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';

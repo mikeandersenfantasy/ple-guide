@@ -109,10 +109,23 @@
   var STORAGE_PREFIX = 'backlash2026';
   var EVENT_KEY = 'backlash2026';
   var picksApi = createPicksApi(EVENT_KEY);
-  // Also pull WM42 picker names so returning family members see their name
-  // in the dropdown without having to retype it (legacy/flat sheet, no PIN).
-  var wm42Api = createPicksApi('wm42', { format: '' });
-  var wm42Names = [];
+
+  // Returning family members from WrestleMania 42. Hardcoded so the dropdown
+  // is instant (no extra Sheet round-trip on page load). Add new picker names
+  // here when they appear on a future event so the family doesn't have to
+  // retype them. Lowercased comparisons handle case-insensitivity.
+  var KNOWN_PICKERS = [
+    'Mike the Man',
+    'Burris',
+    'Jmo2shiesty',
+    'Kenny the Krusher',
+    'Rowdy Ragin’ Ruthie',
+    'FOMOMOMO',
+    'Marauding Mags',
+    'Her Majesty Lady Liz',
+    'Killer Kenga',
+    'DNASTY'
+  ];
   // Picks lock at 6:00 PM ET on May 9 (showtime). Picks open now.
   var SHOW_DATE = new Date('2026-05-09T18:00:00-04:00');
   var OPEN_DATE = new Date('2026-04-20T00:00:00-04:00');
@@ -311,33 +324,24 @@
     var prev = picksSelect.value;
     var html = '<option value="">— Choose your name or add new —</option>';
 
-    // Names from this event's saved picks
-    var backlashNames = allPickers.map(function(p) { return p.name; }).filter(Boolean);
-    var backlashLower = {};
-    backlashNames.forEach(function(n) { backlashLower[n.toLowerCase()] = true; });
-
-    // WM42 names that haven't picked Backlash yet — show in a separate group
-    var wm42Only = wm42Names.filter(function(n) { return !backlashLower[n.toLowerCase()]; });
-
-    backlashNames.sort(function(a, b) { return a.localeCompare(b); });
-    wm42Only.sort(function(a, b) { return a.localeCompare(b); });
-
-    if (backlashNames.length) {
-      html += '<optgroup label="Backlash 2026 picks">';
-      backlashNames.forEach(function(n) {
-        var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
-        html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
-      });
-      html += '</optgroup>';
+    var seen = {};
+    var merged = [];
+    function addName(n) {
+      if (!n) return;
+      var k = n.toLowerCase();
+      if (seen[k]) return;
+      seen[k] = true;
+      merged.push(n);
     }
-    if (wm42Only.length) {
-      html += '<optgroup label="From WrestleMania 42 (no Backlash picks yet)">';
-      wm42Only.forEach(function(n) {
-        var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
-        html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
-      });
-      html += '</optgroup>';
-    }
+    // Backlash pickers first (they're real for THIS event), then known-from-prior-events
+    allPickers.forEach(function(p) { addName(p.name); });
+    KNOWN_PICKERS.forEach(addName);
+
+    merged.sort(function(a, b) { return a.localeCompare(b); });
+    merged.forEach(function(n) {
+      var sel = (prev && prev.toLowerCase() === n.toLowerCase()) ? ' selected' : '';
+      html += '<option value="' + n + '"' + sel + '>' + n + '</option>';
+    });
     html += '<option value="__new__">+ Add new picker</option>';
     picksSelect.innerHTML = html;
   }
@@ -665,23 +669,15 @@
 
   // === DATA REFRESH (picks tab confidence + leaderboard) ===
   var didInitialAutoSelect = false;
-  var didLoadWm42Names = false;
-  function loadWm42NamesOnce() {
-    if (didLoadWm42Names) return;
-    didLoadWm42Names = true;
-    wm42Api.load(function(data) {
-      var names = ((data && data.pickers) || []).map(function(p) { return p.name; }).filter(Boolean);
-      wm42Names = names;
-      rebuildNameDropdown();
-    });
-  }
+  // Render dropdown immediately with hardcoded KNOWN_PICKERS so returning users
+  // see their name without waiting for the network round-trip.
+  rebuildNameDropdown();
   function refreshAll() {
     picksApi.load(function(data) {
       allPickers = (data && data.pickers) || [];
       latestResults = (data && data.results) || {};
       hasPinMap = (data && data.hasPin) || {};
       rebuildNameDropdown();
-      loadWm42NamesOnce();
       renderPickCards();
       if (activeTab === 'leaderboard') renderLeaderboard();
 

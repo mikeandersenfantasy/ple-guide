@@ -77,6 +77,18 @@
   var container = document.getElementById('matches-container');
   if (!container || typeof MATCHES === 'undefined') return;
 
+  // === WM42-only image overrides ===
+  // Sami Zayn was still US Champion at WrestleMania 42 (he lost the title to
+  // Trick Williams in this match). The global Sami image now reflects his
+  // post-WM42 status, so we override here for the WM42 archive only.
+  if (WRESTLERS['sami-zayn']) {
+    WRESTLERS['sami-zayn'] = Object.assign({}, WRESTLERS['sami-zayn'], {
+      img: 'https://www.wwe.com/f/styles/talent_champion_lg/public/2026/03/sami_zayn_profile%202.png',
+      isChampion: true,
+      title: 'United States Champion'
+    });
+  }
+
   var heroSub = document.getElementById('hero-sub');
   heroSub.textContent = MATCHES.length + ' confirmed matches across two nights. Tap any match to see the story.';
 
