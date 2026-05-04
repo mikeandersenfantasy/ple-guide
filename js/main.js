@@ -330,7 +330,9 @@ function initHypeIntro() {
 
 // ===== INIT ALL =====
 document.addEventListener('DOMContentLoaded', () => {
-  initHypeIntro();
+  // initHypeIntro intentionally disabled — the per-page intro card was
+  // friction on inter-page navigation. The function still exists if we
+  // ever want to bring back a one-time landing animation on the homepage.
   initHomepageEvents();
   initCountdown();
   initNav();
