@@ -13,62 +13,53 @@
 @keyframes bgPulse{0%{transform:translate(0,0)}100%{transform:translate(-2%,-1%)}}
 @keyframes spotlightSweep{0%,100%{opacity:.3;transform:translateX(-20%)}50%{opacity:1;transform:translateX(20%)}}
 
-/* ===== MATCH SECTIONS ===== */
-.match-section{padding:60px 0;position:relative;overflow:hidden}
-.match-section:nth-child(even){background:rgba(255,255,255,0.02)}
-.match-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:120%;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(212,168,60,0.3) 50%,transparent 100%)}
-
-/* ===== MATCH BANNER ===== */
-.match-banner{position:relative;text-align:center;margin-bottom:40px}
-.match-banner img{width:100%;max-width:800px;border-radius:16px;display:block;margin:0 auto;border:2px solid rgba(212,168,60,0.2);box-shadow:0 8px 40px rgba(0,0,0,.5),0 0 60px rgba(212,168,60,0.08);transition:all .4s ease}
-.match-banner img:hover{border-color:var(--wm-gold);box-shadow:0 12px 50px rgba(0,0,0,.6),0 0 80px rgba(212,168,60,0.15);transform:scale(1.01)}
-.match-banner-overlay{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:800px;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,0.9));border-radius:0 0 16px 16px;pointer-events:none}
-.match-banner-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--wm-gold);text-shadow:0 2px 8px rgba(0,0,0,.8)}
-@media(max-width:600px){.match-banner-overlay{padding:12px}.match-banner-title{font-size:.6rem;letter-spacing:2px}}
+/* ===== BRAND SECTIONS ===== */
+.brand-section{padding:32px 0 24px;position:relative}
+.brand-section + .brand-section{border-top:1px solid rgba(212,168,60,0.15)}
+.brand-header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.brand-name{font-family:Impact,sans-serif;font-size:clamp(1.4rem,4vw,2rem);letter-spacing:0.08em;text-transform:uppercase;color:#fff}
+.brand-name .brand-accent{color:var(--wm-gold)}
+.brand-count{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
 
 /* ===== ENTRANCE CARDS ===== */
-.vid-card{background:var(--navy-light);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;transition:all .4s ease;display:flex;flex-direction:column;position:relative}
+.vid-card{background:var(--navy-light);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;transition:all .35s ease;display:flex;flex-direction:column;position:relative}
 .vid-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--wm-gold),var(--wwe-red),var(--wm-gold));opacity:0;transition:opacity .3s ease}
-.vid-card:hover{box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 30px rgba(212,168,60,0.1);border-color:rgba(212,168,60,0.3);transform:translateY(-6px)}
+.vid-card:hover{box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 30px rgba(212,168,60,0.1);border-color:rgba(212,168,60,0.3);transform:translateY(-4px)}
 .vid-card:hover::before{opacity:1}
-.vid-embed{position:relative;width:100%;padding-top:56.25%;background:#0a0a12;overflow:hidden}
+.vid-embed{position:relative;width:100%;padding-top:56.25%;background:#0a0a12;overflow:hidden;cursor:pointer}
 .vid-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.vid-body{padding:18px 20px;flex:1;display:flex;flex-direction:column;text-align:center}
-.vid-name{font-size:1.15rem;font-weight:900;color:var(--white);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
-.vid-theme{font-size:.85rem;color:var(--wm-gold);font-style:italic;margin-bottom:8px}
-.vid-desc{font-size:.82rem;color:var(--mid-gray);line-height:1.5;flex:1}
+.vid-embed-poster{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;background-color:#0a0a12}
+.vid-embed-poster::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.65) 100%)}
+.vid-embed-play{position:relative;z-index:2;width:62px;height:62px;border-radius:50%;background:rgba(212,168,60,0.92);display:flex;align-items:center;justify-content:center;color:#0a0c12;font-size:1.4rem;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:transform 0.18s}
+.vid-embed:hover .vid-embed-play{transform:scale(1.08);background:#fff}
+.vid-body{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column;text-align:center}
+.vid-name{font-size:1.05rem;font-weight:900;color:var(--white);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em}
+.vid-theme{font-size:0.82rem;color:var(--wm-gold);font-style:italic;margin-bottom:6px}
+.vid-desc{font-size:0.78rem;color:var(--mid-gray);line-height:1.55;flex:1}
 
-/* ===== GRID LAYOUTS ===== */
-.vid-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto}
-@media(max-width:680px){.vid-grid{grid-template-columns:1fr;max-width:500px}}
-.vid-grid--multi{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;max-width:1100px}
-.vid-grid--multi .vid-card,.vid-grid--multi .vid-card--placeholder{width:calc(33.33% - 16px);min-width:0}
-@media(max-width:960px){.vid-grid--multi .vid-card,.vid-grid--multi .vid-card--placeholder{width:calc(50% - 12px)}}
-@media(max-width:680px){.vid-grid--multi .vid-card,.vid-grid--multi .vid-card--placeholder{width:100%;max-width:500px}}
-
-/* ===== SCROLL ANIMATIONS ===== */
-.fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
-.fade-in.visible{opacity:1;transform:translateY(0)}
-.fade-in:nth-child(2){transition-delay:.1s}
-.fade-in:nth-child(3){transition-delay:.2s}
-.fade-in:nth-child(4){transition-delay:.3s}
-.fade-in:nth-child(5){transition-delay:.4s}
-
-/* ===== TEAM LABELS ===== */
-.team-label{text-align:center;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--wm-gold);padding:20px 0 12px;margin:24px auto 16px;max-width:900px;position:relative}
-.team-label::after{content:'';display:block;width:60px;height:2px;background:var(--wm-gold);margin:8px auto 0;border-radius:1px}
-.team-label:first-of-type{margin-top:0}
+/* ===== GRID ===== */
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
 
 /* ===== PLACEHOLDER CARD ===== */
-.vid-card--placeholder .vid-embed{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy-mid),var(--navy-light))}
+.vid-card--placeholder .vid-embed{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy-mid),var(--navy-light));cursor:default}
 .vid-placeholder-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:var(--mid-gray)}
-.vid-placeholder-inner .icon{font-size:2.5rem;margin-bottom:8px;opacity:.4;animation:pulse 3s ease-in-out infinite}
-.vid-placeholder-inner .text{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
-@keyframes pulse{0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:.6;transform:translate(-50%,-50%) scale(1.1)}}
+.vid-placeholder-inner .icon{font-size:2.5rem;margin-bottom:8px;opacity:.4;animation:plPulse 3s ease-in-out infinite}
+.vid-placeholder-inner .text{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.16em}
+@keyframes plPulse{0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:.6;transform:translate(-50%,-50%) scale(1.08)}}
 
-/* ===== GLOW DIVIDER ===== */
-.glow-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,60,0.4),transparent);margin:0 auto;position:relative}
-.glow-divider::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:var(--wm-gold);border-radius:50%;box-shadow:0 0 12px rgba(212,168,60,0.6)}
+/* ===== CONTROLS ===== */
+.entrances-controls{display:flex;flex-direction:column;gap:10px;background:rgba(15,17,26,0.7);border:1px solid rgba(212,168,60,0.18);border-radius:10px;padding:14px;margin-bottom:18px}
+.entrances-search{position:relative}
+.entrances-search input{width:100%;background:#0a0c12;border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:11px 38px 11px 14px;color:#fff;font-size:0.95rem;font-family:inherit;outline:none;box-sizing:border-box}
+.entrances-search input::placeholder{color:rgba(255,255,255,0.32)}
+.entrances-search input:focus{border-color:#D4A83C}
+.entrances-search-clear{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.08);color:#fff;border:none;font-size:1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.entrances-search-clear:hover{background:rgba(212,168,60,0.25);color:#D4A83C}
+.entrances-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.42)}
+.entrances-show-missing{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:rgba(255,255,255,0.65)}
+.entrances-show-missing input{accent-color:#D4A83C}
+
+.entrances-empty{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.5)}
 </style>
 </head>
 <body>
@@ -88,8 +79,9 @@
           <a href="../events/royal-rumble/">Royal Rumble</a>
         </div>
       </span>
+      <a href="../matches/">Matches</a>
       <a href="../wrestlers/">Wrestlers</a>
-      <a href="../videos/">Entrances</a>
+      <a href="./">Entrances</a>
       <a href="../picks/">Picks</a>
       <a href="../legal/">Legal</a>
     </div>
@@ -99,21 +91,30 @@
 
 <!-- HERO -->
 <section class="hero" style="padding:50px 30px 40px;background:radial-gradient(ellipse at center top,#1a1c2a 0%,#0b0f1a 60%,#080c14 100%)">
-  <div class="hero-label">WrestleMania 42</div>
-  <h1>Entrance <span style="color:#fff">Videos</span></h1>
-  <p class="hero-sub">Learn the entrance themes before the show. When these songs hit, you'll know exactly who's coming out.</p>
+  <div class="hero-label">Entrance Themes</div>
+  <h1>Know the <span style="color:#fff">Music</span></h1>
+  <p class="hero-sub">Every Superstar's entrance, grouped by brand. When the song hits, you'll know who's coming out.</p>
 </section>
 
-<section class="section" style="padding-bottom:0">
+<section class="section">
   <div class="inner">
-    <div class="roster-notice">
-      &#128203; Currently reflecting the <strong>WrestleMania 42</strong> roster.
-      This database will be updated as Backlash 2026 and future events are confirmed.
+    <div class="entrances-controls">
+      <div class="entrances-search">
+        <input type="search" id="ent-search" placeholder="Search by wrestler name, theme, or alias..." autocomplete="off">
+        <button type="button" class="entrances-search-clear" id="ent-search-clear" aria-label="Clear" hidden>&times;</button>
+      </div>
+      <div class="entrances-meta">
+        <span id="ent-count"></span>
+        <label class="entrances-show-missing">
+          <input type="checkbox" id="ent-show-missing" checked>
+          Show wrestlers without an entrance video yet
+        </label>
+      </div>
     </div>
+    <div id="ent-container"></div>
+    <div id="ent-empty" class="entrances-empty" hidden>No entrances match your search.</div>
   </div>
 </section>
-
-<div id="entranceContainer"></div>
 
 <!-- FOOTER -->
 <footer class="footer">
@@ -126,129 +127,166 @@
 <script src="../js/main.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var container = document.getElementById('entranceContainer');
-  if (!container || !window.WM42_DATA) return;
+  var container = document.getElementById('ent-container');
+  if (!container || typeof WRESTLERS === 'undefined') return;
 
-  var wrestlers = window.WM42_DATA.WRESTLERS;
-  var matches = window.WM42_DATA.MATCHES;
+  // Skip synthetic entries (mystery placeholders, team ids)
+  function isSkippable(key) { return key.indexOf('__') === 0 || key.indexOf('team-') === 0; }
 
-  function getMatchWrestlerKeys(match) {
-    if (match.wrestler1 && match.wrestler2) return [match.wrestler1, match.wrestler2];
-    if (match.participants) return match.participants;
-    if (match.teams) {
-      var keys = [];
-      match.teams.forEach(function(t) { keys = keys.concat(t.wrestlers); });
-      return keys;
-    }
-    return [];
-  }
+  // Group order — known brands first, anything else falls into "Other"
+  var BRAND_ORDER = ['Raw', 'SmackDown', 'NXT'];
+  var groups = {};
+  Object.keys(WRESTLERS).forEach(function(key) {
+    if (isSkippable(key)) return;
+    var w = WRESTLERS[key];
+    if (!w || !w.name) return;
+    var brand = (w.brand && BRAND_ORDER.indexOf(w.brand) !== -1) ? w.brand : 'Other';
+    if (!groups[brand]) groups[brand] = [];
+    groups[brand].push({ key: key, w: w });
+  });
 
-  function buildTeamEntranceCard(teamWrestlers, teamName) {
-    // Use the first wrestler's entrance video for the team
-    var w1 = teamWrestlers[0];
-    var names = teamWrestlers.map(function(w) { return w.name; }).join(' & ');
-    if (w1.entranceVideo) {
-      var ev = w1.entranceVideo;
-      return '<div class="vid-card fade-in">' +
-        '<div class="vid-embed">' +
-          '<iframe src="https://www.youtube.com/embed/' + ev.id + '?start=' + ev.start + '" title="' + names + ' Entrance" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
-        '</div>' +
-        '<div class="vid-body">' +
-          '<div class="vid-name">' + names + '</div>' +
-          '<div class="vid-theme">"' + w1.entranceTheme + '" by ' + w1.entranceArtist + '</div>' +
-          (ev.desc ? '<div class="vid-desc">' + ev.desc + '</div>' : '') +
-        '</div>' +
-      '</div>';
-    } else {
-      return '<div class="vid-card vid-card--placeholder fade-in">' +
-        '<div class="vid-embed">' +
-          '<div class="vid-placeholder-inner">' +
-            '<div class="icon">&#127908;</div>' +
-            '<div class="text">Coming Soon</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="vid-body">' +
-          '<div class="vid-name">' + names + '</div>' +
-          '<div class="vid-theme">"' + w1.entranceTheme + '" by ' + w1.entranceArtist + '</div>' +
-        '</div>' +
-      '</div>';
-    }
-  }
+  var orderedBrands = BRAND_ORDER.filter(function(b) { return groups[b] && groups[b].length; });
+  if (groups['Other']) orderedBrands.push('Other');
 
-  function buildEntranceCard(w, slug) {
-    if (w.entranceVideo) {
+  // Sort wrestlers in each group alphabetically
+  orderedBrands.forEach(function(b) {
+    groups[b].sort(function(a, c) { return (a.w.name || '').localeCompare(c.w.name || ''); });
+  });
+
+  // ----- Card rendering. Iframes are NOT created up-front; we render a poster
+  // that swaps to an iframe on click (manual lazy-load — keeps the page light
+  // even with 30+ entrances). -----
+  function buildCard(entry) {
+    var w = entry.w;
+    var slug = entry.key;
+    var hasVideo = !!w.entranceVideo;
+    var card = document.createElement('div');
+    card.className = 'vid-card' + (hasVideo ? '' : ' vid-card--placeholder');
+    card.id = 'entrance-' + slug;
+    card.dataset.search = ((w.name || '') + ' ' + (w.entranceTheme || '') + ' ' + (w.entranceArtist || '') + ' ' + (w.aliases || '')).toLowerCase();
+    card.dataset.hasVideo = hasVideo ? '1' : '0';
+
+    if (hasVideo) {
       var ev = w.entranceVideo;
-      return '<div class="vid-card fade-in" id="entrance-' + (slug || '') + '">' +
-        '<div class="vid-embed">' +
-          '<iframe src="https://www.youtube.com/embed/' + ev.id + '?start=' + ev.start + '" title="' + w.name + ' Entrance" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>' +
-        '</div>' +
-        '<div class="vid-body">' +
-          '<div class="vid-name">' + w.name + '</div>' +
-          '<div class="vid-theme">"' + w.entranceTheme + '" by ' + w.entranceArtist + '</div>' +
-          (ev.desc ? '<div class="vid-desc">' + ev.desc + '</div>' : '') +
-        '</div>' +
-      '</div>';
-    } else {
-      return '<div class="vid-card vid-card--placeholder fade-in" id="entrance-' + (slug || '') + '">' +
-        '<div class="vid-embed">' +
-          '<div class="vid-placeholder-inner">' +
-            '<div class="icon">&#127908;</div>' +
-            '<div class="text">Coming Soon</div>' +
+      var poster = 'https://i.ytimg.com/vi/' + ev.id + '/hqdefault.jpg';
+      var startQ = ev.start ? '?start=' + ev.start : '';
+      card.innerHTML =
+        '<div class="vid-embed" data-yt-id="' + ev.id + '" data-yt-start="' + (ev.start || '') + '">' +
+          '<div class="vid-embed-poster" style="background-image:url(\'' + poster + '\')">' +
+            '<div class="vid-embed-play">&#9654;</div>' +
           '</div>' +
         '</div>' +
         '<div class="vid-body">' +
           '<div class="vid-name">' + w.name + '</div>' +
-          '<div class="vid-theme">"' + w.entranceTheme + '" by ' + w.entranceArtist + '</div>' +
+          '<div class="vid-theme">"' + (w.entranceTheme || '') + '"' + (w.entranceArtist ? ' by ' + w.entranceArtist : '') + '</div>' +
+          (ev.desc ? '<div class="vid-desc">' + ev.desc + '</div>' : '') +
+        '</div>';
+    } else {
+      card.innerHTML =
+        '<div class="vid-embed">' +
+          '<div class="vid-placeholder-inner">' +
+            '<div class="icon">&#127908;</div>' +
+            '<div class="text">Video coming soon</div>' +
+          '</div>' +
         '</div>' +
-      '</div>';
+        '<div class="vid-body">' +
+          '<div class="vid-name">' + w.name + '</div>' +
+          '<div class="vid-theme">"' + (w.entranceTheme || 'Theme TBD') + '"' + (w.entranceArtist ? ' by ' + w.entranceArtist : '') + '</div>' +
+        '</div>';
     }
+    return card;
   }
 
-  matches.forEach(function(match) {
-    var wrestlerKeys = getMatchWrestlerKeys(match);
-    if (wrestlerKeys.length === 0) return;
+  // Render brand sections
+  var allCards = [];
+  orderedBrands.forEach(function(b) {
+    var section = document.createElement('section');
+    section.className = 'brand-section';
+    section.dataset.brand = b;
 
-    var section = document.createElement('div');
-    section.className = 'match-section';
+    var withVid = groups[b].filter(function(e) { return e.w.entranceVideo; }).length;
+    var total = groups[b].length;
 
-    var isMulti = wrestlerKeys.length > 2;
-    var gridClass = isMulti ? 'vid-grid vid-grid--multi' : 'vid-grid';
+    var header = document.createElement('div');
+    header.className = 'brand-header';
+    header.innerHTML =
+      '<h2 class="brand-name">' + (b === 'Other' ? '<span class="brand-accent">Free Agents</span> &amp; Managers' : '<span class="brand-accent">' + b + '</span>') + '</h2>' +
+      '<span class="brand-count" data-brand-count>' + withVid + ' / ' + total + ' have entrance video</span>';
+    section.appendChild(header);
 
-    // Match banner image
-    var html = '<div class="inner">';
-    if (match.bannerImg) {
-      html += '<div class="match-banner fade-in">' +
-        '<img src="' + match.bannerImg + '" alt="' + match.championship + '" onerror="this.parentElement.style.display=\'none\'">' +
-        '<div class="match-banner-overlay">' +
-          '<div class="match-banner-title">' + match.championship.replace(/ -- .*/, '') + '</div>' +
-        '</div>' +
-      '</div>';
-    }
-
-    html += '<div class="' + gridClass + '">';
-    wrestlerKeys.forEach(function(key) {
-      var w = wrestlers[key];
-      if (w) html += buildEntranceCard(w, key);
+    var grid = document.createElement('div');
+    grid.className = 'vid-grid';
+    groups[b].forEach(function(entry) {
+      var card = buildCard(entry);
+      grid.appendChild(card);
+      allCards.push({ card: card, brand: b });
     });
-    html += '</div>';
-
-    html += '</div>';
-    section.innerHTML = html;
+    section.appendChild(grid);
     container.appendChild(section);
   });
 
-  // Scroll animation observer
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
+  // ----- Filtering -----
+  var searchInput = document.getElementById('ent-search');
+  var clearBtn = document.getElementById('ent-search-clear');
+  var showMissing = document.getElementById('ent-show-missing');
+  var countEl = document.getElementById('ent-count');
+  var emptyEl = document.getElementById('ent-empty');
+
+  function applyFilters() {
+    var q = (searchInput && searchInput.value || '').trim().toLowerCase();
+    var includeMissing = showMissing ? showMissing.checked : true;
+    var visibleTotal = 0;
+    var perBrand = {};
+    allCards.forEach(function(item) {
+      var hasVid = item.card.dataset.hasVideo === '1';
+      var matches = !q || item.card.dataset.search.indexOf(q) !== -1;
+      var allow = matches && (includeMissing || hasVid);
+      item.card.style.display = allow ? '' : 'none';
+      if (allow) {
+        visibleTotal++;
+        perBrand[item.brand] = (perBrand[item.brand] || 0) + 1;
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-  document.querySelectorAll('.fade-in').forEach(function(el) {
-    observer.observe(el);
+    // Hide brand sections that have no visible cards
+    container.querySelectorAll('.brand-section').forEach(function(s) {
+      var b = s.dataset.brand;
+      s.style.display = perBrand[b] ? '' : 'none';
+    });
+    if (clearBtn) clearBtn.hidden = !q;
+    if (countEl) countEl.textContent = visibleTotal + ' entrances shown';
+    if (emptyEl) emptyEl.hidden = visibleTotal !== 0;
+  }
+  if (searchInput) searchInput.addEventListener('input', applyFilters);
+  if (showMissing) showMissing.addEventListener('change', applyFilters);
+  if (clearBtn) clearBtn.addEventListener('click', function() {
+    if (searchInput) { searchInput.value = ''; searchInput.focus(); }
+    applyFilters();
   });
+  applyFilters();
+
+  // ----- Lazy-load YouTube iframe on poster click -----
+  container.addEventListener('click', function(e) {
+    var poster = e.target.closest('.vid-embed-poster');
+    if (!poster) return;
+    var embed = poster.parentElement;
+    if (!embed || !embed.dataset.ytId) return;
+    var ytId = embed.dataset.ytId;
+    var start = embed.dataset.ytStart;
+    var src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0' + (start ? '&start=' + start : '');
+    embed.innerHTML = '<iframe src="' + src + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+  });
+
+  // Auto-play on URL hash (#entrance-<slug>)
+  if (window.location.hash && window.location.hash.indexOf('#entrance-') === 0) {
+    var target = document.getElementById(window.location.hash.slice(1));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function() {
+        var poster = target.querySelector('.vid-embed-poster');
+        if (poster) poster.click();
+      }, 600);
+    }
+  }
 });
 </script>
 </body>

@@ -110,7 +110,8 @@
           <a href="../events/royal-rumble/">Royal Rumble</a>
         </div>
       </span>
-      <a href="../wrestlers/">Wrestlers</a>
+      <a href="../matches/">Matches</a>
+      <a href="./">Wrestlers</a>
       <a href="../videos/">Entrances</a>
       <a href="../picks/">Picks</a>
       <a href="../legal/">Legal</a>
@@ -121,22 +122,43 @@
 
 <!-- HERO -->
 <section class="hero" style="padding:50px 30px 40px;background:radial-gradient(ellipse at center top,#1a1c2a 0%,#0b0f1a 60%,#080c14 100%)">
-  <div class="hero-label">WrestleMania 42</div>
+  <div class="hero-label">Roster Glossary</div>
   <h1>Meet the <span style="color:#fff">Superstars</span></h1>
-  <p class="hero-sub">Click any wrestler to see their finisher, entrance music, and career highlights.</p>
+  <p class="hero-sub">Search by name, filter by brand or alignment. Tap any portrait for finisher, theme, and highlights.</p>
 </section>
 
 <section class="section">
 <div class="inner">
-<div class="roster-notice">
-  &#128203; Currently reflecting the <strong>WrestleMania 42</strong> roster.
-  This database will be updated as Backlash 2026 and future events are confirmed.
-</div>
 <div class="vol-warning">
   <span style="font-size:1.3rem">&#128264;</span>
   <span style="font-size:.95rem;color:var(--wm-gold)">Lower your volume before pressing play on entrance themes!</span>
 </div>
+
+<!-- Filters -->
+<div class="roster-filters">
+  <div class="roster-search">
+    <input type="search" id="roster-search-input" placeholder="Search by name, nickname, or alias..." autocomplete="off">
+    <button type="button" class="roster-search-clear" id="roster-search-clear" aria-label="Clear" hidden>&times;</button>
+  </div>
+  <div class="roster-chip-row" id="roster-brand-chips" data-filter="brand">
+    <button type="button" class="roster-chip active" data-value="all">All Brands</button>
+    <button type="button" class="roster-chip" data-value="Raw">Raw</button>
+    <button type="button" class="roster-chip" data-value="SmackDown">SmackDown</button>
+    <button type="button" class="roster-chip" data-value="NXT">NXT</button>
+  </div>
+  <div class="roster-chip-row" id="roster-align-chips" data-filter="alignment">
+    <button type="button" class="roster-chip active" data-value="all">All</button>
+    <button type="button" class="roster-chip" data-value="Face">Face</button>
+    <button type="button" class="roster-chip" data-value="Heel">Heel</button>
+    <button type="button" class="roster-chip" data-value="Champion">Champions only</button>
+  </div>
+  <div class="roster-count" id="roster-count"></div>
+</div>
+
 <div id="rosterGrid"></div>
+<div id="roster-empty" class="roster-empty" hidden>
+  No wrestlers match your filters. Try clearing the search or switching brands.
+</div>
 </div>
 </section>
 
@@ -272,85 +294,95 @@ document.addEventListener('DOMContentLoaded', function() {
     return { card: card, expanded: expanded };
   }
 
-  // Get all wrestler keys for a match
-  function getMatchWrestlerKeys(match) {
-    if (match.wrestler1 && match.wrestler2) return [match.wrestler1, match.wrestler2];
-    if (match.participants) return match.participants;
-    if (match.teams) {
-      var keys = [];
-      match.teams.forEach(function(t) { keys = keys.concat(t.wrestlers); });
-      return keys;
-    }
-    return [];
-  }
+  // ===== Flat alphabetical glossary with search + filter =====
+  // Skip purely synthetic team-id entries (e.g. mystery placeholders)
+  function isSkippable(key) { return key.indexOf('__') === 0 || key.indexOf('team-') === 0; }
 
-  // Build page organized by matchups
-  matches.forEach(function(match) {
-    var wrestlerKeys = getMatchWrestlerKeys(match);
-    if (wrestlerKeys.length === 0) return;
-
-    var section = document.createElement('div');
-    section.className = 'matchup';
-
-    // Title
-    var title = document.createElement('div');
-    title.className = 'matchup-title';
-    title.style.textAlign = 'center';
-    title.style.marginBottom = '20px';
-    title.textContent = match.championship;
-
-    if (wrestlerKeys.length === 2) {
-      // Standard 1v1 VS layout
-      var vsGrid = document.createElement('div');
-      vsGrid.className = 'matchup-vs';
-      vsGrid.appendChild(title);
-
-      var card1 = buildCard(wrestlerKeys[0], wrestlers[wrestlerKeys[0]]);
-      var card2 = buildCard(wrestlerKeys[1], wrestlers[wrestlerKeys[1]]);
-
-      vsGrid.appendChild(card1.card);
-      var vsLabel = document.createElement('div');
-      vsLabel.className = 'vs-label';
-      vsLabel.textContent = 'VS';
-      vsGrid.appendChild(vsLabel);
-      vsGrid.appendChild(card2.card);
-
-      section.appendChild(vsGrid);
-      section.appendChild(card1.expanded);
-      section.appendChild(card2.expanded);
-    } else {
-      // Multi-person match -- centered grid layout
-      section.appendChild(title);
-      var multiGrid = document.createElement('div');
-      multiGrid.className = 'roster-grid';
-
-      // Set columns based on wrestler count: 6=3cols, 8=4cols, else half
-      // On mobile, always use 2 columns
-      var count = wrestlerKeys.length;
-      var isMobile = window.innerWidth <= 768;
-      var cols = isMobile ? 2 : (count <= 4 ? 2 : count <= 6 ? 3 : 4);
-      multiGrid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
-      multiGrid.style.justifyItems = 'center';
-
-      var expandedPanels = [];
-
-      wrestlerKeys.forEach(function(key) {
-        var w = wrestlers[key];
-        if (!w) return;
-        var card = buildCard(key, w);
-        multiGrid.appendChild(card.card);
-        expandedPanels.push(card.expanded);
-      });
-
-      section.appendChild(multiGrid);
-      expandedPanels.forEach(function(panel) {
-        section.appendChild(panel);
-      });
-    }
-
-    container.appendChild(section);
+  var allKeys = Object.keys(wrestlers).filter(function(k) { return !isSkippable(k); });
+  allKeys.sort(function(a, b) {
+    var an = (wrestlers[a].name || '').toLowerCase();
+    var bn = (wrestlers[b].name || '').toLowerCase();
+    return an.localeCompare(bn);
   });
 
+  // Build all cards once; show/hide via display: none for snappy filtering
+  var cardEntries = [];
+  var grid = document.createElement('div');
+  grid.className = 'roster-grid';
+  allKeys.forEach(function(key) {
+    var w = wrestlers[key];
+    if (!w) return;
+    var built = buildCard(key, w);
+    var wrap = document.createElement('div');
+    wrap.className = 'roster-card-wrap';
+    wrap.appendChild(built.card);
+    wrap.appendChild(built.expanded);
+    grid.appendChild(wrap);
+    cardEntries.push({
+      wrap: wrap,
+      key: key,
+      w: w,
+      searchBlob: ((w.name || '') + ' ' + (w.nickname || '') + ' ' + (w.aliases || '')).toLowerCase()
+    });
+  });
+  container.appendChild(grid);
+
+  // Filter state
+  var state = { q: '', brand: 'all', alignment: 'all' };
+  var countEl = document.getElementById('roster-count');
+  var emptyEl = document.getElementById('roster-empty');
+
+  function applyFilters() {
+    var visible = 0;
+    cardEntries.forEach(function(entry) {
+      var w = entry.w;
+      var matchQ = !state.q || entry.searchBlob.indexOf(state.q) !== -1;
+      var matchBrand = state.brand === 'all' || w.brand === state.brand;
+      var matchAlign;
+      if (state.alignment === 'all') matchAlign = true;
+      else if (state.alignment === 'Champion') matchAlign = !!w.isChampion;
+      else matchAlign = w.alignment === state.alignment;
+      var show = matchQ && matchBrand && matchAlign;
+      entry.wrap.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    if (countEl) countEl.textContent = visible + ' of ' + cardEntries.length + ' Superstars';
+    if (emptyEl) emptyEl.hidden = visible !== 0;
+  }
+
+  // Wire search box
+  var searchInput = document.getElementById('roster-search-input');
+  var clearBtn = document.getElementById('roster-search-clear');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      state.q = searchInput.value.trim().toLowerCase();
+      if (clearBtn) clearBtn.hidden = !state.q;
+      applyFilters();
+    });
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      if (searchInput) { searchInput.value = ''; state.q = ''; clearBtn.hidden = true; searchInput.focus(); }
+      applyFilters();
+    });
+  }
+
+  // Wire chip rows
+  ['roster-brand-chips', 'roster-align-chips'].forEach(function(rowId) {
+    var row = document.getElementById(rowId);
+    if (!row) return;
+    var key = row.dataset.filter;
+    row.addEventListener('click', function(e) {
+      var chip = e.target.closest('.roster-chip');
+      if (!chip) return;
+      row.querySelectorAll('.roster-chip').forEach(function(c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      state[key] = chip.dataset.value;
+      applyFilters();
+    });
+  });
+
+  applyFilters();
 });
 </script>
 </body>

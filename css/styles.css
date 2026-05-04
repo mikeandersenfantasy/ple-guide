@@ -2867,6 +2867,92 @@ ul { list-style: none; }
 /* Push the wrestler names up so they don't sit under the role badge corners */
 .card-left-panel--tag .card-tag-name,
 .card-right-panel--tag .card-tag-name { bottom: 36px; }
+
+/* === ROSTER GLOSSARY FILTERS === */
+.roster-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding: 16px;
+  background: rgba(15,17,26,0.7);
+  border: 1px solid rgba(212,168,60,0.18);
+  border-radius: 10px;
+}
+.roster-search { position: relative; }
+.roster-search input {
+  width: 100%;
+  background: #0a0c12;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 11px 38px 11px 14px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.roster-search input::placeholder { color: rgba(255,255,255,0.32); }
+.roster-search input:focus { border-color: #D4A83C; }
+.roster-search-clear {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.roster-search-clear:hover { background: rgba(212,168,60,0.25); color: #D4A83C; }
+.roster-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.roster-chip {
+  background: #0a0c12;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: rgba(255,255,255,0.55);
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.roster-chip:hover { border-color: rgba(212,168,60,0.4); color: rgba(255,255,255,0.85); }
+.roster-chip.active {
+  background: rgba(212,168,60,0.18);
+  border-color: #D4A83C;
+  color: #D4A83C;
+  font-weight: 700;
+}
+.roster-count {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.roster-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.95rem;
+}
+.roster-card-wrap {
+  display: contents;
+}
 @media (max-width: 768px) {
   .card-tag-name { font-size: 0.85rem; bottom: 8px; }
   .card-tag-team-role { font-size: 0.55rem; padding: 3px 7px; }

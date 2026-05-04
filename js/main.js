@@ -4,6 +4,9 @@
    ======================================== */
 
 // ===== EVENT CONFIG =====
+// `slug` matches the matches-data file under js/events/<slug>.js
+// When the next PLE rolls around, ship a new js/events/<slug>.js, change
+// the four fields below, and the homepage + /matches/ page roll over together.
 var NEXT_EVENT = {
   name: 'Backlash 2026',
   subtitle: 'One Night Only',
@@ -11,6 +14,8 @@ var NEXT_EVENT = {
   location: 'Tampa, Florida',
   venue: 'Benchmark International Arena',
   night: null,
+  slug: 'backlash-2026',
+  matchesScript: 'js/events/backlash-2026.js',
   eventUrl: 'events/backlash/backlash-2026/',
   status: 'upcoming'                    // 'upcoming' | 'live' | 'complete'
 };

@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Match Card - WWE PLE Guide</title>
+<title>Match Card — WWE PLE Guide</title>
+<meta name="description" content="The current WWE Premium Live Event match card. Updates as the next PLE approaches.">
 <link rel="stylesheet" href="../css/styles.css">
-<script>window.location.replace('../events/wrestlemania/wm42/');</script>
 </head>
 <body>
 
@@ -22,6 +22,7 @@
           <a href="../events/royal-rumble/">Royal Rumble</a>
         </div>
       </span>
+      <a href="./">Matches</a>
       <a href="../wrestlers/">Wrestlers</a>
       <a href="../videos/">Entrances</a>
       <a href="../picks/">Picks</a>
@@ -33,348 +34,77 @@
 
 <!-- HERO -->
 <section class="hero" style="padding:50px 30px 40px;background:radial-gradient(ellipse at center top,#1a1c2a 0%,#0b0f1a 60%,#080c14 100%)">
-  <div class="hero-label">WrestleMania 42</div>
-  <h1>The Match <span style="color:#fff">Card</span></h1>
-  <p class="hero-sub" id="hero-sub">13 confirmed matches across two nights. Tap any match to see the story.</p>
+  <div class="hero-label" id="m-event-label">Current Match Card</div>
+  <h1 id="m-event-title">Loading the card...</h1>
+  <p class="hero-sub" id="m-event-meta"></p>
+  <div id="m-event-cta" style="margin-top:14px"></div>
 </section>
 
 <section class="section">
-<div class="inner" id="matches-container"></div>
+<div class="inner">
+  <div id="m-matches-container"></div>
+  <div id="m-empty-state" hidden style="text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.6)">
+    <div style="font-size:2.5rem;margin-bottom:0.5rem">&#128203;</div>
+    <h3 style="font-family:Impact,sans-serif;letter-spacing:0.05em;color:#fff;margin-bottom:0.75rem">No active match card yet</h3>
+    <p>The previous event has wrapped. The next PLE's matches will populate here as soon as they're announced.</p>
+    <p style="margin-top:1rem"><a href="../events/" class="btn btn-gold" style="display:inline-block">Browse all events &rarr;</a></p>
+  </div>
+</div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WrestleMania 42 &bull; April 18-19, 2026 &bull; Las Vegas</p>
-  <p>Data sourced from <a href="https://www.wwe.com/shows/wrestlemania" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets. Last updated April 2026.</p>
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WWE PLE Guide &bull; Last updated April 2026</p>
+  <p>Data sourced from <a href="https://www.wwe.com" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets.</p>
 </footer>
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
 <script src="../js/data.js"></script>
 <script src="../js/main.js"></script>
+<script src="../js/events/backlash-2026.js"></script>
 <script>
 (function() {
-  var container = document.getElementById('matches-container');
-  if (!container || typeof MATCHES === 'undefined') return;
+  var META = window.BACKLASH_2026_META || null;
+  var titleEl = document.getElementById('m-event-title');
+  var metaEl = document.getElementById('m-event-meta');
+  var ctaEl = document.getElementById('m-event-cta');
+  var container = document.getElementById('m-matches-container');
+  var emptyEl = document.getElementById('m-empty-state');
 
-  var heroSub = document.getElementById('hero-sub');
-  heroSub.textContent = MATCHES.length + ' confirmed matches across two nights. Tap any match to see the story.';
+  var hasActive = META && Array.isArray(window.BACKLASH_2026_MATCHES) && window.BACKLASH_2026_MATCHES.length > 0;
+  var eventDate = META ? new Date(META.date) : null;
+  var eventOver = eventDate && Date.now() >= eventDate.getTime() + 6 * 3600000; // ~6 hours after start
 
-  // === RENDER MATCHES ===
-  var night1 = MATCHES.filter(function(m) { return m.night === 1; });
-  var night2 = MATCHES.filter(function(m) { return m.night === 2; });
-
-  function getLeftRight(match) {
-    if (match.wrestler1 && match.wrestler2) {
-      var w1 = WRESTLERS[match.wrestler1];
-      var w2 = WRESTLERS[match.wrestler2];
-      return {
-        leftName: w1 ? w1.name : match.wrestler1,
-        leftRole: w1 && w1.isChampion ? 'Champion' : 'Challenger',
-        rightName: w2 ? w2.name : match.wrestler2,
-        rightRole: w2 && w2.isChampion ? 'Champion' : 'Challenger'
-      };
-    }
-    if (match.teams) {
-      var left = match.teams[0] ? match.teams[0].name : '';
-      var right = match.teams.length > 2
-        ? match.teams[1].name + ' & more'
-        : (match.teams[1] ? match.teams[1].name : '');
-      var leftRole = match.teams[0] && match.teams[0].isChampion ? 'Champions' : (match.teams[0] && match.teams[0].role ? match.teams[0].role : '');
-      var rightRole = match.teams[1] && match.teams[1].role ? match.teams[1].role : '';
-      return { leftName: left, leftRole: leftRole, rightName: right, rightRole: rightRole };
-    }
-    if (match.participants) {
-      var names = match.participants.map(function(k) { return WRESTLERS[k] ? WRESTLERS[k].name : k; });
-      var leftNames = names.slice(0, 3).join(' · ');
-      var rightNames = names.length > 3 ? names.slice(3).join(' · ') : '';
-      return { leftName: leftNames, leftRole: '', rightName: rightNames, rightRole: '' };
-    }
-    return { leftName: '', leftRole: '', rightName: '', rightRole: '' };
+  if (!hasActive || eventOver) {
+    if (container) container.hidden = true;
+    if (emptyEl) emptyEl.hidden = false;
+    if (titleEl) titleEl.textContent = 'No active match card';
+    if (metaEl) metaEl.textContent = 'Check back when the next PLE is announced.';
+    return;
   }
 
-  // === GLOSSARY TOOLTIP WRAPPER ===
-  var glossaryTerms = {
-    'heel turn': 'When a good guy wrestler switches to being a villain.',
-    'face': 'The hero / good guy that the crowd cheers for.',
-    'heel': 'The villain / bad guy that the crowd boos.',
-    'kayfabe': 'Treating the scripted storylines as if they are real.',
-    'finisher': "A wrestler's signature big move that usually ends the match.",
-    'unsanctioned': 'No rules, no disqualifications — anything goes.',
-    'Royal Rumble': '30-person battle royal — last one standing earns a WrestleMania title shot.',
-    'Elimination Chamber': '6 wrestlers locked in a steel chamber, eliminated one by one.',
-    'put over': 'When a wrestler loses intentionally to make their opponent look strong.',
-    'promo': 'A mic speech used to hype a match or trash talk an opponent.',
-    'pop': 'The explosive crowd reaction to an exciting moment.'
-  };
+  // Hero
+  if (titleEl) titleEl.innerHTML = META.name;
+  var dateStr = eventDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  var parts = [dateStr];
+  if (META.location) parts.push(META.location);
+  if (META.venue) parts.push(META.venue);
+  if (metaEl) metaEl.textContent = parts.join(' · ');
 
-  function wrapGlossary(text) {
-    var result = text;
-    Object.keys(glossaryTerms).forEach(function(term) {
-      var def = glossaryTerms[term].replace(/"/g, '&quot;');
-      var regex = new RegExp('\\b(' + term + ')\\b', 'gi');
-      result = result.replace(regex, '<span class="glossary-tip" data-def="' + def + '" tabindex="0">$1<sup>?</sup></span>');
-    });
-    return result;
+  if (ctaEl && META.eventUrl) {
+    var ctaHtml = '<a class="btn btn-gold" href="../' + META.eventUrl + '">Open full event page &rarr;</a>';
+    if (META.picksUrl) {
+      ctaHtml += ' <a class="btn" style="margin-left:10px;border:1px solid rgba(212,168,60,0.4);color:#D4A83C" href="../' + META.picksUrl + '">Make picks</a>';
+    }
+    ctaEl.innerHTML = ctaHtml;
   }
 
-  function getBadgeClass(mt) {
-    if (mt === 'title') return 'badge--title';
-    if (mt === 'grudge') return 'badge--grudge';
-    if (mt === 'ladder') return 'badge--ladder';
-    if (mt === 'tag') return 'badge--tag';
-    return 'badge--special';
+  // Render
+  if (typeof window.renderBacklashMatches === 'function') {
+    window.renderBacklashMatches(container);
+  } else if (container) {
+    container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.6);padding:2rem">Could not load matches. Try refreshing.</p>';
   }
-
-  function getBadgeLabel(mt) {
-    if (mt === 'title') return 'Title Match';
-    if (mt === 'grudge') return 'Grudge Match';
-    if (mt === 'ladder') return 'Ladder Match';
-    if (mt === 'tag') return 'Tag Match';
-    return 'Special Match';
-  }
-
-  function getWrestlerImg(key) {
-    var w = WRESTLERS[key];
-    return w && w.img ? w.img : '';
-  }
-
-  function buildCinematicCard(match) {
-    var lr = getLeftRight(match);
-    var mt = match.matchType || 'special';
-    var hype = match.hype || 3;
-
-    // Get wrestler images for background panels
-    var leftImg = '';
-    var rightImg = '';
-    if (match.wrestler1 && match.wrestler2) {
-      leftImg = getWrestlerImg(match.wrestler1);
-      rightImg = getWrestlerImg(match.wrestler2);
-    }
-
-    var leftBgStyle = leftImg ? ' style="background-image:url(\'' + leftImg + '\')"' : '';
-    var rightBgStyle = rightImg ? ' style="background-image:url(\'' + rightImg + '\')"' : '';
-
-    var html = '<div class="cinematic-card" data-match-id="' + match.id + '" data-night="' + match.night + '" data-animated="false">';
-
-    var isMulti = !match.wrestler1 || !match.wrestler2;
-
-    if (!isMulti) {
-      // === SINGLES MATCH - full background images ===
-      html += '<div class="card-faceoff-area">';
-
-      html += '<div class="card-left-panel"' + leftBgStyle + '>';
-      html += '<div class="wrestler-label left">' + lr.leftName + '</div>';
-      if (lr.leftRole) html += '<div class="wrestler-role left">' + lr.leftRole + '</div>';
-      html += '</div>';
-
-      html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
-
-      html += '<div class="card-right-panel"' + rightBgStyle + '>';
-      html += '<div class="wrestler-label right">' + lr.rightName + '</div>';
-      if (lr.rightRole) html += '<div class="wrestler-role right">' + lr.rightRole + '</div>';
-      html += '</div>';
-
-      html += '<div class="card-center-stamp">';
-      html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
-      html += '<div class="championship-title">' + match.championship + '</div>';
-      html += '</div>';
-
-      html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
-      html += '</div>'; // end card-faceoff-area
-
-    } else {
-      // === MULTI-PERSON MATCH — cinematic full-bleed slices ===
-
-      function buildSlices(wrestlerKeys, side) {
-        // side: 'left' or 'right' — determines overlay gradient direction
-        var overlays;
-        if (wrestlerKeys.length === 2) {
-          overlays = side === 'left' ? ['slice-overlay--left', 'slice-overlay--right-fade'] : ['slice-overlay--left-fade', 'slice-overlay--right'];
-        } else {
-          overlays = side === 'left' ? ['slice-overlay--left', 'slice-overlay--mid', 'slice-overlay--right-fade'] : ['slice-overlay--left-fade', 'slice-overlay--mid', 'slice-overlay--right'];
-        }
-        var h = '';
-        wrestlerKeys.forEach(function(key, i) {
-          var w = WRESTLERS[key];
-          if (!w) return;
-          var bgImg = w.img ? "background-image:url('" + w.img + "')" : "background:linear-gradient(135deg,#12151f,#0a0c12)";
-          h += '<div class="multi-slice" style="' + bgImg + '">';
-          h += '<div class="slice-overlay ' + (overlays[i] || 'slice-overlay--mid') + '"></div>';
-          h += '<span class="slice-name">' + w.name + '</span>';
-          h += '</div>';
-        });
-        return h;
-      }
-
-      function buildFaceoffRow(leftKeys, rightKeys) {
-        var h = '<div class="faceoff-row">';
-        h += '<div class="card-left-panel card-multi-panel">' + buildSlices(leftKeys, 'left') + '</div>';
-        h += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
-        h += '<div class="card-right-panel card-multi-panel">' + buildSlices(rightKeys, 'right') + '</div>';
-        h += '</div>';
-        return h;
-      }
-
-      if (match.teams && match.teams.length === 4) {
-        // Fatal 4-Way: two stacked face-off rows
-        html += '<div class="card-faceoff-area card-faceoff-area--double">';
-        html += buildFaceoffRow(match.teams[0].wrestlers, match.teams[1].wrestlers);
-        html += '<div class="row-divider"></div>';
-        html += buildFaceoffRow(match.teams[2].wrestlers, match.teams[3].wrestlers);
-        html += '<div class="card-center-stamp card-center-stamp--tall">';
-        html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
-        html += '<div class="championship-title">' + match.championship + '</div>';
-        html += '</div>';
-        html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
-        html += '</div>';
-
-      } else if (match.teams && match.teams.length === 2) {
-        // 3v3 tag: single face-off row with 3 slices per side
-        html += '<div class="card-faceoff-area">';
-        html += '<div class="card-left-panel card-multi-panel">' + buildSlices(match.teams[0].wrestlers, 'left') + '</div>';
-        html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
-        html += '<div class="card-right-panel card-multi-panel">' + buildSlices(match.teams[1].wrestlers, 'right') + '</div>';
-        html += '<div class="card-center-stamp">';
-        html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
-        html += '<div class="championship-title">' + match.championship + '</div>';
-        html += '</div>';
-        html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
-        html += '</div>';
-
-      } else if (match.participants) {
-        // Ladder match: split participants 3-left, 3-right
-        var half = Math.ceil(match.participants.length / 2);
-        var leftP = match.participants.slice(0, half);
-        var rightP = match.participants.slice(half);
-        html += '<div class="card-faceoff-area">';
-        html += '<div class="card-left-panel card-multi-panel">' + buildSlices(leftP, 'left') + '</div>';
-        html += '<div class="card-seam"><div class="seam-line"></div><div class="seam-flash"></div><div class="shockwave"></div></div>';
-        html += '<div class="card-right-panel card-multi-panel">' + buildSlices(rightP, 'right') + '</div>';
-        html += '<div class="card-center-stamp">';
-        html += '<div class="match-badge ' + getBadgeClass(mt) + '">' + getBadgeLabel(mt) + '</div>';
-        html += '<div class="championship-title">' + match.championship + '</div>';
-        html += '</div>';
-        html += '<div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>';
-        html += '</div>';
-      }
-    }
-
-    // Bottom bar (in normal flow below faceoff area)
-    html += '<div class="card-bottom-bar">';
-    html += '<div class="hype-meter"><span class="hype-label">HYPE</span><div class="hype-pips">';
-    for (var i = 0; i < 5; i++) {
-      html += '<div class="pip' + (i < hype ? ' lit' : '') + '"></div>';
-    }
-    html += '</div></div>';
-    html += '<div class="expand-hint">Tap for the story ↓</div>';
-    html += '</div>';
-
-    // Story panel (in normal flow, hidden by CSS)
-    html += '<div class="card-story-panel">';
-    html += '<div class="story-bar"></div>';
-    if (match.whyItMatters) {
-      html += '<div class="story-section">';
-      html += '<div class="story-section-title">Why This Match Matters</div>';
-      html += '<div class="story-text">' + wrapGlossary(match.whyItMatters) + '</div>';
-      html += '</div>';
-    }
-    if (match.storySoFar) {
-      html += '<div class="story-section">';
-      html += '<div class="story-section-title">The Story So Far</div>';
-      html += '<div class="story-text">' + wrapGlossary(match.storySoFar) + '</div>';
-      html += '</div>';
-    }
-    if (!match.whyItMatters && !match.storySoFar && match.story) {
-      html += '<div class="story-section">';
-      html += '<div class="story-section-title">The Story</div>';
-      html += '<div class="story-text">' + wrapGlossary(match.story) + '</div>';
-      html += '</div>';
-    }
-    html += '</div>';
-
-    html += '</div>'; // end cinematic-card
-    return html;
-  }
-
-  // Night 1
-  var html = '<div class="night-header night-1"><div class="night-badge">NIGHT 1</div><div class="night-info"><span class="night-date">Saturday · April 18</span><span class="night-venue">Allegiant Stadium · Las Vegas</span></div></div>';
-  night1.forEach(function(m) { html += buildCinematicCard(m); });
-
-  html += '<div class="night-divider"></div>';
-
-  // Night 2
-  html += '<div class="night-header night-2"><div class="night-badge">NIGHT 2</div><div class="night-info"><span class="night-date">Sunday · April 19</span><span class="night-venue">The Main Event</span></div></div>';
-  night2.forEach(function(m) { html += buildCinematicCard(m); });
-
-  container.innerHTML = html;
-
-  // === ANIMATION TRIGGER ===
-  var isMobile = window.innerWidth <= 768;
-
-  if (isMobile) {
-    // Mobile: show all cards instantly, no animation overhead
-    document.querySelectorAll('.cinematic-card').forEach(function(card) {
-      card.classList.add('panel-in');
-      card.dataset.animated = 'true';
-    });
-  } else {
-    // Desktop: IntersectionObserver for scroll-triggered animations
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting && entry.target.dataset.animated === 'false') {
-          var card = entry.target;
-          card.dataset.animated = 'true';
-          card.classList.add('panel-in');
-          setTimeout(function() { card.classList.add('impact'); }, 420);
-          setTimeout(function() { card.classList.remove('impact'); }, 800);
-          observer.unobserve(card);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    document.querySelectorAll('.cinematic-card').forEach(function(card) {
-      observer.observe(card);
-    });
-  }
-
-  // === CARD CLICK / TOGGLE ===
-  document.addEventListener('click', function(e) {
-    // Don't toggle card if clicking a glossary tooltip
-    if (e.target.closest('.glossary-tip')) return;
-    var card = e.target.closest('.cinematic-card');
-    if (!card) return;
-    var storyPanel = card.querySelector('.card-story-panel');
-    var hint = card.querySelector('.expand-hint');
-    if (!storyPanel) return;
-
-    var isOpen = storyPanel.classList.contains('open');
-    storyPanel.classList.toggle('open', !isOpen);
-    if (hint) hint.textContent = isOpen ? 'Tap for the story ↓' : 'Close ↑';
-
-    if (!isOpen && storyPanel) {
-      setTimeout(function() { storyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
-    }
-  });
-
-  // === GLOSSARY TOOLTIP TOGGLE ===
-  document.addEventListener('click', function(e) {
-    // Close any open tooltip
-    document.querySelectorAll('.glossary-tip.tip-active').forEach(function(t) {
-      if (t !== e.target.closest('.glossary-tip')) t.classList.remove('tip-active');
-    });
-    var tip = e.target.closest('.glossary-tip');
-    if (tip) {
-      tip.classList.toggle('tip-active');
-      // Position below if near top of screen
-      var rect = tip.getBoundingClientRect();
-      if (rect.top < window.innerHeight / 2) {
-        tip.classList.add('tip-below');
-      } else {
-        tip.classList.remove('tip-below');
-      }
-      e.stopPropagation();
-    }
-  });
 })();
 </script>
 </body>
