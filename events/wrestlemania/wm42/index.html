@@ -23,7 +23,7 @@
       </span>
       <a href="../../../matches/">Matches</a>
       <a href="../../../wrestlers/">Wrestlers</a>
-      <a href="../../../videos/">Entrances</a>
+      <a href="../../../picks/leaderboard/">Leaderboard</a>
       <a href="../../../picks/">Picks</a>
       <a href="../../../legal/">Legal</a>
     </div>
@@ -438,14 +438,17 @@
 
   function loadWM42FromSheets(callback) {
     var script = document.createElement('script');
-    var cbName = '_wm42res_' + Date.now();
-    script.src = WM42_API + '?action=load&callback=' + cbName + '&t=' + Date.now();
+    var cbName = '_wm42res_' + Math.random().toString(36).slice(2) + '_' + Date.now();
+    script.src = WM42_API + '?action=load&event=wm42&callback=' + cbName + '&t=' + Date.now();
+    var done = false;
     window[cbName] = function(data) {
+      if (done) return; done = true;
       callback(data);
-      delete window[cbName];
+      try { delete window[cbName]; } catch(e) { window[cbName] = null; }
       if (script.parentNode) script.parentNode.removeChild(script);
     };
     script.onerror = function() {
+      if (done) return; done = true;
       if (script.parentNode) script.parentNode.removeChild(script);
       var pickers = [];
       for (var i = 0; i < localStorage.length; i++) {
@@ -459,8 +462,11 @@
       callback({ pickers: pickers, results: results });
     };
     setTimeout(function() {
-      if (window[cbName]) { window[cbName] = function() {}; script.onerror(); }
-    }, 6000);
+      if (done) return;
+      done = true;
+      window[cbName] = function() {};
+      script.onerror();
+    }, 12000);
     document.head.appendChild(script);
   }
 
@@ -500,7 +506,12 @@
     }
 
     loadWM42FromSheets(function(data) {
-      wm42PicksRendered = true;
+      // Only mark "rendered" if the response actually had pickers — otherwise
+      // a one-off network blip would cache an empty render and the auto-poll
+      // would never refill it. Empty responses leave the flag false so the
+      // 30s poll keeps trying.
+      var hasPickers = data && Array.isArray(data.pickers) && data.pickers.length > 0;
+      if (hasPickers) wm42PicksRendered = true;
       var pickers = (data && data.pickers) || [];
       var results = (data && data.results) || {};
       var hasResults = Object.keys(results).length > 0;

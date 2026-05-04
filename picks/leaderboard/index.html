@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Season Leaderboard — WWE PLE Guide</title>
+<link rel="stylesheet" href="../../css/styles.css">
+<style>
+.season-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:18px;padding:14px 16px;background:rgba(15,17,26,0.7);border:1px solid rgba(212,168,60,0.18);border-radius:10px}
+.season-status{font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+.season-refresh-btn{background:none;border:none;color:#D4A83C;font-family:inherit;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+.season-refresh-btn:hover{color:#e6bc4a}
+
+.season-table{display:table;width:100%;border-collapse:separate;border-spacing:0 4px}
+.season-row{display:table-row;cursor:pointer}
+.season-cell{display:table-cell;padding:12px 14px;background:#0f111a;border-top:1px solid rgba(212,168,60,0.1);border-bottom:1px solid rgba(212,168,60,0.1);vertical-align:middle}
+.season-cell:first-child{border-left:1px solid rgba(212,168,60,0.1);border-radius:8px 0 0 8px}
+.season-cell:last-child{border-right:1px solid rgba(212,168,60,0.1);border-radius:0 8px 8px 0;text-align:right}
+.season-row.lb-row--top3 .season-cell{background:rgba(212,168,60,0.08);border-color:rgba(212,168,60,0.3)}
+.season-row:hover .season-cell{background:rgba(212,168,60,0.05)}
+.season-row.expanded .season-cell{background:rgba(212,168,60,0.06);border-color:rgba(212,168,60,0.35)}
+
+.season-rank{font-family:Impact,sans-serif;font-size:1.05rem;color:rgba(255,255,255,0.6);width:54px}
+.season-row.lb-row--top3 .season-rank{color:#D4A83C}
+.season-name{font-family:Impact,sans-serif;font-size:1rem;letter-spacing:0.04em;color:#fff}
+.season-stat-label{display:none;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:2px}
+.season-stat-val{font-family:Impact,sans-serif;font-size:1.05rem;color:#fff;letter-spacing:0.04em}
+.season-stat-sub{font-size:0.65rem;letter-spacing:0.05em;color:rgba(255,255,255,0.4);margin-top:1px}
+.season-total{font-size:1.4rem;color:#D4A83C}
+.season-expand-icon{display:inline-block;width:16px;color:rgba(212,168,60,0.5);transition:transform 0.2s;margin-left:6px}
+.season-row.expanded .season-expand-icon{transform:rotate(90deg);color:#D4A83C}
+
+.season-detail{display:none;background:#0a0c12;border:1px solid rgba(212,168,60,0.25);border-top:none;border-radius:0 0 10px 10px;padding:18px 20px;margin-bottom:8px;margin-top:-8px}
+.season-row.expanded + .season-detail{display:block}
+.season-detail-header{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#D4A83C;margin-bottom:10px;border-bottom:1px solid rgba(212,168,60,0.2);padding-bottom:8px}
+.season-event-block{margin-bottom:18px}
+.season-event-block:last-child{margin-bottom:0}
+.season-event-title{font-family:Impact,sans-serif;font-size:0.95rem;letter-spacing:0.05em;color:#fff;margin-bottom:6px}
+.season-event-score{font-size:0.78rem;color:rgba(255,255,255,0.55);margin-bottom:10px}
+.season-pick-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.season-pick-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:5px;font-size:0.78rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)}
+.season-pick-row.correct{background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3)}
+.season-pick-row.wrong{background:rgba(224,64,64,0.08);border-color:rgba(224,64,64,0.3)}
+.season-pick-row.tbd{opacity:0.65}
+.season-pick-match{color:rgba(255,255,255,0.55);font-size:0.7rem}
+.season-pick-pick{color:#fff}
+.season-pick-row.correct .season-pick-pick{color:#4ade80}
+.season-pick-row.wrong .season-pick-pick{color:#ff8888}
+.season-pick-mark{font-family:Impact,sans-serif;color:rgba(255,255,255,0.4)}
+.season-pick-row.correct .season-pick-mark{color:#4ade80}
+.season-pick-row.wrong .season-pick-mark{color:#ff8888}
+
+.season-fav-block{margin-top:14px;padding-top:14px;border-top:1px solid rgba(212,168,60,0.15)}
+.season-fav-title{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#D4A83C;margin-bottom:8px}
+.season-fav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px}
+.season-fav-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;background:rgba(255,255,255,0.03);border-radius:5px;font-size:0.78rem}
+.season-fav-name{color:#fff}
+.season-fav-stats{font-size:0.7rem;color:rgba(212,168,60,0.7);font-family:Impact,sans-serif}
+
+.season-empty{text-align:center;padding:3rem 1rem;color:rgba(255,255,255,0.55)}
+
+@media (max-width:600px){
+  .season-cell{padding:10px 8px}
+  .season-rank{width:38px;font-size:0.85rem}
+  .season-name{font-size:0.85rem}
+  .season-stat-val{font-size:0.85rem}
+  .season-total{font-size:1.1rem}
+  .season-pick-list{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo"><span style="letter-spacing:1px">WWE</span> <span style="color:#D4A83C">PLE</span> <span style="color:#D4A83C">Guide</span></a>
+    <div class="nav-links">
+      <a href="../../">Home</a>
+      <span class="nav-item--dropdown"><a href="../../events/">Events</a>
+        <div class="nav-dropdown">
+          <a href="../../events/wrestlemania/">WrestleMania</a>
+          <a href="../../events/backlash/">Backlash</a>
+          <a href="../../events/royal-rumble/">Royal Rumble</a>
+        </div>
+      </span>
+      <a href="../../matches/">Matches</a>
+      <a href="../../wrestlers/">Wrestlers</a>
+      <a href="../../picks/">Picks</a>
+      <a href="./">Leaderboard</a>
+      <a href="../../legal/">Legal</a>
+    </div>
+    <button class="hamburger" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+
+<section class="hero" style="padding:50px 30px 40px;background:radial-gradient(ellipse at center top,#1a1c2a 0%,#0b0f1a 60%,#080c14 100%)">
+  <div class="hero-label">Season Standings</div>
+  <h1>Family <span style="color:#fff">Leaderboard</span></h1>
+  <p class="hero-sub">Every PLE pick across the season. Wins, top-3 finishes, accuracy, and a per-pick history for each picker.</p>
+</section>
+
+<section class="section">
+  <div class="inner">
+    <div class="season-controls">
+      <div>
+        <div style="font-family:Impact,sans-serif;letter-spacing:0.04em;color:#fff;font-size:0.95rem">All-Event Standings</div>
+        <div class="season-status" id="season-status">Loading...</div>
+      </div>
+      <button type="button" class="season-refresh-btn" id="season-refresh">Refresh now</button>
+    </div>
+    <div id="season-table-wrap"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Made with <span class="heart">&#10084;</span> for the family &bull; WWE PLE Guide &bull; Last updated April 2026</p>
+  <p>Data sourced from <a href="https://www.wwe.com" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets.</p>
+</footer>
+
+<button class="scroll-top" id="scrollTop">&#8593;</button>
+<script src="../../js/data.js"></script>
+<script src="../../js/main.js"></script>
+<script src="../../js/picks-api.js"></script>
+<script src="../../js/events/registry.js"></script>
+<script src="../../js/events/backlash-2026.js"></script>
+<script>
+(function() {
+  var POLL_MS = 60000;
+  var statusEl = document.getElementById('season-status');
+  var tableWrap = document.getElementById('season-table-wrap');
+  var refreshBtn = document.getElementById('season-refresh');
+
+  // Load every registered event in parallel via the shared picks API.
+  function loadAll(callback) {
+    var registry = window.EVENT_REGISTRY || [];
+    var simple = registry.filter(function(e) { return e.scoringStyle === 'matchPicks'; });
+    var results = {};
+    var remaining = simple.length;
+    if (!remaining) return callback({});
+    simple.forEach(function(ev) {
+      var api = createPicksApi(ev.key, { format: ev.format });
+      api.load(function(data) {
+        results[ev.key] = data || { pickers: [], results: {} };
+        remaining--;
+        if (remaining === 0) callback(results);
+      });
+    });
+  }
+
+  function lowerKey(name) { return (name || '').trim().toLowerCase(); }
+
+  // Build per-picker aggregate stats across all events
+  function aggregate(eventDataMap) {
+    var pickers = {}; // lowerName -> { name, totalPoints, eventScores: { evKey: { score, total, picks, results } }, wins, top3, totalAccuracyNum, totalAccuracyDen, favorites }
+    var registry = window.EVENT_REGISTRY || [];
+    var rankByEvent = {}; // evKey -> [{name, score}, ...] sorted
+
+    registry.forEach(function(ev) {
+      if (ev.scoringStyle !== 'matchPicks') return;
+      var data = eventDataMap[ev.key] || { pickers: [], results: {} };
+      var evResults = data.results || {};
+      var hasResults = Object.keys(evResults).length > 0;
+      var perEventScores = [];
+
+      (data.pickers || []).forEach(function(p) {
+        if (!p || !p.name) return;
+        var picksObj = p.picks || {};
+        var score = 0, total = 0, correctMap = {};
+        if (hasResults) {
+          Object.keys(evResults).forEach(function(mid) {
+            if (evResults[mid]) {
+              total++;
+              if (picksObj[mid] === evResults[mid]) {
+                score++;
+                correctMap[mid] = true;
+              }
+            }
+          });
+        }
+        var key = lowerKey(p.name);
+        if (!pickers[key]) {
+          pickers[key] = {
+            name: p.name,
+            totalPoints: 0,
+            wins: 0, top3: 0,
+            accuracyNum: 0, accuracyDen: 0,
+            eventScores: {},
+            favorites: {}
+          };
+        }
+        pickers[key].name = p.name; // keep last-seen casing
+        pickers[key].totalPoints += score * (ev.pointsPerCorrect || 10);
+        pickers[key].accuracyNum += score;
+        pickers[key].accuracyDen += total;
+        pickers[key].eventScores[ev.key] = {
+          score: score, total: total, hasResults: hasResults,
+          picks: picksObj, results: evResults, correctMap: correctMap
+        };
+        // Favorite wrestlers picked
+        Object.keys(picksObj).forEach(function(mid) {
+          var pick = picksObj[mid];
+          if (!pick) return;
+          if (!pickers[key].favorites[pick]) pickers[key].favorites[pick] = { picked: 0, won: 0 };
+          pickers[key].favorites[pick].picked++;
+          if (hasResults && evResults[mid] === pick) pickers[key].favorites[pick].won++;
+        });
+        if (hasResults) perEventScores.push({ name: p.name, score: score });
+      });
+      // Rank pickers within this event
+      perEventScores.sort(function(a, b) { return b.score - a.score; });
+      rankByEvent[ev.key] = perEventScores;
+      // Award wins / top-3 from per-event ranks
+      perEventScores.forEach(function(entry, i) {
+        var key = lowerKey(entry.name);
+        if (!pickers[key]) return;
+        if (i === 0 && entry.score > 0) pickers[key].wins++;
+        if (i < 3) pickers[key].top3++;
+      });
+    });
+
+    // Sort overall by total points, then wins, then accuracy
+    var rows = Object.keys(pickers).map(function(k) {
+      var p = pickers[k];
+      p.accuracy = p.accuracyDen > 0 ? Math.round((p.accuracyNum / p.accuracyDen) * 100) : 0;
+      return p;
+    });
+    rows.sort(function(a, b) {
+      if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      return b.accuracy - a.accuracy || a.name.localeCompare(b.name);
+    });
+    return { rows: rows, rankByEvent: rankByEvent };
+  }
+
+  function getMatchLabel(ev, matchId) {
+    if (ev.key === 'wm42' && typeof MATCHES !== 'undefined') {
+      for (var i = 0; i < MATCHES.length; i++) {
+        if (MATCHES[i].id === matchId) return MATCHES[i].championship || matchId;
+      }
+    }
+    if (ev.key === 'backlash2026' && window.BACKLASH_2026_MATCHES) {
+      for (var j = 0; j < window.BACKLASH_2026_MATCHES.length; j++) {
+        if (window.BACKLASH_2026_MATCHES[j].id === matchId) return window.BACKLASH_2026_MATCHES[j].championship || matchId;
+      }
+    }
+    return matchId;
+  }
+
+  function getWrestlerName(key) {
+    if (typeof WRESTLERS !== 'undefined' && WRESTLERS[key] && WRESTLERS[key].name) return WRESTLERS[key].name;
+    if (key === '__mystery') return 'Mystery Partner';
+    if (key && key.indexOf('team-') === 0) {
+      // Try to look up in Backlash matches for team names
+      if (window.BACKLASH_2026_MATCHES) {
+        for (var i = 0; i < window.BACKLASH_2026_MATCHES.length; i++) {
+          var m = window.BACKLASH_2026_MATCHES[i];
+          if (m.wrestler1 && m.wrestler1.id === key) return m.wrestler1.name;
+          if (m.wrestler2 && m.wrestler2.id === key) return m.wrestler2.name;
+        }
+      }
+    }
+    return key;
+  }
+
+  function buildDetailHtml(picker) {
+    var registry = window.EVENT_REGISTRY || [];
+    var html = '<div class="season-detail-header">' + picker.name + " &mdash; per-event picks</div>";
+
+    registry.forEach(function(ev) {
+      var es = picker.eventScores[ev.key];
+      if (!es) return;
+      var matchIds = Object.keys(es.picks);
+      if (!matchIds.length) return;
+
+      html += '<div class="season-event-block">';
+      html += '<div class="season-event-title">' + ev.name + '</div>';
+      var scoreLine = es.hasResults
+        ? es.score + ' / ' + es.total + ' correct &middot; ' + (es.score * (ev.pointsPerCorrect || 10)) + ' pts'
+        : matchIds.length + ' picks locked &middot; awaiting results';
+      html += '<div class="season-event-score">' + scoreLine + '</div>';
+
+      html += '<ul class="season-pick-list">';
+      matchIds.forEach(function(mid) {
+        var pick = es.picks[mid];
+        var actual = es.results[mid];
+        var wasCorrect = es.hasResults && actual && pick === actual;
+        var wasWrong = es.hasResults && actual && pick !== actual;
+        var rowCls = wasCorrect ? 'correct' : wasWrong ? 'wrong' : 'tbd';
+        var mark = wasCorrect ? '&#10003;' : wasWrong ? '&times;' : '&hellip;';
+        html += '<li class="season-pick-row ' + rowCls + '">';
+        html += '<div>';
+        html += '<div class="season-pick-match">' + getMatchLabel(ev, mid) + '</div>';
+        html += '<div class="season-pick-pick">' + getWrestlerName(pick) + '</div>';
+        html += '</div>';
+        html += '<span class="season-pick-mark">' + mark + '</span>';
+        html += '</li>';
+      });
+      html += '</ul>';
+      html += '</div>';
+    });
+
+    // Per-pick favorites: wrestlers this picker bets on most + win rate
+    var favs = Object.keys(picker.favorites).map(function(k) {
+      return { key: k, picked: picker.favorites[k].picked, won: picker.favorites[k].won };
+    }).sort(function(a, b) { return b.picked - a.picked || b.won - a.won; }).slice(0, 8);
+    if (favs.length) {
+      html += '<div class="season-fav-block">';
+      html += '<div class="season-fav-title">Most-picked wrestlers (so far)</div>';
+      html += '<div class="season-fav-grid">';
+      favs.forEach(function(f) {
+        html += '<div class="season-fav-row">';
+        html += '<span class="season-fav-name">' + getWrestlerName(f.key) + '</span>';
+        html += '<span class="season-fav-stats">' + f.won + '/' + f.picked + '</span>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    }
+    return html;
+  }
+
+  function render(eventDataMap) {
+    var agg = aggregate(eventDataMap);
+    if (!agg.rows.length) {
+      tableWrap.innerHTML = '<div class="season-empty">No picks have been saved across any event yet.</div>';
+      statusEl.textContent = 'No picks yet';
+      return;
+    }
+    var medals = ['&#x1F947;', '&#x1F948;', '&#x1F949;'];
+    var html = '<div class="season-table">';
+    agg.rows.forEach(function(p, i) {
+      var rank = i < 3 ? medals[i] : '#' + (i + 1);
+      var top3Cls = i < 3 ? ' lb-row--top3' : '';
+      html += '<div class="season-row' + top3Cls + '" data-picker="' + p.name + '">';
+      html += '<div class="season-cell season-rank">' + rank + '</div>';
+      html += '<div class="season-cell"><span class="season-name">' + p.name + '</span><span class="season-expand-icon">&#9656;</span></div>';
+      html += '<div class="season-cell"><span class="season-stat-val">' + p.wins + '</span><div class="season-stat-sub">Wins</div></div>';
+      html += '<div class="season-cell"><span class="season-stat-val">' + p.top3 + '</span><div class="season-stat-sub">Top 3</div></div>';
+      html += '<div class="season-cell"><span class="season-stat-val">' + p.accuracy + '%</span><div class="season-stat-sub">Accuracy</div></div>';
+      html += '<div class="season-cell"><span class="season-stat-val season-total">' + p.totalPoints + '</span><div class="season-stat-sub">Points</div></div>';
+      html += '</div>';
+      html += '<div class="season-detail">' + buildDetailHtml(p) + '</div>';
+    });
+    html += '</div>';
+    tableWrap.innerHTML = html;
+
+    // Wire row click → toggle expansion
+    tableWrap.querySelectorAll('.season-row').forEach(function(row) {
+      row.addEventListener('click', function() {
+        var wasOpen = row.classList.contains('expanded');
+        tableWrap.querySelectorAll('.season-row.expanded').forEach(function(r) { r.classList.remove('expanded'); });
+        if (!wasOpen) row.classList.add('expanded');
+      });
+    });
+
+    var doneEvents = (window.EVENT_REGISTRY || []).filter(function(e) {
+      return e.scoringStyle === 'matchPicks' && eventDataMap[e.key];
+    });
+    statusEl.textContent = agg.rows.length + ' family pickers across ' + doneEvents.length + ' events';
+  }
+
+  function refresh() {
+    statusEl.textContent = 'Refreshing...';
+    loadAll(render);
+  }
+  refresh();
+  if (refreshBtn) refreshBtn.addEventListener('click', refresh);
+  setInterval(refresh, POLL_MS);
+})();
+</script>
+</body>
+</html>

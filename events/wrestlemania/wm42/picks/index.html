@@ -23,7 +23,7 @@
       </span>
       <a href="../../../../matches/">Matches</a>
       <a href="../../../../wrestlers/">Wrestlers</a>
-      <a href="../../../../videos/">Entrances</a>
+      <a href="../../../../picks/leaderboard/">Leaderboard</a>
       <a href="../../../../picks/">Picks</a>
       <a href="../../../../legal/">Legal</a>
     </div>
@@ -98,24 +98,23 @@
   }
 
   function loadFromSheets(callback) {
-    // Use script tag injection to bypass CORS (Apps Script returns JSON)
     var script = document.createElement('script');
-    var cbName = '_wm42_' + Date.now();
-    script.src = API + '?action=load&callback=' + cbName + '&t=' + Date.now();
-
+    var cbName = '_wm42_' + Math.random().toString(36).slice(2) + '_' + Date.now();
+    var done = false;
+    script.src = API + '?action=load&event=wm42&callback=' + cbName + '&t=' + Date.now();
     window[cbName] = function(data) {
+      if (done) return; done = true;
       callback(data);
-      delete window[cbName];
+      try { delete window[cbName]; } catch(e) { window[cbName] = null; }
       if (script.parentNode) script.parentNode.removeChild(script);
     };
-
     script.onerror = function() {
+      if (done) return; done = true;
       if (script.parentNode) script.parentNode.removeChild(script);
-      // Fallback to localStorage
       var pickers = [];
       for (var i = 0; i < localStorage.length; i++) {
         var key = localStorage.key(i);
-        if (key.startsWith('wm42-picks-')) {
+        if (key && key.indexOf('wm42-picks-') === 0) {
           try { pickers.push(JSON.parse(localStorage.getItem(key))); } catch(e) {}
         }
       }
@@ -123,15 +122,12 @@
       try { results = JSON.parse(localStorage.getItem('wm42-results')) || {}; } catch(e) {}
       callback({ pickers: pickers, results: results });
     };
-
-    // Timeout to localStorage fallback
     setTimeout(function() {
-      if (window[cbName]) {
-        window[cbName] = function() {};
-        script.onerror();
-      }
-    }, 6000);
-
+      if (done) return;
+      done = true;
+      window[cbName] = function() {};
+      script.onerror();
+    }, 12000);
     document.head.appendChild(script);
   }
 

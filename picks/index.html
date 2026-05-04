@@ -3,8 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Predictions - WWE PLE Guide</title>
+<title>Picks — WWE PLE Guide</title>
 <link rel="stylesheet" href="../css/styles.css">
+<script src="../js/main.js"></script>
+<script>
+// Default the /picks/ entry point to the active event picks page so family
+// members reach the form in one tap. Fall back to a link if JS is blocked.
+(function() {
+  var url = (typeof NEXT_EVENT !== 'undefined' && NEXT_EVENT && NEXT_EVENT.eventUrl)
+    ? '../' + NEXT_EVENT.eventUrl + 'picks/'
+    : '../events/backlash/backlash-2026/picks/';
+  window.location.replace(url);
+})();
+</script>
 </head>
 <body>
 
@@ -23,7 +34,7 @@
       </span>
       <a href="../matches/">Matches</a>
       <a href="../wrestlers/">Wrestlers</a>
-      <a href="../videos/">Entrances</a>
+      <a href="leaderboard/">Leaderboard</a>
       <a href="./">Picks</a>
       <a href="../legal/">Legal</a>
     </div>
@@ -31,99 +42,14 @@
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero hero--evergreen">
-  <div class="hero-label">Predictions</div>
-  <h1>Family <span style="color:#fff">Picks</span></h1>
-  <p class="hero-sub">Lock in your predictions for the next event. Compete on the family leaderboard.</p>
+<section class="hero" style="padding:50px 30px 40px;background:radial-gradient(ellipse at center top,#1a1c2a 0%,#0b0f1a 60%,#080c14 100%)">
+  <h1>Loading the active event picks...</h1>
+  <p class="hero-sub" style="margin-top:14px"><a href="../events/backlash/backlash-2026/picks/" class="btn btn-gold">Open picks page &rarr;</a></p>
+  <p class="hero-sub" style="margin-top:14px"><a href="leaderboard/" style="color:#D4A83C">Or view the family season leaderboard &rarr;</a></p>
 </section>
 
-<section class="section">
-  <div class="picks-router-active">
-    <div class="router-label">Current Event</div>
-    <h2 class="router-event-name" id="router-event-name">Loading...</h2>
-    <div class="router-status" id="router-status"></div>
-    <a class="btn btn-gold" id="router-cta" href="#">Make Your Picks &rarr;</a>
-  </div>
-
-  <div class="picks-router-past">
-    <h3 class="router-past-title">Past Events</h3>
-    <div class="router-past-grid" id="router-past-grid"></div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer class="footer">
   <p>Made with <span class="heart">&#10084;</span> for the family &bull; WWE PLE Guide &bull; Last updated April 2026</p>
-  <p>Data sourced from <a href="https://www.wwe.com" target="_blank" rel="noopener">WWE.com</a> and wrestling news outlets.</p>
 </footer>
-
-<button class="scroll-top" id="scrollTop">&#8593;</button>
-<script src="../js/main.js"></script>
-<script>
-(function() {
-  var PICKS_CONFIG = {
-    activeEvent: {
-      name: 'Backlash 2026',
-      date: '2026-05-09T18:00:00-04:00',
-      picksOpenDate: '2026-04-20T00:00:00-04:00',
-      picksUrl: '../events/backlash/backlash-2026/picks/',
-      storagePrefix: 'backlash2026',
-      status: 'open'
-    },
-    pastEvents: [
-      {
-        name: 'WrestleMania 42',
-        picksUrl: '../events/wrestlemania/wm42/#picks',
-        status: 'complete',
-        finalDate: 'April 19, 2026'
-      }
-    ]
-  };
-
-  var active = PICKS_CONFIG.activeEvent;
-  var nameEl = document.getElementById('router-event-name');
-  var statusEl = document.getElementById('router-status');
-  var ctaEl = document.getElementById('router-cta');
-
-  if (nameEl) nameEl.textContent = active.name;
-
-  var now = new Date();
-  var openTime = new Date(active.picksOpenDate);
-  var showTime = new Date(active.date);
-
-  if (ctaEl) ctaEl.href = active.picksUrl;
-
-  if (now >= showTime) {
-    if (statusEl) statusEl.innerHTML = '<span class="picks-status picks-status--locked">&#128274; Event complete &mdash; picks are locked</span>';
-    if (ctaEl) {
-      ctaEl.textContent = 'View Results →';
-      ctaEl.href = '../events/backlash/backlash-2026/';
-    }
-  } else if (now >= openTime) {
-    if (statusEl) statusEl.innerHTML = '<span class="picks-status picks-status--open">&#128994; Picks are open!</span>';
-  } else {
-    var days = Math.ceil((openTime - now) / (1000 * 60 * 60 * 24));
-    if (statusEl) statusEl.innerHTML = '<span class="picks-status picks-status--soon">Picks open in ' + days + ' ' + (days === 1 ? 'day' : 'days') + '</span>';
-    if (ctaEl) {
-      ctaEl.classList.add('btn-disabled');
-      ctaEl.style.opacity = '0.55';
-      ctaEl.style.pointerEvents = 'none';
-    }
-  }
-
-  var pastGrid = document.getElementById('router-past-grid');
-  if (pastGrid && PICKS_CONFIG.pastEvents.length > 0) {
-    var html = '';
-    PICKS_CONFIG.pastEvents.forEach(function(pe) {
-      html += '<a href="' + pe.picksUrl + '" class="router-past-card">';
-      html += '<span class="router-past-name">' + pe.name + ' &middot; ' + pe.finalDate + '</span>';
-      html += '<span class="router-past-link">View Results &rarr;</span>';
-      html += '</a>';
-    });
-    pastGrid.innerHTML = html;
-  }
-})();
-</script>
 </body>
 </html>

@@ -2953,6 +2953,111 @@ ul { list-style: none; }
 .roster-card-wrap {
   display: contents;
 }
+
+/* === PICKS LOCK COUNTDOWN BANNER === */
+.picks-countdown-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, rgba(204,26,43,0.08) 0%, rgba(212,168,60,0.08) 100%);
+  border: 1px solid rgba(212,168,60,0.3);
+  border-radius: 7px;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.picks-countdown-icon { font-size: 1rem; }
+.picks-countdown-text { color: rgba(255,255,255,0.85); }
+#picks-countdown-timer {
+  font-family: Impact, sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: #D4A83C;
+  margin-left: 4px;
+}
+
+/* Pulse the save button when there are unsaved picks */
+.save-picks-btn--dirty {
+  animation: dirtyPulse 1.6s ease-in-out infinite;
+  box-shadow: 0 0 0 1px rgba(212,168,60,0.5), 0 6px 24px rgba(212,168,60,0.18);
+}
+@keyframes dirtyPulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(212,168,60,0.45), 0 6px 24px rgba(212,168,60,0.18); }
+  50%      { box-shadow: 0 0 0 2px rgba(212,168,60,0.85), 0 8px 32px rgba(212,168,60,0.35); }
+}
+
+/* === HOMEPAGE LAST EVENT RECAP === */
+.last-event-recap {
+  background: linear-gradient(135deg, rgba(212,168,60,0.06) 0%, rgba(11,15,26,0.6) 100%);
+  border: 1px solid rgba(212,168,60,0.25);
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin: 22px 0 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.last-event-recap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #D4A83C, transparent);
+}
+.recap-label {
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #D4A83C;
+  margin-bottom: 2px;
+}
+.recap-event {
+  font-family: Impact, sans-serif;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 1.1;
+}
+.recap-meta {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+.recap-spacer { flex: 1; min-width: 12px; }
+.recap-winner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: rgba(212,168,60,0.1);
+  border: 1px solid rgba(212,168,60,0.3);
+  border-radius: 8px;
+}
+.recap-winner-medal { font-size: 1.6rem; }
+.recap-winner-name {
+  font-family: Impact, sans-serif;
+  font-size: 1.05rem;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+.recap-winner-stats {
+  font-size: 0.7rem;
+  color: rgba(212,168,60,0.85);
+  letter-spacing: 0.06em;
+}
+.recap-cta { margin-left: auto; }
+@media (max-width: 600px) {
+  .last-event-recap { padding: 16px 18px; gap: 12px; }
+  .recap-cta { width: 100%; }
+  .recap-cta .btn { width: 100%; text-align: center; }
+}
 @media (max-width: 768px) {
   .card-tag-name { font-size: 0.85rem; bottom: 8px; }
   .card-tag-team-role { font-size: 0.55rem; padding: 3px 7px; }

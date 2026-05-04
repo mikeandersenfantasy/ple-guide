@@ -39,7 +39,7 @@
       </span>
       <a href="matches/">Matches</a>
       <a href="wrestlers/">Wrestlers</a>
-      <a href="videos/">Entrances</a>
+      <a href="picks/leaderboard/">Leaderboard</a>
       <a href="picks/">Picks</a>
       <a href="legal/">Legal</a>
     </div>
@@ -68,13 +68,31 @@
   <a href="events/backlash/backlash-2026/" class="btn btn-gold" id="next-event-btn">View Event &rarr;</a>
 </section>
 
-<!-- PAST EVENTS -->
+<!-- PAST EVENTS + LAST EVENT RECAP -->
 <section class="section past-events-section">
   <div class="inner">
     <div class="text-center" style="margin-bottom:10px">
       <div class="section-label">Past Events</div>
       <h2 class="section-title">Past Events</h2>
       <p class="section-subtitle mx-auto">Relive the storylines, matches, and predictions from past Premium Live Events.</p>
+    </div>
+    <div class="last-event-recap" id="last-event-recap" hidden>
+      <div>
+        <div class="recap-label">Last Event &middot; Family Pick Champion</div>
+        <div class="recap-event" id="recap-event-name">--</div>
+        <div class="recap-meta" id="recap-event-meta"></div>
+      </div>
+      <div class="recap-spacer"></div>
+      <div class="recap-winner" id="recap-winner-pill" hidden>
+        <span class="recap-winner-medal">&#x1F947;</span>
+        <div>
+          <div class="recap-winner-name" id="recap-winner-name">--</div>
+          <div class="recap-winner-stats" id="recap-winner-stats"></div>
+        </div>
+      </div>
+      <div class="recap-cta">
+        <a class="btn btn-gold" id="recap-cta" href="picks/leaderboard/">View season leaderboard &rarr;</a>
+      </div>
     </div>
     <div class="past-events-grid" id="past-events-grid"></div>
   </div>
@@ -124,5 +142,56 @@
 
 <button class="scroll-top" id="scrollTop">&#8593;</button>
 <script src="js/main.js"></script>
+<script src="js/picks-api.js"></script>
+<script src="js/events/registry.js"></script>
+<script>
+// Homepage Last Event Recap — pulls the most recent completed event's
+// leaderboard from the shared API and shows the family champion + score.
+(function() {
+  if (typeof getMostRecentCompletedEvent !== 'function') return;
+  var ev = getMostRecentCompletedEvent();
+  if (!ev) return;
+  var box = document.getElementById('last-event-recap');
+  if (!box) return;
+  var nameEl = document.getElementById('recap-event-name');
+  var metaEl = document.getElementById('recap-event-meta');
+  var winnerPill = document.getElementById('recap-winner-pill');
+  var winnerName = document.getElementById('recap-winner-name');
+  var winnerStats = document.getElementById('recap-winner-stats');
+  var ctaEl = document.getElementById('recap-cta');
+
+  if (nameEl) nameEl.textContent = ev.name;
+  var dateStr = new Date(ev.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  if (metaEl) metaEl.textContent = dateStr + (ev.location ? ' · ' + ev.location : '');
+  if (ctaEl && ev.eventUrl) ctaEl.href = ev.eventUrl;
+
+  box.hidden = false;
+
+  var api = createPicksApi(ev.key, { format: ev.format });
+  api.load(function(data) {
+    var pickers = (data && data.pickers) || [];
+    var results = (data && data.results) || {};
+    if (!pickers.length || !Object.keys(results).length) {
+      if (metaEl) metaEl.textContent = dateStr + (ev.location ? ' · ' + ev.location : '') + ' · No scored picks yet';
+      return;
+    }
+    var scored = pickers.map(function(p) {
+      var picks = p.picks || {};
+      var score = 0, total = 0;
+      Object.keys(results).forEach(function(mid) {
+        if (results[mid]) { total++; if (picks[mid] === results[mid]) score++; }
+      });
+      return { name: p.name, score: score, total: total };
+    });
+    scored.sort(function(a, b) { return b.score - a.score; });
+    var top = scored[0];
+    if (top && top.total > 0) {
+      if (winnerPill) winnerPill.hidden = false;
+      if (winnerName) winnerName.textContent = top.name;
+      if (winnerStats) winnerStats.textContent = top.score + ' / ' + top.total + ' correct';
+    }
+  });
+})();
+</script>
 </body>
 </html>

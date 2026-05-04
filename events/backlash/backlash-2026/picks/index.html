@@ -23,7 +23,7 @@
       </span>
       <a href="../../../../matches/">Matches</a>
       <a href="../../../../wrestlers/">Wrestlers</a>
-      <a href="../../../../videos/">Entrances</a>
+      <a href="../../../../picks/leaderboard/">Leaderboard</a>
       <a href="../../../../picks/">Picks</a>
       <a href="../../../../legal/">Legal</a>
     </div>
@@ -55,6 +55,10 @@
 
     <!-- PICKS PANEL -->
     <div class="rr-panel active" id="panel-picks">
+      <div id="picks-countdown-banner" class="picks-countdown-banner" hidden>
+        <span class="picks-countdown-icon">&#128274;</span>
+        <span class="picks-countdown-text">Picks lock in <span id="picks-countdown-timer">--</span></span>
+      </div>
       <div id="picks-lock-banner" class="picks-lock-banner" hidden></div>
 
       <div id="picks-form-container">
@@ -187,6 +191,35 @@
     var daysUntil = Math.ceil((OPEN_DATE - now) / 86400000);
     lockBanner.innerHTML = '&#8987; Picks open in ' + daysUntil + ' ' + (daysUntil === 1 ? 'day' : 'days') + '.';
     lockBanner.hidden = false;
+  } else {
+    // Live lock countdown banner — picks are open and the clock is ticking
+    var countdownBanner = document.getElementById('picks-countdown-banner');
+    var countdownTimer = document.getElementById('picks-countdown-timer');
+    if (countdownBanner) countdownBanner.hidden = false;
+    function fmtCountdown() {
+      var diff = SHOW_DATE.getTime() - Date.now();
+      if (diff <= 0) {
+        if (countdownBanner) countdownBanner.hidden = true;
+        if (lockBanner) {
+          lockBanner.innerHTML = '&#128274; Picks are locked &mdash; Backlash has started!';
+          lockBanner.hidden = false;
+        }
+        if (formContainer) formContainer.hidden = true;
+        return;
+      }
+      var days = Math.floor(diff / 86400000);
+      var hours = Math.floor((diff % 86400000) / 3600000);
+      var mins = Math.floor((diff % 3600000) / 60000);
+      var secs = Math.floor((diff % 60000) / 1000);
+      var parts = [];
+      if (days) parts.push(days + 'd');
+      parts.push((hours < 10 ? '0' : '') + hours + 'h');
+      parts.push((mins < 10 ? '0' : '') + mins + 'm');
+      if (!days) parts.push((secs < 10 ? '0' : '') + secs + 's');
+      if (countdownTimer) countdownTimer.textContent = parts.join(' ');
+    }
+    fmtCountdown();
+    setInterval(fmtCountdown, 1000);
   }
 
   // === MATCH TYPE BADGE CLASS ===
@@ -207,6 +240,31 @@
   var loadedExistingPicker = false;
   var activeTab = 'picks';
   var POLL_MS = 30000;
+  var hasUnsavedChanges = false;
+  var savedPicksSnapshot = '';
+
+  // Warn before leaving the page if picks were touched but not saved.
+  window.addEventListener('beforeunload', function(e) {
+    if (!hasUnsavedChanges) return;
+    e.preventDefault();
+    e.returnValue = 'You have unsaved picks. Lock them in before leaving?';
+    return e.returnValue;
+  });
+  function snapshotPicks() { return JSON.stringify(currentPicks); }
+  function markDirty() {
+    hasUnsavedChanges = snapshotPicks() !== savedPicksSnapshot;
+    var btn = document.getElementById('save-picks-btn');
+    if (btn) {
+      if (hasUnsavedChanges) btn.classList.add('save-picks-btn--dirty');
+      else btn.classList.remove('save-picks-btn--dirty');
+    }
+  }
+  function markClean() {
+    savedPicksSnapshot = snapshotPicks();
+    hasUnsavedChanges = false;
+    var btn = document.getElementById('save-picks-btn');
+    if (btn) btn.classList.remove('save-picks-btn--dirty');
+  }
   var CLAIM_KEY = STORAGE_PREFIX + '-claim';
   var sessionPin = '';          // pin in memory for the current picker
   var sessionPinName = '';      // name the sessionPin belongs to
@@ -300,6 +358,7 @@
     card.classList.add('has-pick');
     currentPicks[matchId] = pickId;
     updateSummary();
+    markDirty();
   });
 
   function updateSummary() {
@@ -360,6 +419,7 @@
     currentPicks = {};
     if (picks) Object.keys(picks).forEach(function(mid) { currentPicks[mid] = picks[mid]; });
     loadedExistingPicker = true;
+    markClean();
     if (loadedBanner) {
       var pickedCount = Object.keys(currentPicks).length;
       loadedBanner.innerHTML = '&#9989; Loaded ' + pickedCount + ' saved pick' + (pickedCount === 1 ? '' : 's') + ' for <strong>' + name + '</strong>. Tap any side to change a pick, then hit <strong>Update</strong>. <button type="button" class="picker-switch-link" id="picker-switch">Not me?</button>';
@@ -595,6 +655,7 @@
       sessionPin = pinToUse;
       sessionPinName = name;
       hasPinMap[nameLower] = true;
+      markClean();
 
       document.getElementById('save-confirmation').hidden = false;
       document.getElementById('saved-name').textContent = name;
